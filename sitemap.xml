@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://liaohr9.github.io/2025/08/07/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/hexo-fluid%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E%E9%AA%8C%E8%AF%81/</loc>
+    
+    <lastmod>2025-08-06</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://liaohr9.github.io/2025/08/04/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/gdb%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/</loc>
     
     <lastmod>2025-08-06</lastmod>
@@ -155,13 +164,6 @@
 
   
   <url>
-    <loc>https://liaohr9.github.io/tags/%E6%95%B0%E5%AD%A6/</loc>
-    <lastmod>2025-08-06</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://liaohr9.github.io/tags/%E7%94%9F%E6%B4%BB/</loc>
     <lastmod>2025-08-06</lastmod>
     <changefreq>weekly</changefreq>
@@ -169,7 +171,7 @@
   </url>
   
   <url>
-    <loc>https://liaohr9.github.io/tags/Vite-Vue-Tauri/</loc>
+    <loc>https://liaohr9.github.io/tags/%E6%95%B0%E5%AD%A6/</loc>
     <lastmod>2025-08-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -183,7 +185,21 @@
   </url>
   
   <url>
-    <loc>https://liaohr9.github.io/tags/GDB/</loc>
+    <loc>https://liaohr9.github.io/tags/Agent/</loc>
+    <lastmod>2025-08-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://liaohr9.github.io/tags/Vite-Vue-Tauri/</loc>
+    <lastmod>2025-08-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://liaohr9.github.io/tags/hexo-fluid%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E/</loc>
     <lastmod>2025-08-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -197,7 +213,7 @@
   </url>
   
   <url>
-    <loc>https://liaohr9.github.io/tags/Agent/</loc>
+    <loc>https://liaohr9.github.io/tags/GDB/</loc>
     <lastmod>2025-08-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -213,13 +229,6 @@
 
   
   <url>
-    <loc>https://liaohr9.github.io/categories/Learnings/</loc>
-    <lastmod>2025-08-06</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://liaohr9.github.io/categories/Life/</loc>
     <lastmod>2025-08-06</lastmod>
     <changefreq>weekly</changefreq>
@@ -227,7 +236,7 @@
   </url>
   
   <url>
-    <loc>https://liaohr9.github.io/categories/technology/</loc>
+    <loc>https://liaohr9.github.io/categories/Learnings/</loc>
     <lastmod>2025-08-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -235,6 +244,13 @@
   
   <url>
     <loc>https://liaohr9.github.io/categories/Research/</loc>
+    <lastmod>2025-08-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://liaohr9.github.io/categories/technology/</loc>
     <lastmod>2025-08-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>

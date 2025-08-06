@@ -19,17 +19,18 @@
   <meta name="author" content="Haoran Liao">
   <meta name="keywords" content="Haoran Liao, Sun Yat-sen University, Computer Science, Robotics, Machine Learning, Computer Vision, Teleoperation, Research, SYSU, TypeTele, CoRL">
   
-    <meta name="description" content="误删文件后的恢复尝试与教训 一、事件背景：一个危险的BAT脚本 最近在搭建个人网站（hexo个人网站）时，我想通过GPT生成一个能实现「自动删除文件、自动复制文件、自动git上传」的BAT脚本。由于没有仔细验证代码安全性，直接使用了GPT生成的脚本，最终导致了严重的数据丢失。 GPT生成的BAT脚本如下： 12345678910111213141516171819202122@echo of">
+    <meta name="description" content="误删文件后的恢复尝试与教训一、事件背景：一个危险的BAT脚本最近在搭建个人网站（hexo个人网站）时，我想通过GPT生成一个能实现「自动删除文件、自动复制文件、自动git上传」的BAT脚本。由于没有仔细验证代码安全性，直接使用了GPT生成的脚本，最终导致了严重的数据丢失。 GPT生成的BAT脚本如下：12345678910111213141516171819202122@echo offsetlo">
 <meta property="og:type" content="article">
 <meta property="og:title" content="误删文件后的恢复尝试与教训">
 <meta property="og:url" content="https://liaohr9.github.io/2025/08/04/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/%E8%AF%AF%E5%88%A0%E6%96%87%E4%BB%B6%E5%90%8E%E7%9A%84%E6%81%A2%E5%A4%8D%E5%B0%9D%E8%AF%95%E4%B8%8E%E6%95%99%E8%AE%AD/%E8%AF%AF%E5%88%A0%E6%96%87%E4%BB%B6%E5%90%8E%E7%9A%84%E6%81%A2%E5%A4%8D%E5%B0%9D%E8%AF%95%E4%B8%8E%E6%95%99%E8%AE%AD/index.html">
 <meta property="og:site_name" content="Haoran&#39;s homepage">
-<meta property="og:description" content="误删文件后的恢复尝试与教训 一、事件背景：一个危险的BAT脚本 最近在搭建个人网站（hexo个人网站）时，我想通过GPT生成一个能实现「自动删除文件、自动复制文件、自动git上传」的BAT脚本。由于没有仔细验证代码安全性，直接使用了GPT生成的脚本，最终导致了严重的数据丢失。 GPT生成的BAT脚本如下： 12345678910111213141516171819202122@echo of">
+<meta property="og:description" content="误删文件后的恢复尝试与教训一、事件背景：一个危险的BAT脚本最近在搭建个人网站（hexo个人网站）时，我想通过GPT生成一个能实现「自动删除文件、自动复制文件、自动git上传」的BAT脚本。由于没有仔细验证代码安全性，直接使用了GPT生成的脚本，最终导致了严重的数据丢失。 GPT生成的BAT脚本如下：12345678910111213141516171819202122@echo offsetlo">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://liaohr9.github.io/2025/08/04/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/%E8%AF%AF%E5%88%A0%E6%96%87%E4%BB%B6%E5%90%8E%E7%9A%84%E6%81%A2%E5%A4%8D%E5%B0%9D%E8%AF%95%E4%B8%8E%E6%95%99%E8%AE%AD/%E8%AF%AF%E5%88%A0%E6%96%87%E4%BB%B6%E5%90%8E%E7%9A%84%E6%81%A2%E5%A4%8D%E5%B0%9D%E8%AF%95%E4%B8%8E%E6%95%99%E8%AE%AD/image.jpg">
 <meta property="og:image" content="https://liaohr9.github.io/2025/08/04/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/%E8%AF%AF%E5%88%A0%E6%96%87%E4%BB%B6%E5%90%8E%E7%9A%84%E6%81%A2%E5%A4%8D%E5%B0%9D%E8%AF%95%E4%B8%8E%E6%95%99%E8%AE%AD/%E8%AF%AF%E5%88%A0%E6%96%87%E4%BB%B6%E5%90%8E%E7%9A%84%E6%81%A2%E5%A4%8D%E5%B0%9D%E8%AF%95%E4%B8%8E%E6%95%99%E8%AE%AD/image%20copy.jpg">
 <meta property="og:image" content="https://liaohr9.github.io/2025/08/04/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/%E8%AF%AF%E5%88%A0%E6%96%87%E4%BB%B6%E5%90%8E%E7%9A%84%E6%81%A2%E5%A4%8D%E5%B0%9D%E8%AF%95%E4%B8%8E%E6%95%99%E8%AE%AD/%E8%AF%AF%E5%88%A0%E6%96%87%E4%BB%B6%E5%90%8E%E7%9A%84%E6%81%A2%E5%A4%8D%E5%B0%9D%E8%AF%95%E4%B8%8E%E6%95%99%E8%AE%AD/image%20copy%202.jpg">
 <meta property="og:image" content="https://liaohr9.github.io/2025/08/04/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/%E8%AF%AF%E5%88%A0%E6%96%87%E4%BB%B6%E5%90%8E%E7%9A%84%E6%81%A2%E5%A4%8D%E5%B0%9D%E8%AF%95%E4%B8%8E%E6%95%99%E8%AE%AD/%E8%AF%AF%E5%88%A0%E6%96%87%E4%BB%B6%E5%90%8E%E7%9A%84%E6%81%A2%E5%A4%8D%E5%B0%9D%E8%AF%95%E4%B8%8E%E6%95%99%E8%AE%AD/image%20copy%203.jpg">
+<meta property="og:image" content="https://liaohr9.github.io/2025/08/04/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/%E8%AF%AF%E5%88%A0%E6%96%87%E4%BB%B6%E5%90%8E%E7%9A%84%E6%81%A2%E5%A4%8D%E5%B0%9D%E8%AF%95%E4%B8%8E%E6%95%99%E8%AE%AD/%E8%AF%AF%E5%88%A0%E6%96%87%E4%BB%B6%E5%90%8E%E7%9A%84%E6%81%A2%E5%A4%8D%E5%B0%9D%E8%AF%95%E4%B8%8E%E6%95%99%E8%AE%AD/b53a1b6f950a710f3b2a425e356477b8.jpg">
 <meta property="article:published_time" content="2025-08-04T14:32:32.000Z">
 <meta property="article:modified_time" content="2025-08-06T10:48:23.900Z">
 <meta property="article:author" content="Haoran Liao">
@@ -314,348 +315,273 @@
             
               <div class="markdown-body">
                 
-                <h1 id="误删文件后的恢复尝试与教训">误删文件后的恢复尝试与教训</h1>
-<h2
-id="一事件背景一个危险的bat脚本">一、事件背景：一个危险的BAT脚本</h2>
-<p>最近在搭建个人网站（hexo个人网站）时，我想通过GPT生成一个能实现「自动删除文件、自动复制文件、自动git上传」的BAT脚本。由于没有仔细验证代码安全性，直接使用了GPT生成的脚本，最终导致了严重的数据丢失。</p>
-<p>GPT生成的BAT脚本如下： <figure class="highlight bat"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs bat">@<span class="hljs-built_in">echo</span> off<br><span class="hljs-built_in">setlocal</span> enabledelayedexpansion<br><br><span class="hljs-built_in">set</span> &quot;target=E:\创作\个人网站\Leon_Blog&quot;<br><br><span class="hljs-built_in">echo</span> Deleting all contents <span class="hljs-keyword">in</span> <span class="hljs-variable">%target%</span> except .git folder...<br><br>:: 删除文件夹<br><span class="hljs-keyword">for</span> /d <span class="hljs-variable">%%D</span> <span class="hljs-keyword">in</span> (&quot;<span class="hljs-variable">%target%</span>\*&quot;) <span class="hljs-keyword">do</span> (<br>    <span class="hljs-keyword">if</span> /i <span class="hljs-keyword">not</span> &quot;<span class="hljs-variable">%%~</span>nxD&quot;==&quot;.git&quot; (<br>        <span class="hljs-built_in">echo</span> Deleting folder: <span class="hljs-variable">%%D</span><br>        <span class="hljs-built_in">rd</span> /s /q &quot;<span class="hljs-variable">%%D</span>&quot;<br>    )<br>)<br><br>:: 删除文件<br><span class="hljs-keyword">for</span> <span class="hljs-variable">%%F</span> <span class="hljs-keyword">in</span> (&quot;<span class="hljs-variable">%target%</span>\*&quot;) <span class="hljs-keyword">do</span> (<br>    <span class="hljs-keyword">if</span> /i <span class="hljs-keyword">not</span> &quot;<span class="hljs-variable">%%~</span>nxF&quot;==&quot;.git&quot; (<br>        <span class="hljs-built_in">echo</span> Deleting file: <span class="hljs-variable">%%F</span><br>        <span class="hljs-built_in">del</span> /q &quot;<span class="hljs-variable">%%F</span>&quot;<br>    )<br>)<br></code></pre></td></tr></table></figure></p>
-<p>这个脚本的预期功能是：删除<code>E:\创作\个人网站\Leon_Blog</code>目录下所有子目录和文件，但保留<code>.git</code>文件夹。<strong>但它存在致命缺陷</strong>：当<code>target</code>路径不存在或无法被正确解析时，<code>"%target%\*"</code>会被错误解析为<code>"E:\*"</code>（即E盘根目录），导致脚本对整个E盘执行删除操作。</p>
-<h2
-id="二误删过程e盘根目录文件被批量删除">二、误删过程：E盘根目录文件被批量删除</h2>
-<p>执行脚本后，我看到命令行中快速闪过大量文件名，才意识到不对劲，立刻按<code>Ctrl+C</code>停止，但已经来不及了——E盘根目录下的所有文件和文件夹已被批量删除，相当于E盘被「格式化」了。</p>
-<p><img src="image.jpg" srcset="/img/loading.gif" lazyload /></p>
-<h2
-id="三恢复尝试三款工具的使用与结果">三、恢复尝试：三款工具的使用与结果</h2>
-<p>为了减少损失，我立刻停止对E盘的任何操作（避免覆盖数据），并尝试了以下恢复工具：</p>
-<h3 id="recuva免费数据恢复工具">1. Recuva（免费数据恢复工具）</h3>
-<p>Recuva是一款经典的免费数据恢复软件，支持多种文件类型，操作相对简单。</p>
-<h4 id="使用步骤">使用步骤：</h4>
-<ul>
-<li>第一步：选择需要恢复的文件类型（这会影响扫描速度和准确度）<br />
-<img src="image%20copy.jpg" srcset="/img/loading.gif" lazyload /></li>
-<li>第二步：选择需要扫描的驱动器（此处选择E盘）<br />
-<img src="image%20copy%202.jpg" srcset="/img/loading.gif" lazyload /></li>
-<li>第三步：启动深度扫描（Deep Search）<br />
-<img src="image%20copy%203.jpg" srcset="/img/loading.gif" lazyload /></li>
+                <h1 id="误删文件后的恢复尝试与教训"><a href="#误删文件后的恢复尝试与教训" class="headerlink" title="误删文件后的恢复尝试与教训"></a>误删文件后的恢复尝试与教训</h1><h2 id="一、事件背景：一个危险的BAT脚本"><a href="#一、事件背景：一个危险的BAT脚本" class="headerlink" title="一、事件背景：一个危险的BAT脚本"></a>一、事件背景：一个危险的BAT脚本</h2><p>最近在搭建个人网站（hexo个人网站）时，我想通过GPT生成一个能实现「自动删除文件、自动复制文件、自动git上传」的BAT脚本。由于没有仔细验证代码安全性，直接使用了GPT生成的脚本，最终导致了严重的数据丢失。</p>
+<p>GPT生成的BAT脚本如下：<br><figure class="highlight bat"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs bat">@<span class="hljs-built_in">echo</span> off<br><span class="hljs-built_in">setlocal</span> enabledelayedexpansion<br><br><span class="hljs-built_in">set</span> &quot;target=E:\创作\个人网站\Leon_Blog&quot;<br><br><span class="hljs-built_in">echo</span> Deleting all contents <span class="hljs-keyword">in</span> <span class="hljs-variable">%target%</span> except .git folder...<br><br>:: 删除文件夹<br><span class="hljs-keyword">for</span> /d <span class="hljs-variable">%%D</span> <span class="hljs-keyword">in</span> (&quot;<span class="hljs-variable">%target%</span>\*&quot;) <span class="hljs-keyword">do</span> (<br>    <span class="hljs-keyword">if</span> /i <span class="hljs-keyword">not</span> &quot;<span class="hljs-variable">%%~</span>nxD&quot;==&quot;.git&quot; (<br>        <span class="hljs-built_in">echo</span> Deleting folder: <span class="hljs-variable">%%D</span><br>        <span class="hljs-built_in">rd</span> /s /q &quot;<span class="hljs-variable">%%D</span>&quot;<br>    )<br>)<br><br>:: 删除文件<br><span class="hljs-keyword">for</span> <span class="hljs-variable">%%F</span> <span class="hljs-keyword">in</span> (&quot;<span class="hljs-variable">%target%</span>\*&quot;) <span class="hljs-keyword">do</span> (<br>    <span class="hljs-keyword">if</span> /i <span class="hljs-keyword">not</span> &quot;<span class="hljs-variable">%%~</span>nxF&quot;==&quot;.git&quot; (<br>        <span class="hljs-built_in">echo</span> Deleting file: <span class="hljs-variable">%%F</span><br>        <span class="hljs-built_in">del</span> /q &quot;<span class="hljs-variable">%%F</span>&quot;<br>    )<br>)<br></code></pre></td></tr></table></figure></p>
+<p>这个脚本的预期功能是：删除<code>E:\创作\个人网站\Leon_Blog</code>目录下所有子目录和文件，但保留<code>.git</code>文件夹。<strong>但它存在致命缺陷</strong>：当<code>target</code>路径不存在或无法被正确解析时，<code>&quot;%target%\*&quot;</code>会被错误解析为<code>&quot;E:\*&quot;</code>（即E盘根目录），导致脚本对整个E盘执行删除操作。</p>
+<h2 id="二、误删过程：E盘根目录文件被批量删除"><a href="#二、误删过程：E盘根目录文件被批量删除" class="headerlink" title="二、误删过程：E盘根目录文件被批量删除"></a>二、误删过程：E盘根目录文件被批量删除</h2><p>执行脚本后，我看到命令行中快速闪过大量文件名，才意识到不对劲，立刻按<code>Ctrl+C</code>停止，但已经来不及了——E盘根目录下的所有文件和文件夹已被批量删除，相当于E盘被「格式化」了。</p>
+<p><img src="image.jpg" srcset="/img/loading.gif" lazyload alt=""></p>
+<h2 id="三、恢复尝试：三款工具的使用与结果"><a href="#三、恢复尝试：三款工具的使用与结果" class="headerlink" title="三、恢复尝试：三款工具的使用与结果"></a>三、恢复尝试：三款工具的使用与结果</h2><p>为了减少损失，我立刻停止对E盘的任何操作（避免覆盖数据），并尝试了以下恢复工具：</p>
+<h3 id="1-Recuva（免费数据恢复工具）"><a href="#1-Recuva（免费数据恢复工具）" class="headerlink" title="1. Recuva（免费数据恢复工具）"></a>1. Recuva（免费数据恢复工具）</h3><p>Recuva是一款经典的免费数据恢复软件，支持多种文件类型，操作相对简单。</p>
+<h4 id="使用步骤："><a href="#使用步骤：" class="headerlink" title="使用步骤："></a>使用步骤：</h4><ul>
+<li>第一步：选择需要恢复的文件类型（这会影响扫描速度和准确度）<br><img src="image copy.jpg" srcset="/img/loading.gif" lazyload alt=""></li>
+<li>第二步：选择需要扫描的驱动器（此处选择E盘）<br><img src="image copy 2.jpg" srcset="/img/loading.gif" lazyload alt=""></li>
+<li>第三步：启动深度扫描（Deep Search）<br><img src="image copy 3.jpg" srcset="/img/loading.gif" lazyload alt=""></li>
 </ul>
-<h4 id="恢复结果">恢复结果：</h4>
-<ul>
+<h4 id="恢复结果："><a href="#恢复结果：" class="headerlink" title="恢复结果："></a>恢复结果：</h4><ul>
 <li>深度扫描后查到约5万多个文件，软件显示「有效恢复」的约2万多个，但实际能正常打开的文件极少。</li>
 <li>恢复的文件被无序放在同一个文件夹中，原有的文件结构完全丢失，使用起来非常不便。</li>
 </ul>
 <blockquote>
-<p>官网链接：<a target="_blank" rel="noopener" href="https://www.ccleaner.com/recuva">Recuva
-官方网站</a></p>
+<p>官网链接：<a target="_blank" rel="noopener" href="https://www.ccleaner.com/recuva">Recuva 官方网站</a></p>
 </blockquote>
-<h3 id="windows-file-recovery微软自带命令行工具">2. Windows File
-Recovery（微软自带命令行工具）</h3>
-<p>Windows File
-Recovery是微软官方推出的命令行恢复工具，支持更多文件类型，虽然操作复杂，但恢复效果相对更好。</p>
-<h4 id="基本步骤">基本步骤：</h4>
-<ol type="1">
-<li>如有必要，请从 Microsoft 应用商店安装应用：<br />
-<a href="ms-windows-store://pdp/?productid=9n26s50ln705">Windows File
-Recovery</a></li>
-<li>按 Windows 键，在搜索框中输入<strong>Windows File
-Recovery</strong>，然后选择“<strong>Windows File
-Recovery</strong>”。</li>
+<h3 id="2-Windows-File-Recovery（微软自带命令行工具）"><a href="#2-Windows-File-Recovery（微软自带命令行工具）" class="headerlink" title="2. Windows File Recovery（微软自带命令行工具）"></a>2. Windows File Recovery（微软自带命令行工具）</h3><p>Windows File Recovery是微软官方推出的命令行恢复工具，支持更多文件类型，虽然操作复杂，但恢复效果相对更好。</p>
+<h4 id="基本步骤："><a href="#基本步骤：" class="headerlink" title="基本步骤："></a>基本步骤：</h4><ol>
+<li>如有必要，请从 Microsoft 应用商店安装应用：<br><a href="ms-windows-store://pdp/?productid=9n26s50ln705">Windows File Recovery</a></li>
+<li>按 Windows 键，在搜索框中输入<strong>Windows File Recovery</strong>，然后选择“<strong>Windows File Recovery</strong>”。</li>
 <li>当系统提示你允许应用对设备进行更改时，请选择“<strong>是</strong>”。</li>
-<li>在 <strong>“命令提示符”</strong>窗口中，按以下格式输入命令：<br />
-<code>winfr source-drive: destination-drive: [/mode] [/switches]</code></li>
-<li>有 2 种基本模式可用于恢复文件：“常规”和“广泛”。<br />
-<strong>常规模式示例</strong>
+<li>在 <strong>“命令提示符”</strong>窗口中，按以下格式输入命令：<br><code>winfr source-drive: destination-drive: [/mode] [/switches]</code></li>
+<li><p>有 2 种基本模式可用于恢复文件：“常规”和“广泛”。<br><strong>常规模式示例</strong>  </p>
 <ul>
-<li>将 Documents 文件夹从 C： 驱动器恢复到 E：
-驱动器上的恢复文件夹（不要忘记文件夹末尾的反斜杠 ）：<br />
-<code>Winfr C: E: /regular /n \Users\&lt;username&gt;\Documents\</code><br />
-</li>
-<li>将 PDF 和Word文件从 C： 驱动器恢复到 E：
-驱动器上的恢复文件夹：<br />
-<code>Winfr C: E: /regular /n *.pdf /n *.docx</code></li>
+<li>将 Documents 文件夹从 C： 驱动器恢复到 E： 驱动器上的恢复文件夹（不要忘记文件夹末尾的反斜杠 \）：<br><code>Winfr C: E: /regular /n \Users\&lt;username&gt;\Documents\</code>  </li>
+<li>将 PDF 和Word文件从 C： 驱动器恢复到 E： 驱动器上的恢复文件夹：<br><code>Winfr C: E: /regular /n *.pdf /n *.docx</code>  </li>
 </ul>
-<strong>广泛的模式示例</strong>
+<p><strong>广泛的模式示例</strong>  </p>
 <ul>
-<li>使用通配符恢复文件名中包含字符串“invoice”的任何文件：<br />
-<code>Winfr E: C: /extensive /n *invoice*</code><br />
-</li>
-<li>将 jpeg 和 png 照片从“图片”文件夹恢复到 E：
-驱动器上的恢复文件夹：<br />
-<code>Winfr C: E: /extensive /n \Users\&lt;username&gt;\Pictures\*.JPEG /n\Users\&lt;username&gt;\Pictures\*.PNG</code></li>
+<li>使用通配符恢复文件名中包含字符串“invoice”的任何文件：<br><code>Winfr E: C: /extensive /n *invoice*</code>  </li>
+<li>将 jpeg 和 png 照片从“图片”文件夹恢复到 E： 驱动器上的恢复文件夹：<br><code>Winfr C: E: /extensive /n \Users\&lt;username&gt;\Pictures\*.JPEG /n\Users\&lt;username&gt;\Pictures\*.PNG</code>  </li>
 </ul>
 <blockquote>
-<p>注意：源驱动器和目标驱动器必须不同。从操作系统驱动器（通常是C:）恢复时，请使用
-<code>/n &lt;filter&gt;</code>
-开关指定用户文件或文件夹。微软会在目标驱动器上自动创建名为
-<code>Recovery_&lt;date and time&gt;</code> 的恢复文件夹。</p>
-</blockquote></li>
-<li>当系统提示确认继续时，请输入 <strong>Y</strong>
-以启动恢复操作。这可能需要一段时间，具体取决于源驱动器的大小。若要停止恢复过程，请按
-<strong>Ctrl</strong> + <strong>C</strong>。</li>
+<p>注意：源驱动器和目标驱动器必须不同。从操作系统驱动器（通常是C:）恢复时，请使用 <code>/n &lt;filter&gt;</code> 开关指定用户文件或文件夹。微软会在目标驱动器上自动创建名为 <code>Recovery_&lt;date and time&gt;</code> 的恢复文件夹。</p>
+</blockquote>
+</li>
+<li>当系统提示确认继续时，请输入 <strong>Y</strong> 以启动恢复操作。这可能需要一段时间，具体取决于源驱动器的大小。若要停止恢复过程，请按 <strong>Ctrl</strong> + <strong>C</strong>。</li>
 </ol>
-<h4 id="关于模式和文件系统">关于模式和文件系统：</h4>
-<p>以下信息可帮助你确定你拥有哪个文件系统以及要使用的模式。</p>
+<h4 id="关于模式和文件系统："><a href="#关于模式和文件系统：" class="headerlink" title="关于模式和文件系统："></a>关于模式和文件系统：</h4><p>以下信息可帮助你确定你拥有哪个文件系统以及要使用的模式。</p>
 <p><strong><em>文件系统</em></strong></p>
+<div class="table-container">
 <table>
-
 <thead>
 <tr>
-<th style="text-align: left;"><strong>文件系统</strong></th>
-<th style="text-align: left;"><strong>示例</strong></th>
+<th style="text-align:left"><strong>文件系统</strong></th>
+<th style="text-align:left"><strong>示例</strong></th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;">FAT 和 exFAT</td>
-<td style="text-align: left;">SD 卡、闪存或 U 盘 (&lt; 4GB)</td>
+<td style="text-align:left">FAT 和 exFAT</td>
+<td style="text-align:left">SD 卡、闪存或 U 盘 (&lt; 4GB)</td>
 </tr>
 <tr>
-<td style="text-align: left;">NTFS</td>
-<td style="text-align: left;">计算机（HDD、SSD）、外部硬盘驱动器、闪存或
-U 盘 (&gt; 4GB)</td>
+<td style="text-align:left">NTFS</td>
+<td style="text-align:left">计算机（HDD、SSD）、外部硬盘驱动器、闪存或 U 盘 (&gt; 4GB)</td>
 </tr>
 </tbody>
 </table>
-<p>Windows
-支持的多个文件系统因存储设备或操作系统而异。仅广泛模式支持从非 NTFS
-文件系统恢复文件。若要查看你拥有的文件系统，请右键单击文件资源管理器中的驱动器，然后选择“<strong>属性</strong>”。</p>
+</div>
+<p>Windows 支持的多个文件系统因存储设备或操作系统而异。仅广泛模式支持从非 NTFS 文件系统恢复文件。若要查看你拥有的文件系统，请右键单击文件资源管理器中的驱动器，然后选择“<strong>属性</strong>”。</p>
 <p><strong><em>决定使用哪种模式</em></strong></p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">文件系统</th>
-<th style="text-align: left;">情况</th>
-<th style="text-align: left;">建议模式</th>
+<th style="text-align:left">文件系统</th>
+<th style="text-align:left">情况</th>
+<th style="text-align:left">建议模式</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;">NTFS</td>
-<td style="text-align: left;">最近删除</td>
-<td style="text-align: left;">Regular</td>
+<td style="text-align:left">NTFS</td>
+<td style="text-align:left">最近删除</td>
+<td style="text-align:left">Regular</td>
 </tr>
 <tr>
-<td style="text-align: left;">NTFS</td>
-<td style="text-align: left;">前一段时间已删除</td>
-<td style="text-align: left;">广泛</td>
+<td style="text-align:left">NTFS</td>
+<td style="text-align:left">前一段时间已删除</td>
+<td style="text-align:left">广泛</td>
 </tr>
 <tr>
-<td style="text-align: left;">NTFS</td>
-<td style="text-align: left;">格式化磁盘后</td>
-<td style="text-align: left;">广泛</td>
+<td style="text-align:left">NTFS</td>
+<td style="text-align:left">格式化磁盘后</td>
+<td style="text-align:left">广泛</td>
 </tr>
 <tr>
-<td style="text-align: left;">NTFS</td>
-<td style="text-align: left;">损坏的磁盘</td>
-<td style="text-align: left;">广泛</td>
+<td style="text-align:left">NTFS</td>
+<td style="text-align:left">损坏的磁盘</td>
+<td style="text-align:left">广泛</td>
 </tr>
 <tr>
-<td style="text-align: left;">FAT 和 exFAT</td>
-<td style="text-align: left;">任何</td>
-<td style="text-align: left;">广泛</td>
+<td style="text-align:left">FAT 和 exFAT</td>
+<td style="text-align:left">任何</td>
+<td style="text-align:left">广泛</td>
 </tr>
 </tbody>
 </table>
-<h4 id="命令行语法">命令行语法：</h4>
-<p><strong><em>常规语法</em></strong></p>
-<table style="width:100%;">
-
+</div>
+<h4 id="命令行语法："><a href="#命令行语法：" class="headerlink" title="命令行语法："></a>命令行语法：</h4><p><strong><em>常规语法</em></strong></p>
+<div class="table-container">
+<table>
 <thead>
 <tr>
-<th style="text-align: left;"><strong>参数/开关</strong></th>
-<th style="text-align: left;"><strong>说明</strong></th>
-<th style="text-align: left;"><strong>支持的模式</strong></th>
+<th style="text-align:left"><strong>参数/开关</strong></th>
+<th style="text-align:left"><strong>说明</strong></th>
+<th style="text-align:left"><strong>支持的模式</strong></th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;">Source-drive:</td>
-<td
-style="text-align: left;">指定文件丢失的存储设备。必须与目标驱动器不同。</td>
-<td style="text-align: left;">全部</td>
+<td style="text-align:left">Source-drive:</td>
+<td style="text-align:left">指定文件丢失的存储设备。必须与目标驱动器不同。</td>
+<td style="text-align:left">全部</td>
 </tr>
 <tr>
-<td style="text-align: left;">Destination-drive:</td>
-<td
-style="text-align: left;">指定要放置恢复文件的存储设备和文件夹。必须与源驱动器不同。</td>
-<td style="text-align: left;">全部</td>
+<td style="text-align:left">Destination-drive:</td>
+<td style="text-align:left">指定要放置恢复文件的存储设备和文件夹。必须与源驱动器不同。</td>
+<td style="text-align:left">全部</td>
 </tr>
 <tr>
-<td style="text-align: left;">/regular</td>
-<td style="text-align: left;">常规模式，未损坏的 NTFS
-驱动器的标准恢复选项</td>
-<td style="text-align: left;">Regular</td>
+<td style="text-align:left">/regular</td>
+<td style="text-align:left">常规模式，未损坏的 NTFS 驱动器的标准恢复选项</td>
+<td style="text-align:left">Regular</td>
 </tr>
 <tr>
-<td style="text-align: left;">/extensive</td>
-<td
-style="text-align: left;">广泛模式，适用于所有文件系统的彻底恢复选项</td>
-<td style="text-align: left;">广泛</td>
+<td style="text-align:left">/extensive</td>
+<td style="text-align:left">广泛模式，适用于所有文件系统的彻底恢复选项</td>
+<td style="text-align:left">广泛</td>
 </tr>
 <tr>
-<td style="text-align: left;">/n<filter></td>
-<td
-style="text-align: left;">使用文件名、文件路径、文件类型或通配符扫描特定文件。例如：<br>-
-文件名：/n myfile.docx<br>- 文件路径：/n
-/users/&lt;username&gt;/Documents/<br>- 通配符：/n myfile.*、/n
-*.docx、/n <em>&lt;string&gt;</em></td>
-<td style="text-align: left;">全部</td>
+<td style="text-align:left">/n<filter></td>
+<td style="text-align:left">使用文件名、文件路径、文件类型或通配符扫描特定文件。例如：<br>- 文件名：/n myfile.docx<br>- 文件路径：/n /users/\<username\>/Documents/<br>- 通配符：/n myfile.*、/n *.docx、/n <em>\<string\></em></td>
+<td style="text-align:left">全部</td>
 </tr>
 <tr>
-<td style="text-align: left;">/?</td>
-<td style="text-align: left;">一般用户的语法和开关摘要。</td>
-<td style="text-align: left;">全部</td>
+<td style="text-align:left">/?</td>
+<td style="text-align:left">一般用户的语法和开关摘要。</td>
+<td style="text-align:left">全部</td>
 </tr>
 <tr>
-<td style="text-align: left;">/!</td>
-<td style="text-align: left;">高级用户的语法和开关摘要。</td>
-<td style="text-align: left;">全部</td>
+<td style="text-align:left">/!</td>
+<td style="text-align:left">高级用户的语法和开关摘要。</td>
+<td style="text-align:left">全部</td>
 </tr>
 </tbody>
 </table>
+</div>
 <p><strong><em>高级语法</em></strong></p>
-<table style="width:100%;">
-
+<div class="table-container">
+<table>
 <thead>
 <tr>
-<th style="text-align: left;"><strong>开关</strong></th>
-<th style="text-align: left;"><strong>说明</strong></th>
-<th style="text-align: left;"><strong>支持的模式</strong></th>
+<th style="text-align:left"><strong>开关</strong></th>
+<th style="text-align:left"><strong>说明</strong></th>
+<th style="text-align:left"><strong>支持的模式</strong></th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;">/ntfs</td>
-<td style="text-align: left;">NTFS 模式，使用主文件表实现正常 NTFS
-驱动器的快速恢复选项</td>
-<td style="text-align: left;">NTFS</td>
+<td style="text-align:left">/ntfs</td>
+<td style="text-align:left">NTFS 模式，使用主文件表实现正常 NTFS 驱动器的快速恢复选项</td>
+<td style="text-align:left">NTFS</td>
 </tr>
 <tr>
-<td style="text-align: left;">/segment</td>
-<td style="text-align: left;">段模式，使用文件记录段的 NTFS
-驱动器的恢复选项</td>
-<td style="text-align: left;">段</td>
+<td style="text-align:left">/segment</td>
+<td style="text-align:left">段模式，使用文件记录段的 NTFS 驱动器的恢复选项</td>
+<td style="text-align:left">段</td>
 </tr>
 <tr>
-<td style="text-align: left;">/signature</td>
-<td
-style="text-align: left;">使用文件标头的所有文件系统类型的签名模式和恢复选项</td>
-<td style="text-align: left;">签名</td>
+<td style="text-align:left">/signature</td>
+<td style="text-align:left">使用文件标头的所有文件系统类型的签名模式和恢复选项</td>
+<td style="text-align:left">签名</td>
 </tr>
 <tr>
-<td style="text-align: left;">/y:&lt;type(s)&gt;</td>
-<td style="text-align: left;">恢复特定扩展组，逗号分隔</td>
-<td style="text-align: left;">签名</td>
+<td style="text-align:left">/y:<type(s)></td>
+<td style="text-align:left">恢复特定扩展组，逗号分隔</td>
+<td style="text-align:left">签名</td>
 </tr>
 <tr>
-<td style="text-align: left;">/#</td>
-<td style="text-align: left;">签名模式扩展组和支持的文件类型。</td>
-<td style="text-align: left;">签名</td>
+<td style="text-align:left">/#</td>
+<td style="text-align:left">签名模式扩展组和支持的文件类型。</td>
+<td style="text-align:left">签名</td>
 </tr>
 <tr>
-<td style="text-align: left;">/p:<folder></td>
-<td
-style="text-align: left;">将恢复操作的日志文件保存在与恢复驱动器上的默认位置不同的位置（例如，
-D:）。</td>
-<td style="text-align: left;">全部</td>
+<td style="text-align:left">/p:<folder></td>
+<td style="text-align:left">将恢复操作的日志文件保存在与恢复驱动器上的默认位置不同的位置（例如， D:\logfile）。</td>
+<td style="text-align:left">全部</td>
 </tr>
 <tr>
-<td style="text-align: left;">/a</td>
-<td style="text-align: left;">重写用户提示，这在脚本文件中很有用。</td>
-<td style="text-align: left;">全部</td>
+<td style="text-align:left">/a</td>
+<td style="text-align:left">重写用户提示，这在脚本文件中很有用。</td>
+<td style="text-align:left">全部</td>
 </tr>
 <tr>
-<td style="text-align: left;">/u</td>
-<td style="text-align: left;">例如，从回收站中恢复未删除的文件。</td>
-<td style="text-align: left;">NTFS 段</td>
+<td style="text-align:left">/u</td>
+<td style="text-align:left">例如，从回收站中恢复未删除的文件。</td>
+<td style="text-align:left">NTFS 段</td>
 </tr>
 <tr>
-<td style="text-align: left;">/k</td>
-<td style="text-align: left;">恢复系统文件。</td>
-<td style="text-align: left;">NTFS 段</td>
+<td style="text-align:left">/k</td>
+<td style="text-align:left">恢复系统文件。</td>
+<td style="text-align:left">NTFS 段</td>
 </tr>
 <tr>
-<td style="text-align: left;">/o:&lt;a|n|b&gt;</td>
-<td
-style="text-align: left;">指定在选择是否覆盖文件时，是始终（a），从不（n），还是始终保留两者（b）。默认操作是提示覆盖。</td>
-<td style="text-align: left;">NTFS 段</td>
+<td style="text-align:left">/o:&lt;a\</td>
+<td style="text-align:left">n\</td>
+<td style="text-align:left">b&gt;</td>
+<td>指定在选择是否覆盖文件时，是始终（a），从不（n），还是始终保留两者（b）。默认操作是提示覆盖。</td>
+<td>NTFS 段</td>
 </tr>
 <tr>
-<td style="text-align: left;">/g</td>
-<td style="text-align: left;">恢复没有主数据流的文件。</td>
-<td style="text-align: left;">NTFS 段</td>
+<td style="text-align:left">/g</td>
+<td style="text-align:left">恢复没有主数据流的文件。</td>
+<td style="text-align:left">NTFS 段</td>
 </tr>
 <tr>
-<td style="text-align: left;">/e</td>
-<td
-style="text-align: left;">为了保持结果易于管理并专注于用户文件，默认情况下会筛选某些文件类型，但此开关会删除该筛选器。有关这些文件类型的完整列表，请参阅此表后面的信息。</td>
-<td style="text-align: left;">NTFS 段</td>
+<td style="text-align:left">/e</td>
+<td style="text-align:left">为了保持结果易于管理并专注于用户文件，默认情况下会筛选某些文件类型，但此开关会删除该筛选器。有关这些文件类型的完整列表，请参阅此表后面的信息。</td>
+<td style="text-align:left">NTFS 段</td>
 </tr>
 <tr>
-<td style="text-align: left;">/e:<extension></td>
-<td
-style="text-align: left;">指定筛选的文件类型。有关这些文件类型的完整列表，请参阅此表后面的信息。</td>
-<td style="text-align: left;">NTFS 段</td>
+<td style="text-align:left">/e:<extension></td>
+<td style="text-align:left">指定筛选的文件类型。有关这些文件类型的完整列表，请参阅此表后面的信息。</td>
+<td style="text-align:left">NTFS 段</td>
 </tr>
 <tr>
-<td style="text-align: left;">/s:<sectors></td>
-<td
-style="text-align: left;">指定源设备上的扇区数。若要查找扇区信息，请使用
-<a
-target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/fsutil">fsutil</a>。</td>
-<td style="text-align: left;">段、签名</td>
+<td style="text-align:left">/s:<sectors></td>
+<td style="text-align:left">指定源设备上的扇区数。若要查找扇区信息，请使用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/fsutil">fsutil</a>。</td>
+<td style="text-align:left">段、签名</td>
 </tr>
 <tr>
-<td style="text-align: left;">/b:<bytes></td>
-<td style="text-align: left;">指定源设备上（分配单元）群集大小。</td>
-<td style="text-align: left;">段、签名</td>
+<td style="text-align:left">/b:<bytes></td>
+<td style="text-align:left">指定源设备上（分配单元）群集大小。</td>
+<td style="text-align:left">段、签名</td>
 </tr>
 </tbody>
 </table>
+</div>
 <p><strong><em>文件扩展名筛选器列表</em></strong></p>
-<p>默认情况下，将从结果中筛选以下文件类型。使用 <code>/e</code>
-开关禁用此筛选器，或使用 <code>/e:&lt;extension&gt;</code>
-筛选器来指定要筛选的文件类型。</p>
-<p>_, adm, admx, appx, appx, ascx, asm, aspx, aux, ax, bin, browser, c,
-cab, cat cdf-ms, catalogItem, cdxm, cmake, cmd, coffee, config, cp, cpp,
-cs, cshtm, css, cur, dat, dll, et, evtx, exe, fon, gpd, h, hbakedcurve,
-htm, htm, ico, id, ildl, ilpdb, iltoc, iltocpdb, in, inf, inf_loc, ini,
-js, json, lib, lnk, log, man, manifest, map, metadata, mf, mof, msc,
-msi, mui, mui, mum, mun, nls, npmignore, nupkg, nuspec, obj, p7s, p7x,
-pak, pckdep, pdb, pf, pkgdef, plist, pnf, pp, pri, props, ps1, ps1xm,
-psd1, psm1, py, resjson, resw, resx, rl, rs, sha512, snippet, sq, sys,
-t4, targets, th, tlb, tmSnippet, toc, ts, tt, ttf, vb, vbhtm, vbs,
-vsdir, vsix, vsixlangpack, vsixmanifest, vstdir, vstemplate, vstman,
-winmd, xam, xbf, xm, xrm-ms, xs, xsd, ym</p>
-<h4 id="我的操作与结果">我的操作与结果：</h4>
-<p>我选择的恢复命令如下： <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">Winfr C: E: /regular /n E:/<br></code></pre></td></tr></table></figure>
-执行后，软件提示输入<code>Y</code>确认恢复操作。恢复完成后，文件被放在E盘的<code>Recovery_&lt;date and time&gt;</code>文件夹中。</p>
+<p>默认情况下，将从结果中筛选以下文件类型。使用 <code>/e</code> 开关禁用此筛选器，或使用 <code>/e:&lt;extension&gt;</code> 筛选器来指定要筛选的文件类型。</p>
+<p>_, adm, admx, appx, appx, ascx, asm, aspx, aux, ax, bin, browser, c, cab, cat cdf-ms, catalogItem, cdxm, cmake, cmd, coffee, config, cp, cpp, cs, cshtm, css, cur, dat, dll, et, evtx, exe, fon, gpd, h, hbakedcurve, htm, htm, ico, id, ildl, ilpdb, iltoc, iltocpdb, in, inf, inf_loc, ini, js, json, lib, lnk, log, man, manifest, map, metadata, mf, mof, msc, msi, mui, mui, mum, mun, nls, npmignore, nupkg, nuspec, obj, p7s, p7x, pak, pckdep, pdb, pf, pkgdef, plist, pnf, pp, pri, props, ps1, ps1xm, psd1, psm1, py, resjson, resw, resx, rl, rs, sha512, snippet, sq, sys, t4, targets, th, tlb, tmSnippet, toc, ts, tt, ttf, vb, vbhtm, vbs, vsdir, vsix, vsixlangpack, vsixmanifest, vstdir, vstemplate, vstman, winmd, xam, xbf, xm, xrm-ms, xs, xsd, ym</p>
+<h4 id="我的操作与结果："><a href="#我的操作与结果：" class="headerlink" title="我的操作与结果："></a>我的操作与结果：</h4><p>我选择的恢复命令如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">Winfr C: E: /regular /n E:/<br></code></pre></td></tr></table></figure><br>执行后，软件提示输入<code>Y</code>确认恢复操作。恢复完成后，文件被放在E盘的<code>Recovery_&lt;date and time&gt;</code>文件夹中。</p>
 <ul>
 <li>优势：保留了完整的文件结构（包括文件夹层级），一些久未使用的文件夹被完整恢复。</li>
 <li>不足：大部分文件（如PDF、DOCX）打开后显示损坏，仅少数TXT文件和图片能正常打开。</li>
 </ul>
-<h3 id="diskgenius未尝试的专业工具">3.
-DiskGenius（未尝试的专业工具）</h3>
-<p>DiskGenius是一款功能强大的专业数据恢复软件，支持多种文件系统和恢复模式，提供图形界面，操作相对简单。但由于前两次尝试已消耗较多时间，我未进一步尝试。</p>
+<h3 id="3-DiskGenius（未尝试的专业工具）"><a href="#3-DiskGenius（未尝试的专业工具）" class="headerlink" title="3. DiskGenius（未尝试的专业工具）"></a>3. DiskGenius（未尝试的专业工具）</h3><p>DiskGenius是一款功能强大的专业数据恢复软件，支持多种文件系统和恢复模式，提供图形界面，操作相对简单。但由于前两次尝试已消耗较多时间，我未进一步尝试。</p>
 <blockquote>
-<p>官网链接：<a target="_blank" rel="noopener" href="https://www.diskgenius.cn/">DiskGenius
-官方网站</a></p>
+<p>官网链接：<a target="_blank" rel="noopener" href="https://www.diskgenius.cn/">DiskGenius 官方网站</a></p>
 </blockquote>
-<h2 id="四总结与教训">四、总结与教训</h2>
-<p>这次事件让我深刻意识到数据安全的重要性，总结以下教训：</p>
-<h3 id="数据无价操作前务必备份">1. 数据无价，操作前务必备份</h3>
-<p>涉及文件删除、格式化等危险操作时，一定要先备份重要数据。即使是「看似简单」的脚本，也可能因意外导致不可逆的损失。</p>
-<h3 id="谨慎使用ai生成的代码">2. 谨慎使用AI生成的代码</h3>
-<p>AI生成的代码可能存在潜在风险（尤其是文件操作、系统命令类），使用前必须：
-- 逐行检查逻辑（如本次脚本的路径解析漏洞）； -
-在测试环境中验证（用空文件夹或非重要数据测试效果）； -
-明确代码的「边界条件」（如路径不存在时的处理）。</p>
-<p>就像下图的提醒：AI不会为你的错误负责，最终承担损失的是自己。 <img
-src="b53a1b6f950a710f3b2a425e356477b8.jpg" srcset="/img/loading.gif" lazyload /></p>
-<h3 id="数据恢复的注意事项">3. 数据恢复的注意事项</h3>
+<h2 id="四、总结与教训"><a href="#四、总结与教训" class="headerlink" title="四、总结与教训"></a>四、总结与教训</h2><p>这次事件让我深刻意识到数据安全的重要性，总结以下教训：</p>
+<h3 id="1-数据无价，操作前务必备份"><a href="#1-数据无价，操作前务必备份" class="headerlink" title="1. 数据无价，操作前务必备份"></a>1. 数据无价，操作前务必备份</h3><p>涉及文件删除、格式化等危险操作时，一定要先备份重要数据。即使是「看似简单」的脚本，也可能因意外导致不可逆的损失。</p>
+<h3 id="2-谨慎使用AI生成的代码"><a href="#2-谨慎使用AI生成的代码" class="headerlink" title="2. 谨慎使用AI生成的代码"></a>2. 谨慎使用AI生成的代码</h3><p>AI生成的代码可能存在潜在风险（尤其是文件操作、系统命令类），使用前必须：</p>
 <ul>
+<li>逐行检查逻辑（如本次脚本的路径解析漏洞）；</li>
+<li>在测试环境中验证（用空文件夹或非重要数据测试效果）；</li>
+<li>明确代码的「边界条件」（如路径不存在时的处理）。</li>
+</ul>
+<p>就像下图的提醒：AI不会为你的错误负责，最终承担损失的是自己。<br><img src="b53a1b6f950a710f3b2a425e356477b8.jpg" srcset="/img/loading.gif" lazyload alt=""></p>
+<h3 id="3-数据恢复的注意事项"><a href="#3-数据恢复的注意事项" class="headerlink" title="3. 数据恢复的注意事项"></a>3. 数据恢复的注意事项</h3><ul>
 <li>误删后<strong>立即停止对目标磁盘的操作</strong>（避免新数据覆盖原有扇区）；</li>
-<li>优先使用专业工具（如DiskGenius）或官方工具（如Windows File
-Recovery）；</li>
+<li>优先使用专业工具（如DiskGenius）或官方工具（如Windows File Recovery）；</li>
 <li>恢复后需逐一验证文件完整性，不要依赖「恢复成功」的提示。</li>
 </ul>
 <p>希望我的经历能给大家提个醒：对待数据操作，再谨慎也不为过。</p>

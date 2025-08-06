@@ -19,12 +19,12 @@
   <meta name="author" content="Haoran Liao">
   <meta name="keywords" content="Haoran Liao, Sun Yat-sen University, Computer Science, Robotics, Machine Learning, Computer Vision, Teleoperation, Research, SYSU, TypeTele, CoRL">
   
-    <meta name="description" content="DS本地化 一个基于 Tauri 的桌面应用，提供 DeepSeek Chat 的本地化体验。 https:&#x2F;&#x2F;github.com&#x2F;liaohr9&#x2F;DeepSeekApp 项目动因 平时一直有使用网页版 DeepSeek Chat 的习惯，但在浏览器中使用时总感觉不太舒服，经常关闭浏览器的时候就会退出，然后再次载入的时候又丢失了聊天记录，所以就想做一个本地化的桌面应用，让这个网页一直挂">
+    <meta name="description" content="DS本地化一个基于 Tauri 的桌面应用，提供 DeepSeek Chat 的本地化体验。 https:&#x2F;&#x2F;github.com&#x2F;liaohr9&#x2F;DeepSeekApp 项目动因平时一直有使用网页版 DeepSeek Chat 的习惯，但在浏览器中使用时总感觉不太舒服，经常关闭浏览器的时候就会退出，然后再次载入的时候又丢失了聊天记录，所以就想做一个本地化的桌面应用，让这个网页一直挂载后台，随时可">
 <meta property="og:type" content="article">
 <meta property="og:title" content="轻量化DeepSeek本地App">
 <meta property="og:url" content="https://liaohr9.github.io/2025/08/06/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/%E8%BD%BB%E9%87%8F%E5%8C%96DeepSeek%E6%9C%AC%E5%9C%B0App/index.html">
 <meta property="og:site_name" content="Haoran&#39;s homepage">
-<meta property="og:description" content="DS本地化 一个基于 Tauri 的桌面应用，提供 DeepSeek Chat 的本地化体验。 https:&#x2F;&#x2F;github.com&#x2F;liaohr9&#x2F;DeepSeekApp 项目动因 平时一直有使用网页版 DeepSeek Chat 的习惯，但在浏览器中使用时总感觉不太舒服，经常关闭浏览器的时候就会退出，然后再次载入的时候又丢失了聊天记录，所以就想做一个本地化的桌面应用，让这个网页一直挂">
+<meta property="og:description" content="DS本地化一个基于 Tauri 的桌面应用，提供 DeepSeek Chat 的本地化体验。 https:&#x2F;&#x2F;github.com&#x2F;liaohr9&#x2F;DeepSeekApp 项目动因平时一直有使用网页版 DeepSeek Chat 的习惯，但在浏览器中使用时总感觉不太舒服，经常关闭浏览器的时候就会退出，然后再次载入的时候又丢失了聊天记录，所以就想做一个本地化的桌面应用，让这个网页一直挂载后台，随时可">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2025-08-06T04:08:39.000Z">
 <meta property="article:modified_time" content="2025-08-06T10:48:23.899Z">
@@ -309,68 +309,50 @@
             
               <div class="markdown-body">
                 
-                <h1 id="ds本地化">DS本地化</h1>
-<p>一个基于 Tauri 的桌面应用，提供 DeepSeek Chat 的本地化体验。</p>
-<p><a
-target="_blank" rel="noopener" href="https://github.com/liaohr9/DeepSeekApp">https://github.com/liaohr9/DeepSeekApp</a></p>
-<h2 id="项目动因">项目动因</h2>
-<p>平时一直有使用网页版 DeepSeek Chat
-的习惯，但在浏览器中使用时总感觉不太舒服，经常关闭浏览器的时候就会退出，然后再次载入的时候又丢失了聊天记录，所以就想做一个本地化的桌面应用，让这个网页一直挂载后台，随时可以打开和关闭。为了极致的性能、大小和体验，选择了
-Tauri 框架来构建这个应用。</p>
-<h2 id="功能特性">功能特性</h2>
-<ul>
+                <h1 id="DS本地化"><a href="#DS本地化" class="headerlink" title="DS本地化"></a>DS本地化</h1><p>一个基于 Tauri 的桌面应用，提供 DeepSeek Chat 的本地化体验。</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/liaohr9/DeepSeekApp">https://github.com/liaohr9/DeepSeekApp</a></p>
+<h2 id="项目动因"><a href="#项目动因" class="headerlink" title="项目动因"></a>项目动因</h2><p>平时一直有使用网页版 DeepSeek Chat 的习惯，但在浏览器中使用时总感觉不太舒服，经常关闭浏览器的时候就会退出，然后再次载入的时候又丢失了聊天记录，所以就想做一个本地化的桌面应用，让这个网页一直挂载后台，随时可以打开和关闭。为了极致的性能、大小和体验，选择了 Tauri 框架来构建这个应用。</p>
+<h2 id="功能特性"><a href="#功能特性" class="headerlink" title="功能特性"></a>功能特性</h2><ul>
 <li>🖥️ 原生桌面体验</li>
 <li>🎨 无边框窗口设计</li>
 <li>📱 响应式界面 (1200×800)</li>
 <li>🔗 直接访问 DeepSeek Chat</li>
 <li>快捷键支持：Alt + Z 关闭和打开窗口</li>
 </ul>
-<h2 id="技术栈">技术栈</h2>
-<ul>
+<h2 id="技术栈"><a href="#技术栈" class="headerlink" title="技术栈"></a>技术栈</h2><ul>
 <li><strong>前端</strong>: DeepSeek Chat (Web)</li>
 <li><strong>框架</strong>: Tauri 2.0</li>
 <li><strong>语言</strong>: Rust + Web Technologies</li>
 </ul>
-<h2 id="开发">开发</h2>
-<h3 id="环境要求">环境要求</h3>
-<ul>
+<h2 id="开发"><a href="#开发" class="headerlink" title="开发"></a>开发</h2><h3 id="环境要求"><a href="#环境要求" class="headerlink" title="环境要求"></a>环境要求</h3><ul>
 <li>Node.js</li>
 <li>Rust</li>
 <li>Tauri CLI</li>
 </ul>
-<h3 id="安装依赖">安装依赖</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">npm install<br></code></pre></td></tr></table></figure>
-<h3 id="开发模式">开发模式</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">npm run tauri dev<br></code></pre></td></tr></table></figure>
-<h3 id="构建应用">构建应用</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">npm run build<br></code></pre></td></tr></table></figure>
-<h3 id="多平台构建">多平台构建</h3>
-<h4 id="本地构建windows">本地构建（Windows）</h4>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">npm run build                    <span class="hljs-comment"># Windows x64</span><br></code></pre></td></tr></table></figure>
-<h4 id="苹果-m-芯片构建">苹果 M 芯片构建</h4>
-<p>由于交叉编译的复杂性，建议使用 GitHub Actions 进行构建：</p>
-<ol type="1">
+<h3 id="安装依赖"><a href="#安装依赖" class="headerlink" title="安装依赖"></a>安装依赖</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">npm install<br></code></pre></td></tr></table></figure>
+<h3 id="开发模式"><a href="#开发模式" class="headerlink" title="开发模式"></a>开发模式</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">npm run tauri dev<br></code></pre></td></tr></table></figure>
+<h3 id="构建应用"><a href="#构建应用" class="headerlink" title="构建应用"></a>构建应用</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">npm run build<br></code></pre></td></tr></table></figure>
+<h3 id="多平台构建"><a href="#多平台构建" class="headerlink" title="多平台构建"></a>多平台构建</h3><h4 id="本地构建（Windows）"><a href="#本地构建（Windows）" class="headerlink" title="本地构建（Windows）"></a>本地构建（Windows）</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">npm run build                    <span class="hljs-comment"># Windows x64</span><br></code></pre></td></tr></table></figure>
+<h4 id="苹果-M-芯片构建"><a href="#苹果-M-芯片构建" class="headerlink" title="苹果 M 芯片构建"></a>苹果 M 芯片构建</h4><p>由于交叉编译的复杂性，建议使用 GitHub Actions 进行构建：</p>
+<ol>
 <li>推送代码到 GitHub</li>
-<li>创建 tag 触发发布构建： <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">git tag v1.0.0<br>git push origin v1.0.0<br></code></pre></td></tr></table></figure></li>
+<li>创建 tag 触发发布构建：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">git tag v1.0.0<br>git push origin v1.0.0<br></code></pre></td></tr></table></figure></li>
 <li>GitHub Actions 会自动为所有平台（包括苹果 M 芯片）构建并发布</li>
 </ol>
-<h4 id="支持的平台">支持的平台</h4>
-<ul>
+<h4 id="支持的平台"><a href="#支持的平台" class="headerlink" title="支持的平台"></a>支持的平台</h4><ul>
 <li>Windows x64</li>
 <li>macOS Intel (x86_64)</li>
 <li>macOS Apple Silicon (ARM64)</li>
 <li>Linux x64</li>
 </ul>
-<h2 id="配置">配置</h2>
-<p>应用配置位于 <code>src-tauri/tauri.conf.json</code>，主要设置：</p>
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><p>应用配置位于 <code>src-tauri/tauri.conf.json</code>，主要设置：</p>
 <ul>
 <li>产品名称: “ds本地化”</li>
 <li>窗口尺寸: 1200×800</li>
 <li>无边框设计</li>
 <li>直接加载远程内容</li>
 </ul>
-<h2 id="许可证">许可证</h2>
-<p>MIT License</p>
+<h2 id="许可证"><a href="#许可证" class="headerlink" title="许可证"></a>许可证</h2><p>MIT License</p>
 
                 
               </div>
@@ -460,6 +442,12 @@ Tauri 框架来构建这个应用。</p>
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2025/08/07/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/hexo-fluid%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E%E9%AA%8C%E8%AF%81/" title="hexo-fluid搜索引擎验证">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">hexo-fluid搜索引擎验证</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">

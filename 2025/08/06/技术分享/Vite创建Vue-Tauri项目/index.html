@@ -19,12 +19,12 @@
   <meta name="author" content="Haoran Liao">
   <meta name="keywords" content="Haoran Liao, Sun Yat-sen University, Computer Science, Robotics, Machine Learning, Computer Vision, Teleoperation, Research, SYSU, TypeTele, CoRL">
   
-    <meta name="description" content="环境准备 确保已安装: - Node.js (推荐 v20.19.0 或更高版本) - Rust (通过 rustup 安装) 1. 创建Vue项目 使用Vite初始化Vue项目: 1cnpm create vite@latest yourRepoName 完整输出示例: 1234567891011121314Need to install the following package">
+    <meta name="description" content="环境准备确保已安装:  Node.js (推荐 v20.19.0 或更高版本) Rust (通过 rustup 安装)  1. 创建Vue项目使用Vite初始化Vue项目: 1cnpm create vite@latest yourRepoName 完整输出示例: 1234567891011121314Need to install the following packages:  create-">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Vite创建Vue + Tauri项目">
 <meta property="og:url" content="https://liaohr9.github.io/2025/08/06/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/Vite%E5%88%9B%E5%BB%BAVue-Tauri%E9%A1%B9%E7%9B%AE/index.html">
 <meta property="og:site_name" content="Haoran&#39;s homepage">
-<meta property="og:description" content="环境准备 确保已安装: - Node.js (推荐 v20.19.0 或更高版本) - Rust (通过 rustup 安装) 1. 创建Vue项目 使用Vite初始化Vue项目: 1cnpm create vite@latest yourRepoName 完整输出示例: 1234567891011121314Need to install the following package">
+<meta property="og:description" content="环境准备确保已安装:  Node.js (推荐 v20.19.0 或更高版本) Rust (通过 rustup 安装)  1. 创建Vue项目使用Vite初始化Vue项目: 1cnpm create vite@latest yourRepoName 完整输出示例: 1234567891011121314Need to install the following packages:  create-">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2025-08-06T03:25:52.000Z">
 <meta property="article:modified_time" content="2025-08-06T10:48:23.899Z">
@@ -309,38 +309,31 @@
             
               <div class="markdown-body">
                 
-                <h1 id="环境准备">环境准备</h1>
-<p>确保已安装: - Node.js (推荐 v20.19.0 或更高版本) - Rust (通过 rustup
-安装)</p>
-<h1 id="创建vue项目">1. 创建Vue项目</h1>
-<p>使用Vite初始化Vue项目:</p>
+                <h1 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h1><p>确保已安装:</p>
+<ul>
+<li>Node.js (推荐 v20.19.0 或更高版本)</li>
+<li>Rust (通过 rustup 安装)</li>
+</ul>
+<h1 id="1-创建Vue项目"><a href="#1-创建Vue项目" class="headerlink" title="1. 创建Vue项目"></a>1. 创建Vue项目</h1><p>使用Vite初始化Vue项目:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">cnpm create vite@latest yourRepoName<br></code></pre></td></tr></table></figure>
 <p>完整输出示例:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs bash">Need to install the following packages:<br>  create-vite@7.0.3<br>Ok to proceed? (y) y<br><br>✔ Select a framework: › Vue<br>✔ Select a variant: › TypeScript<br><br>Scaffolding project <span class="hljs-keyword">in</span> /path/to/yourRepoName...<br><br>Done. Now run:<br><br>  <span class="hljs-built_in">cd</span> yourRepoName<br>  npm install<br>  npm run dev<br></code></pre></td></tr></table></figure>
-<h1 id="安装tauri依赖">2. 安装Tauri依赖</h1>
-<p>进入项目目录并安装Tauri CLI:</p>
+<h1 id="2-安装Tauri依赖"><a href="#2-安装Tauri依赖" class="headerlink" title="2. 安装Tauri依赖"></a>2. 安装Tauri依赖</h1><p>进入项目目录并安装Tauri CLI:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> yourRepoName<br>cnpm install -D @tauri-apps/cli@next<br></code></pre></td></tr></table></figure>
-<h1 id="初始化tauri配置">3. 初始化Tauri配置</h1>
-<p>运行初始化命令:</p>
+<h1 id="3-初始化Tauri配置"><a href="#3-初始化Tauri配置" class="headerlink" title="3. 初始化Tauri配置"></a>3. 初始化Tauri配置</h1><p>运行初始化命令:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">npx tauri init<br></code></pre></td></tr></table></figure>
 <p>完整交互过程:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash">✔ What is your app name? · yourAppName<br>✔ What should the window title be? · yourAppName<br>✔ Where are your web assets located? · ../dist<br>✔ What is the url of your dev server? · http://localhost:3000<br>✔ What is your frontend dev <span class="hljs-built_in">command</span>? · npm run dev<br>✔ What is your frontend build <span class="hljs-built_in">command</span>? · npm run build<br></code></pre></td></tr></table></figure>
-<h1 id="安装项目依赖">4. 安装项目依赖</h1>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">cnpm install<br></code></pre></td></tr></table></figure>
-<h1 id="rust镜像配置可选">5. Rust镜像配置(可选)</h1>
-<p>对于国内用户，可以设置Rust镜像加速:</p>
+<h1 id="4-安装项目依赖"><a href="#4-安装项目依赖" class="headerlink" title="4. 安装项目依赖"></a>4. 安装项目依赖</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">cnpm install<br></code></pre></td></tr></table></figure>
+<h1 id="5-Rust镜像配置-可选"><a href="#5-Rust镜像配置-可选" class="headerlink" title="5. Rust镜像配置(可选)"></a>5. Rust镜像配置(可选)</h1><p>对于国内用户，可以设置Rust镜像加速:</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs powershell"><span class="hljs-comment"># Windows PowerShell</span><br><span class="hljs-variable">$ENV:RUSTUP_DIST_SERVER</span>=<span class="hljs-string">&#x27;https://mirrors.ustc.edu.cn/rust-static&#x27;</span><br><span class="hljs-variable">$ENV:RUSTUP_UPDATE_ROOT</span>=<span class="hljs-string">&#x27;https://mirrors.ustc.edu.cn/rust-static/rustup&#x27;</span><br></code></pre></td></tr></table></figure>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># Linux/macOS</span><br><span class="hljs-built_in">export</span> RUSTUP_DIST_SERVER=https://mirrors.ustc.edu.cn/rust-static<br><span class="hljs-built_in">export</span> RUSTUP_UPDATE_ROOT=https://mirrors.ustc.edu.cn/rust-static/rustup<br></code></pre></td></tr></table></figure>
-<h2 id="项目结构说明">项目结构说明</h2>
-<p>初始化完成后，典型项目结构如下:</p>
+<h2 id="项目结构说明"><a href="#项目结构说明" class="headerlink" title="项目结构说明"></a>项目结构说明</h2><p>初始化完成后，典型项目结构如下:</p>
 <figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs stylus">yourRepoName/<br>├── node_modules/<br>├── public/<br>├── <span class="hljs-attribute">src</span>/<br>│   ├── assets/<br>│   ├── components/<br>│   └── App<span class="hljs-selector-class">.vue</span><br>├── <span class="hljs-attribute">src</span>-tauri/<br>│   ├── Cargo<span class="hljs-selector-class">.toml</span><br>│   ├── tauri<span class="hljs-selector-class">.conf</span><span class="hljs-selector-class">.json</span><br>│   └── <span class="hljs-attribute">src</span>/<br>│       └── <span class="hljs-selector-tag">main</span><span class="hljs-selector-class">.rs</span><br>├── package<span class="hljs-selector-class">.json</span><br>├── tsconfig<span class="hljs-selector-class">.json</span><br>└── vite<span class="hljs-selector-class">.config</span>.ts<br></code></pre></td></tr></table></figure>
-<h2 id="常用命令">常用命令</h2>
-<p><strong>开发模式:</strong> <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">npm run dev<br></code></pre></td></tr></table></figure></p>
-<p><strong>构建Web应用:</strong> <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">npm run build<br></code></pre></td></tr></table></figure></p>
-<p><strong>构建Tauri应用:</strong> <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">npx tauri build<br></code></pre></td></tr></table></figure>
-首次可能很慢，因为需要下载Rust工具链。</p>
-<h2 id="注意事项">注意事项</h2>
-<ol type="1">
+<h2 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h2><p><strong>开发模式:</strong><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">npm run dev<br></code></pre></td></tr></table></figure></p>
+<p><strong>构建Web应用:</strong><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">npm run build<br></code></pre></td></tr></table></figure></p>
+<p><strong>构建Tauri应用:</strong><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">npx tauri build<br></code></pre></td></tr></table></figure><br>首次可能很慢，因为需要下载Rust工具链。</p>
+<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><ol>
 <li>确保Node.js版本符合要求</li>
 <li>首次构建可能需要较长时间下载Rust工具链</li>
 <li>如果遇到网络问题，建议配置国内镜像源</li>

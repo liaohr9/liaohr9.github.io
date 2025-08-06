@@ -19,22 +19,25 @@
   <meta name="author" content="Haoran Liao">
   <meta name="keywords" content="Haoran Liao, Sun Yat-sen University, Computer Science, Robotics, Machine Learning, Computer Vision, Teleoperation, Research, SYSU, TypeTele, CoRL">
   
-    <meta name="description" content="GDB（GNU Debugger）提供了丰富的调试命令，涵盖代码运行、断点管理、变量查看、堆栈分析等多个方面。以下是 GDB 的所有主要调试命令，按类别分类：  1. 启动和退出    命令 说明     gdb program 调试可执行文件 program   gdb --args program arg1 arg2 传递参数给 program   gdb -p PID 附加到进程 PID">
+    <meta name="description" content="Hexo搜索引擎验证 本文记录了我在给 Hexo 博客添加 Google 和 Bing 搜索引擎验证过程中踩过的坑，以及最终找到的 优雅解法。 适配 Hexo 5.x + Fluid 主题   官网申请验证 📘 Google Search Console：https:&#x2F;&#x2F;search.google.com&#x2F;search-console 📘 Bing Webmaster Tools：https:">
 <meta property="og:type" content="article">
-<meta property="og:title" content="gdb常用指令">
-<meta property="og:url" content="https://liaohr9.github.io/2025/08/04/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/gdb%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/index.html">
+<meta property="og:title" content="hexo-fluid搜索引擎验证">
+<meta property="og:url" content="https://liaohr9.github.io/2025/08/07/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/hexo-fluid%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E%E9%AA%8C%E8%AF%81/index.html">
 <meta property="og:site_name" content="Haoran&#39;s homepage">
-<meta property="og:description" content="GDB（GNU Debugger）提供了丰富的调试命令，涵盖代码运行、断点管理、变量查看、堆栈分析等多个方面。以下是 GDB 的所有主要调试命令，按类别分类：  1. 启动和退出    命令 说明     gdb program 调试可执行文件 program   gdb --args program arg1 arg2 传递参数给 program   gdb -p PID 附加到进程 PID">
+<meta property="og:description" content="Hexo搜索引擎验证 本文记录了我在给 Hexo 博客添加 Google 和 Bing 搜索引擎验证过程中踩过的坑，以及最终找到的 优雅解法。 适配 Hexo 5.x + Fluid 主题   官网申请验证 📘 Google Search Console：https:&#x2F;&#x2F;search.google.com&#x2F;search-console 📘 Bing Webmaster Tools：https:">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2025-08-03T19:08:28.000Z">
-<meta property="article:modified_time" content="2025-08-06T10:48:23.900Z">
+<meta property="og:image" content="https://liaohr9.github.io/2025/08/07/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/hexo-fluid%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E%E9%AA%8C%E8%AF%81/gg.jpg">
+<meta property="og:image" content="https://liaohr9.github.io/2025/08/07/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/hexo-fluid%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E%E9%AA%8C%E8%AF%81/bing.jpg">
+<meta property="article:published_time" content="2025-08-06T16:19:26.000Z">
+<meta property="article:modified_time" content="2025-08-06T16:41:07.344Z">
 <meta property="article:author" content="Haoran Liao">
-<meta property="article:tag" content="GDB">
+<meta property="article:tag" content="hexo-fluid搜索引擎">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://liaohr9.github.io/2025/08/07/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/hexo-fluid%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E%E9%AA%8C%E8%AF%81/gg.jpg">
   
   
   
-  <title>gdb常用指令 - Haoran&#39;s homepage</title>
+  <title>hexo-fluid搜索引擎验证 - Haoran&#39;s homepage</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -224,7 +227,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="gdb常用指令"></span>
+            <span id="subtitle" data-typed-text="hexo-fluid搜索引擎验证"></span>
           
         </div>
 
@@ -235,8 +238,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-08-04 03:08" pubdate>
-          August 4, 2025 am
+        <time datetime="2025-08-07 00:19" pubdate>
+          August 7, 2025 am
         </time>
       </span>
     
@@ -247,7 +250,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          721 words
+          734 words
         
       </span>
     
@@ -304,464 +307,64 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">gdb常用指令</h1>
+            <h1 id="seo-header">hexo-fluid搜索引擎验证</h1>
             
             
               <div class="markdown-body">
                 
-                <p>GDB（GNU Debugger）提供了丰富的调试命令，涵盖代码运行、断点管理、变量查看、堆栈分析等多个方面。以下是 GDB 的所有主要调试命令，按类别分类：</p>
+                <h1 id="Hexo搜索引擎验证"><a href="#Hexo搜索引擎验证" class="headerlink" title="Hexo搜索引擎验证"></a>Hexo搜索引擎验证</h1><blockquote>
+<p>本文记录了我在给 Hexo 博客添加 Google 和 Bing 搜索引擎验证过程中踩过的坑，以及最终找到的 <strong>优雅解法</strong>。</p>
+<p>适配 Hexo 5.x + Fluid 主题</p>
+</blockquote>
 <hr>
-<h2 id="1-启动和退出"><a href="#1-启动和退出" class="headerlink" title="1. 启动和退出"></a>1. <strong>启动和退出</strong></h2><div class="table-container">
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>gdb program</code></td>
-<td>调试可执行文件 <code>program</code></td>
-</tr>
-<tr>
-<td><code>gdb --args program arg1 arg2</code></td>
-<td>传递参数给 <code>program</code></td>
-</tr>
-<tr>
-<td><code>gdb -p PID</code></td>
-<td>附加到进程 PID</td>
-</tr>
-<tr>
-<td><code>q</code> / <code>quit</code></td>
-<td>退出 GDB</td>
-</tr>
-</tbody>
-</table>
-</div>
+<h2 id="官网申请验证"><a href="#官网申请验证" class="headerlink" title="官网申请验证"></a>官网申请验证</h2><ul>
+<li>📘 Google Search Console：<a target="_blank" rel="noopener" href="https://search.google.com/search-console">https://search.google.com/search-console</a></li>
+<li>📘 Bing Webmaster Tools：<a target="_blank" rel="noopener" href="https://www.bing.com/webmasters/">https://www.bing.com/webmasters/</a></li>
+</ul>
+<p>去官方网站，注册登录，然后选择URL方式，输入你的网址，然后选择用meta标签验证。</p>
+<h2 id="注入meta验证"><a href="#注入meta验证" class="headerlink" title="注入meta验证"></a>注入meta验证</h2><h3 id="失败尝试"><a href="#失败尝试" class="headerlink" title="失败尝试"></a>失败尝试</h3><h4 id="❌-方法-1：使用-hexo-inject-插件注入-lt-meta-gt"><a href="#❌-方法-1：使用-hexo-inject-插件注入-lt-meta-gt" class="headerlink" title="❌ 方法 1：使用 hexo-inject 插件注入 &lt;meta&gt;"></a>❌ 方法 1：使用 <code>hexo-inject</code> 插件注入 <code>&lt;meta&gt;</code></h4><p>网上很多老教程推荐用 <code>hexo-inject</code> 插件来在 <code>&lt;head&gt;</code> 里注入 meta 标签，比如：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs js">hexo.<span class="hljs-property">extend</span>.<span class="hljs-property">injector</span>.<span class="hljs-title function_">register</span>(<br>  <span class="hljs-string">&#x27;head_begin&#x27;</span>,<br>  <span class="hljs-string">&#x27;&lt;meta name=&quot;google-site-verification&quot; content=&quot;xxx&quot; /&gt;&#x27;</span>,<br>  <span class="hljs-string">&#x27;default&#x27;</span><br>);<br></code></pre></td></tr></table></figure>
+<p>但是，这个方法 <strong>在 Hexo 5.x + Fluid 主题下是无效的</strong>，原因如下：</p>
+<ul>
+<li><code>hexo-inject</code> 插件已经 <strong>多年未维护</strong>，对新版本不兼容</li>
+<li>Hexo 和主题都已经内置了更强大的注入机制，插件反而冲突</li>
+</ul>
+<h4 id="❌-方法-2：直接改config"><a href="#❌-方法-2：直接改config" class="headerlink" title="❌ 方法 2：直接改config"></a>❌ 方法 2：直接改config</h4><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">google_site_verification:</span> <span class="hljs-string">qZ_SWeFH1DKuHoF65EsrPOowD_ekRYBX5hTT2MDf06A</span><br></code></pre></td></tr></table></figure>
+<p>这个方法可以注入，但是注入的位置在body，而谷歌要求 meta 标签必须在 <code>&lt;head&gt;</code> 中，所以失败。</p>
 <hr>
-<h2 id="2-运行程序"><a href="#2-运行程序" class="headerlink" title="2. 运行程序"></a>2. <strong>运行程序</strong></h2><div class="table-container">
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>r</code> / <code>run [args]</code></td>
-<td>运行程序，可传递参数</td>
-</tr>
-<tr>
-<td><code>start</code></td>
-<td>启动程序并停在 <code>main()</code> 之前</td>
-</tr>
-<tr>
-<td><code>kill</code></td>
-<td>终止正在调试的程序</td>
-</tr>
-</tbody>
-</table>
-</div>
+<h3 id="✅-正确姿势：Hexo-内置注入-JS-文件注入-meta-标签"><a href="#✅-正确姿势：Hexo-内置注入-JS-文件注入-meta-标签" class="headerlink" title="✅ 正确姿势：Hexo 内置注入 + JS 文件注入 meta 标签"></a>✅ 正确姿势：Hexo 内置注入 + JS 文件注入 meta 标签</h3><p>在<code>项目根目录/scripts/</code>中创建一个 JS 文件，动态注入 meta 标签到 <code>&lt;head&gt;</code> 中。（名字随意啦）</p>
+<p>内容如下</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs js">hexo.<span class="hljs-property">extend</span>.<span class="hljs-property">injector</span>.<span class="hljs-title function_">register</span>(<br>  <span class="hljs-string">&#x27;head_begin&#x27;</span>,<br>  <span class="hljs-string">&#x27;&lt;meta name=&quot;google-site-verification&quot; content=&quot;qZ_SWeFH****************5hTT2MDf06A&quot; /&gt;&#x27;</span>,<br>  <span class="hljs-string">&#x27;default&#x27;</span><br>);<br></code></pre></td></tr></table></figure>
+<p>然后即可，他会自己注入</p>
+<p>生成代码</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">hexo clean &amp;&amp; hexo g<br></code></pre></td></tr></table></figure>
+<p>在浏览器中查看网页源码，确认 <code>&lt;head&gt;</code> 中已经有了 Google 的验证 meta 标签。</p>
+<h3 id="✅-一、Google-站点验证"><a href="#✅-一、Google-站点验证" class="headerlink" title="✅ 一、Google 站点验证"></a>✅ 一、Google 站点验证</h3><p>部署完成后，浏览器访问你的网站，查看网页源码，确认看到：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;google-site-verification&quot;</span> <span class="hljs-attr">content</span>=<span class="hljs-string">&quot;qZ_SWeFH1DKuHo****************hTT2MDf06A&quot;</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<p>Google Search Console 验证通过 ✅</p>
 <hr>
-<h2 id="3-断点（Breakpoints）"><a href="#3-断点（Breakpoints）" class="headerlink" title="3. 断点（Breakpoints）"></a>3. <strong>断点（Breakpoints）</strong></h2><div class="table-container">
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>b</code> / <code>break func_name</code></td>
-<td>在函数 <code>func_name</code> 处设置断点</td>
-</tr>
-<tr>
-<td><code>b line_number</code></td>
-<td>在当前源文件的 <code>line_number</code> 处设置断点</td>
-</tr>
-<tr>
-<td><code>b file:line</code></td>
-<td>在指定文件 <code>file</code> 的 <code>line</code> 行处设置断点</td>
-</tr>
-<tr>
-<td><code>b *address</code></td>
-<td>在内存地址 <code>address</code> 处设置断点</td>
-</tr>
-<tr>
-<td><code>info breakpoints</code></td>
-<td>显示所有断点</td>
-</tr>
-<tr>
-<td><code>delete [num]</code></td>
-<td>删除编号为 <code>num</code> 的断点（默认删除所有断点）</td>
-</tr>
-<tr>
-<td><code>clear func_name</code></td>
-<td>清除函数 <code>func_name</code> 的断点</td>
-</tr>
-<tr>
-<td><code>clear file:line</code></td>
-<td>清除 <code>file</code> 文件 <code>line</code> 行的断点</td>
-</tr>
-<tr>
-<td><code>enable [num]</code></td>
-<td>启用编号为 <code>num</code> 的断点</td>
-</tr>
-<tr>
-<td><code>disable [num]</code></td>
-<td>禁用编号为 <code>num</code> 的断点</td>
-</tr>
-<tr>
-<td><code>condition num expr</code></td>
-<td>仅当 <code>expr</code> 为真时，触发编号为 <code>num</code> 的断点</td>
-</tr>
-</tbody>
-</table>
-</div>
+<h3 id="✅-二、Bing-站点验证（Fluid-主题不支持，需要手动-JS-注入）"><a href="#✅-二、Bing-站点验证（Fluid-主题不支持，需要手动-JS-注入）" class="headerlink" title="✅ 二、Bing 站点验证（Fluid 主题不支持，需要手动 JS 注入）"></a>✅ 二、Bing 站点验证（Fluid 主题不支持，需要手动 JS 注入）</h3><p>Fluid 没有 Bing 验证的内置字段。Bing 要求也在 <code>&lt;head&gt;</code> 注入一段：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;msvalidate.01&quot;</span> <span class="hljs-attr">content</span>=<span class="hljs-string">&quot;XXXXXX&quot;</span> /&gt;</span><br></code></pre></td></tr></table></figure>
+<p>但是bing可以选择从谷歌导入，于是乎省去了很多麻烦</p>
 <hr>
-<h2 id="4-观察点（Watchpoints）"><a href="#4-观察点（Watchpoints）" class="headerlink" title="4. 观察点（Watchpoints）"></a>4. <strong>观察点（Watchpoints）</strong></h2><div class="table-container">
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>watch var</code></td>
-<td>监视变量 <code>var</code> 变化时暂停</td>
-</tr>
-<tr>
-<td><code>rwatch var</code></td>
-<td>变量 <code>var</code> 被读取时暂停</td>
-</tr>
-<tr>
-<td><code>awatch var</code></td>
-<td>变量 <code>var</code> 被读/写时暂停</td>
-</tr>
-<tr>
-<td><code>info watchpoints</code></td>
-<td>显示所有监视点</td>
-</tr>
-<tr>
-<td><code>delete watch num</code></td>
-<td>删除编号为 <code>num</code> 的监视点</td>
-</tr>
-</tbody>
-</table>
-</div>
+<h2 id="sitemap"><a href="#sitemap" class="headerlink" title="sitemap"></a>sitemap</h2><p>申请验证之后还要等很久，主动导入sitemap会快很多</p>
+<h3 id="✅-一、生成-sitemap"><a href="#✅-一、生成-sitemap" class="headerlink" title="✅ 一、生成 sitemap"></a>✅ 一、生成 sitemap</h3><p>在 Hexo 中生成 sitemap 非常简单，只需安装 <code>hexo-generator-sitemap</code> 插件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">npm install hexo-generator-sitemap --save<br></code></pre></td></tr></table></figure>
+<p>添加到网站根目录的 <code>_config.yml</code> 文件中：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-comment"># SEO and Sitemap</span><br><span class="hljs-attr">sitemap:</span><br>  <span class="hljs-attr">path:</span> <span class="hljs-string">sitemap.xml</span> <span class="hljs-comment"># 文件名</span><br>  <span class="hljs-attr">rel:</span> <span class="hljs-literal">true</span>         <span class="hljs-comment"># 在 &lt;head&gt; 里插入 rel=&quot;sitemap&quot;</span><br>  <span class="hljs-attr">tags:</span> <span class="hljs-literal">true</span>        <span class="hljs-comment"># 在 sitemap 中包含标签</span><br>  <span class="hljs-attr">categories:</span> <span class="hljs-literal">true</span>  <span class="hljs-comment"># 在 sitemap 中包含分类  </span><br>  <span class="hljs-attr">publications:</span> <span class="hljs-literal">true</span> <span class="hljs-comment"># 生成的 sitemap 是否包含公开的页面</span><br></code></pre></td></tr></table></figure>
+<p>生成并部署 sitemap：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">hexo clean &amp;&amp; hexo g<br></code></pre></td></tr></table></figure>
+<h3 id="✅-二、提交-sitemap"><a href="#✅-二、提交-sitemap" class="headerlink" title="✅ 二、提交 sitemap"></a>✅ 二、提交 sitemap</h3><p>在 Google Search Console 和 Bing Webmaster Tools 中，分别提交你的 sitemap URL：</p>
+<p>然后静静等待，搜索引擎会自动抓取你的网站，收录你的内容。</p>
+<p><img src="gg.jpg" srcset="/img/loading.gif" lazyload alt=""></p>
+<p><img src="bing.jpg" srcset="/img/loading.gif" lazyload alt=""></p>
+<h2 id="📎-相关资源-amp-参考链接"><a href="#📎-相关资源-amp-参考链接" class="headerlink" title="📎 相关资源 &amp; 参考链接"></a>📎 相关资源 &amp; 参考链接</h2><ul>
+<li>📘 Google Search Console：<a target="_blank" rel="noopener" href="https://search.google.com/search-console">https://search.google.com/search-console</a></li>
+<li>📘 Bing Webmaster Tools：<a target="_blank" rel="noopener" href="https://www.bing.com/webmasters/">https://www.bing.com/webmasters/</a></li>
+<li>💡 Fluid 官方文档：<a target="_blank" rel="noopener" href="https://hexo.fluid-dev.com/docs/">https://hexo.fluid-dev.com/docs/</a></li>
+<li>🧪 插件 hexo-inject（已弃用）：<a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo-inject">https://github.com/hexojs/hexo-inject</a></li>
+</ul>
 <hr>
-<h2 id="5-单步执行（Stepping）"><a href="#5-单步执行（Stepping）" class="headerlink" title="5. 单步执行（Stepping）"></a>5. <strong>单步执行（Stepping）</strong></h2><div class="table-container">
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>s</code> / <code>step</code></td>
-<td>单步执行代码（进入函数内部）</td>
-</tr>
-<tr>
-<td><code>n</code> / <code>next</code></td>
-<td>单步执行代码（不进入函数内部）</td>
-</tr>
-<tr>
-<td><code>finish</code></td>
-<td>运行到当前函数返回</td>
-</tr>
-<tr>
-<td><code>until</code></td>
-<td>运行到当前代码块结束</td>
-</tr>
-</tbody>
-</table>
-</div>
-<hr>
-<h2 id="6-继续执行"><a href="#6-继续执行" class="headerlink" title="6. 继续执行"></a>6. <strong>继续执行</strong></h2><div class="table-container">
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>c</code> / <code>continue</code></td>
-<td>继续执行到下一个断点</td>
-</tr>
-<tr>
-<td><code>jump line</code></td>
-<td>跳转到 <code>line</code> 行执行</td>
-</tr>
-</tbody>
-</table>
-</div>
-<hr>
-<h2 id="7-堆栈（Stack）"><a href="#7-堆栈（Stack）" class="headerlink" title="7. 堆栈（Stack）"></a>7. <strong>堆栈（Stack）</strong></h2><div class="table-container">
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>bt</code> / <code>backtrace</code></td>
-<td>显示当前调用栈</td>
-</tr>
-<tr>
-<td><code>bt full</code></td>
-<td>显示完整的调用栈（包含参数和变量）</td>
-</tr>
-<tr>
-<td><code>frame num</code></td>
-<td>切换到编号 <code>num</code> 的栈帧</td>
-</tr>
-<tr>
-<td><code>up</code></td>
-<td>向上移动一层栈帧</td>
-</tr>
-<tr>
-<td><code>down</code></td>
-<td>向下移动一层栈帧</td>
-</tr>
-</tbody>
-</table>
-</div>
-<hr>
-<h2 id="8-打印变量"><a href="#8-打印变量" class="headerlink" title="8. 打印变量"></a>8. <strong>打印变量</strong></h2><div class="table-container">
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>p</code> / <code>print expr</code></td>
-<td>打印表达式 <code>expr</code> 的值</td>
-</tr>
-<tr>
-<td><code>ptype var</code></td>
-<td>显示变量 <code>var</code> 的类型</td>
-</tr>
-<tr>
-<td><code>whatis var</code></td>
-<td>显示变量 <code>var</code> 的类型</td>
-</tr>
-<tr>
-<td><code>x addr</code></td>
-<td>以十六进制格式查看 <code>addr</code> 处的内存</td>
-</tr>
-<tr>
-<td><code>x/4x addr</code></td>
-<td>以十六进制显示 <code>addr</code> 处的 4 个单位数据</td>
-</tr>
-</tbody>
-</table>
-</div>
-<hr>
-<h2 id="9-寄存器"><a href="#9-寄存器" class="headerlink" title="9. 寄存器"></a>9. <strong>寄存器</strong></h2><div class="table-container">
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>info registers</code></td>
-<td>显示所有寄存器的值</td>
-</tr>
-<tr>
-<td><code>p $eax</code></td>
-<td>打印寄存器 <code>eax</code> 的值</td>
-</tr>
-</tbody>
-</table>
-</div>
-<hr>
-<h2 id="10-信号（Signals）"><a href="#10-信号（Signals）" class="headerlink" title="10. 信号（Signals）"></a>10. <strong>信号（Signals）</strong></h2><div class="table-container">
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>handle SIGSEGV stop</code></td>
-<td>在 <code>SIGSEGV</code> 信号触发时暂停</td>
-</tr>
-<tr>
-<td><code>handle SIGINT nostop</code></td>
-<td>忽略 <code>SIGINT</code> 信号</td>
-</tr>
-</tbody>
-</table>
-</div>
-<hr>
-<h2 id="11-调试共享库"><a href="#11-调试共享库" class="headerlink" title="11. 调试共享库"></a>11. <strong>调试共享库</strong></h2><div class="table-container">
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>info sharedlibrary</code></td>
-<td>显示加载的共享库</td>
-</tr>
-<tr>
-<td><code>set solib-search-path path</code></td>
-<td>设置共享库搜索路径</td>
-</tr>
-</tbody>
-</table>
-</div>
-<hr>
-<h2 id="12-修改变量"><a href="#12-修改变量" class="headerlink" title="12. 修改变量"></a>12. <strong>修改变量</strong></h2><div class="table-container">
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>set var = value</code></td>
-<td>修改变量值</td>
-</tr>
-<tr>
-<td><code>set $eax = 0x1234</code></td>
-<td>修改寄存器值</td>
-</tr>
-</tbody>
-</table>
-</div>
-<hr>
-<h2 id="13-附加进程"><a href="#13-附加进程" class="headerlink" title="13. 附加进程"></a>13. <strong>附加进程</strong></h2><div class="table-container">
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>attach PID</code></td>
-<td>附加到进程 <code>PID</code></td>
-</tr>
-<tr>
-<td><code>detach</code></td>
-<td>断开调试进程</td>
-</tr>
-</tbody>
-</table>
-</div>
-<hr>
-<h2 id="14-线程调试"><a href="#14-线程调试" class="headerlink" title="14. 线程调试"></a>14. <strong>线程调试</strong></h2><div class="table-container">
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>info threads</code></td>
-<td>显示所有线程</td>
-</tr>
-<tr>
-<td><code>thread num</code></td>
-<td>切换到 <code>num</code> 号线程</td>
-</tr>
-<tr>
-<td><code>thread apply all cmd</code></td>
-<td>对所有线程执行 <code>cmd</code></td>
-</tr>
-</tbody>
-</table>
-</div>
-<hr>
-<h2 id="15-脚本"><a href="#15-脚本" class="headerlink" title="15. 脚本"></a>15. <strong>脚本</strong></h2><div class="table-container">
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>source file</code></td>
-<td>运行 <code>file</code> 中的 GDB 命令</td>
-</tr>
-<tr>
-<td><code>define cmd</code></td>
-<td>自定义命令</td>
-</tr>
-<tr>
-<td><code>document cmd</code></td>
-<td>添加自定义命令的文档</td>
-</tr>
-<tr>
-<td><code>save breakpoints file</code></td>
-<td>将断点信息保存到 <code>file</code></td>
-</tr>
-</tbody>
-</table>
-</div>
-<hr>
-<h2 id="16-GDB-调试-TUI-模式"><a href="#16-GDB-调试-TUI-模式" class="headerlink" title="16. GDB 调试 TUI 模式"></a>16. <strong>GDB 调试 TUI 模式</strong></h2><div class="table-container">
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>layout src</code></td>
-<td>显示源码窗口</td>
-</tr>
-<tr>
-<td><code>layout asm</code></td>
-<td>显示汇编窗口</td>
-</tr>
-<tr>
-<td><code>layout regs</code></td>
-<td>显示寄存器窗口</td>
-</tr>
-<tr>
-<td><code>tui enable</code></td>
-<td>启用 TUI 模式</td>
-</tr>
-<tr>
-<td><code>tui disable</code></td>
-<td>禁用 TUI 模式</td>
-</tr>
-</tbody>
-</table>
-</div>
 
                 
               </div>
@@ -795,7 +398,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/GDB/" class="print-no-link">#GDB</a>
+        <a href="/tags/hexo-fluid%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E/" class="print-no-link">#hexo-fluid搜索引擎</a>
       
     </div>
   
@@ -807,8 +410,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>gdb常用指令</div>
-      <div>https://liaohr9.github.io/2025/08/04/技术分享/gdb常用指令/</div>
+      <div>hexo-fluid搜索引擎验证</div>
+      <div>https://liaohr9.github.io/2025/08/07/技术分享/hexo-fluid搜索引擎验证/</div>
     </div>
     <div class="license-meta">
       
@@ -820,7 +423,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>Posted on</div>
-          <div>August 4, 2025</div>
+          <div>August 7, 2025</div>
         </div>
       
       
@@ -852,18 +455,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2025/08/04/%E7%94%9F%E6%B4%BB%E9%9A%8F%E7%AC%94/%E6%91%86%E8%84%B1%E5%BF%99%E7%A2%8C%E7%84%A6%E8%99%91/" title="摆脱忙碌焦虑">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">摆脱忙碌焦虑</span>
-                        <span class="visible-mobile">Previous</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2025/08/04/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E9%9A%8F%E6%9C%BA%E8%BF%87%E7%A8%8B/" title="随机过程">
-                        <span class="hidden-mobile">随机过程</span>
+                      <a href="/2025/08/06/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/%E8%BD%BB%E9%87%8F%E5%8C%96DeepSeek%E6%9C%AC%E5%9C%B0App/" title="轻量化DeepSeek本地App">
+                        <span class="hidden-mobile">轻量化DeepSeek本地App</span>
                         <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

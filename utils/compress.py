@@ -27,5 +27,5 @@ def compress_images(folder_path):
                 print(f"Error processing {filename}: {e}")
 
 if __name__ == "__main__":
-    target_folder = r"E:\homepage\source\_posts\technology\误删文件后的恢复尝试与教训\误删文件后的恢复尝试与教训"
+    target_folder = r"E:\homepage\source\_posts\技术分享\hexo-fluid搜索引擎验证"
     compress_images(target_folder)
