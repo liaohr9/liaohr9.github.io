@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Allow: /publications/
+Allow: /categories/
+Allow: /archives/
+Allow: /about/
+Sitemap: https://liaohr9.github.io/sitemap.xml

@@ -1,0 +1,1081 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head><!-- hexo injector head_begin start --><meta name="google-site-verification" content="qZ_SWeFH1DKuHoF65EsrPOowD_ekRYBX5hTT2MDf06A" /><!-- hexo injector head_begin end -->
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/bg/sysu_128.png">
+  <link rel="icon" href="/bg/sysu_128.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Haoran Liao">
+  <meta name="keywords" content="Haoran Liao, Sun Yat-sen University, Computer Science, Robotics, Machine Learning, Computer Vision, Teleoperation, Research, SYSU, TypeTele, CoRL">
+  
+    <meta name="description" content="误删文件后的恢复尝试与教训 一、事件背景：一个危险的BAT脚本 最近在搭建个人网站（hexo个人网站）时，我想通过GPT生成一个能实现「自动删除文件、自动复制文件、自动git上传」的BAT脚本。由于没有仔细验证代码安全性，直接使用了GPT生成的脚本，最终导致了严重的数据丢失。 GPT生成的BAT脚本如下： 12345678910111213141516171819202122@echo of">
+<meta property="og:type" content="article">
+<meta property="og:title" content="误删文件后的恢复尝试与教训">
+<meta property="og:url" content="https://liaohr9.github.io/2025/08/04/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/%E8%AF%AF%E5%88%A0%E6%96%87%E4%BB%B6%E5%90%8E%E7%9A%84%E6%81%A2%E5%A4%8D%E5%B0%9D%E8%AF%95%E4%B8%8E%E6%95%99%E8%AE%AD/%E8%AF%AF%E5%88%A0%E6%96%87%E4%BB%B6%E5%90%8E%E7%9A%84%E6%81%A2%E5%A4%8D%E5%B0%9D%E8%AF%95%E4%B8%8E%E6%95%99%E8%AE%AD/index.html">
+<meta property="og:site_name" content="Haoran&#39;s homepage">
+<meta property="og:description" content="误删文件后的恢复尝试与教训 一、事件背景：一个危险的BAT脚本 最近在搭建个人网站（hexo个人网站）时，我想通过GPT生成一个能实现「自动删除文件、自动复制文件、自动git上传」的BAT脚本。由于没有仔细验证代码安全性，直接使用了GPT生成的脚本，最终导致了严重的数据丢失。 GPT生成的BAT脚本如下： 12345678910111213141516171819202122@echo of">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://liaohr9.github.io/2025/08/04/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/%E8%AF%AF%E5%88%A0%E6%96%87%E4%BB%B6%E5%90%8E%E7%9A%84%E6%81%A2%E5%A4%8D%E5%B0%9D%E8%AF%95%E4%B8%8E%E6%95%99%E8%AE%AD/%E8%AF%AF%E5%88%A0%E6%96%87%E4%BB%B6%E5%90%8E%E7%9A%84%E6%81%A2%E5%A4%8D%E5%B0%9D%E8%AF%95%E4%B8%8E%E6%95%99%E8%AE%AD/image.jpg">
+<meta property="og:image" content="https://liaohr9.github.io/2025/08/04/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/%E8%AF%AF%E5%88%A0%E6%96%87%E4%BB%B6%E5%90%8E%E7%9A%84%E6%81%A2%E5%A4%8D%E5%B0%9D%E8%AF%95%E4%B8%8E%E6%95%99%E8%AE%AD/%E8%AF%AF%E5%88%A0%E6%96%87%E4%BB%B6%E5%90%8E%E7%9A%84%E6%81%A2%E5%A4%8D%E5%B0%9D%E8%AF%95%E4%B8%8E%E6%95%99%E8%AE%AD/image%20copy.jpg">
+<meta property="og:image" content="https://liaohr9.github.io/2025/08/04/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/%E8%AF%AF%E5%88%A0%E6%96%87%E4%BB%B6%E5%90%8E%E7%9A%84%E6%81%A2%E5%A4%8D%E5%B0%9D%E8%AF%95%E4%B8%8E%E6%95%99%E8%AE%AD/%E8%AF%AF%E5%88%A0%E6%96%87%E4%BB%B6%E5%90%8E%E7%9A%84%E6%81%A2%E5%A4%8D%E5%B0%9D%E8%AF%95%E4%B8%8E%E6%95%99%E8%AE%AD/image%20copy%202.jpg">
+<meta property="og:image" content="https://liaohr9.github.io/2025/08/04/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/%E8%AF%AF%E5%88%A0%E6%96%87%E4%BB%B6%E5%90%8E%E7%9A%84%E6%81%A2%E5%A4%8D%E5%B0%9D%E8%AF%95%E4%B8%8E%E6%95%99%E8%AE%AD/%E8%AF%AF%E5%88%A0%E6%96%87%E4%BB%B6%E5%90%8E%E7%9A%84%E6%81%A2%E5%A4%8D%E5%B0%9D%E8%AF%95%E4%B8%8E%E6%95%99%E8%AE%AD/image%20copy%203.jpg">
+<meta property="article:published_time" content="2025-08-04T14:32:32.000Z">
+<meta property="article:modified_time" content="2025-08-06T10:48:23.900Z">
+<meta property="article:author" content="Haoran Liao">
+<meta property="article:tag" content="恢复">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://liaohr9.github.io/2025/08/04/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/%E8%AF%AF%E5%88%A0%E6%96%87%E4%BB%B6%E5%90%8E%E7%9A%84%E6%81%A2%E5%A4%8D%E5%B0%9D%E8%AF%95%E4%B8%8E%E6%95%99%E8%AE%AD/%E8%AF%AF%E5%88%A0%E6%96%87%E4%BB%B6%E5%90%8E%E7%9A%84%E6%81%A2%E5%A4%8D%E5%B0%9D%E8%AF%95%E4%B8%8E%E6%95%99%E8%AE%AD/image.jpg">
+  
+  
+  
+  <title>误删文件后的恢复尝试与教训 - Haoran&#39;s homepage</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"liaohr9.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"jgAoXGVyQknEgQf68L2QLytO-gzGzoHsz","app_key":"Xbyl5Mn2Yb3aP7IhjQZBz2nB","server_url":"https://jgaoxgvy.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+
+<body>
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Haoran&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/publications/" target="_self">
+                
+                <span>publications</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                
+                <span>blogs</span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/Learnings/" target="_self">
+                    
+                    <span>Learnings</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/Life/" target="_self">
+                    
+                    <span>Life</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/technology/" target="_self">
+                    
+                    <span>technology</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/Research/" target="_self">
+                    
+                    <span>Research</span>
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="误删文件后的恢复尝试与教训"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-08-04 22:32" pubdate>
+          August 4, 2025 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.6k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          22 mins
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          read <span id="leancloud-page-views"></span> times
+        </span>
+        
+      
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">误删文件后的恢复尝试与教训</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="误删文件后的恢复尝试与教训">误删文件后的恢复尝试与教训</h1>
+<h2
+id="一事件背景一个危险的bat脚本">一、事件背景：一个危险的BAT脚本</h2>
+<p>最近在搭建个人网站（hexo个人网站）时，我想通过GPT生成一个能实现「自动删除文件、自动复制文件、自动git上传」的BAT脚本。由于没有仔细验证代码安全性，直接使用了GPT生成的脚本，最终导致了严重的数据丢失。</p>
+<p>GPT生成的BAT脚本如下： <figure class="highlight bat"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs bat">@<span class="hljs-built_in">echo</span> off<br><span class="hljs-built_in">setlocal</span> enabledelayedexpansion<br><br><span class="hljs-built_in">set</span> &quot;target=E:\创作\个人网站\Leon_Blog&quot;<br><br><span class="hljs-built_in">echo</span> Deleting all contents <span class="hljs-keyword">in</span> <span class="hljs-variable">%target%</span> except .git folder...<br><br>:: 删除文件夹<br><span class="hljs-keyword">for</span> /d <span class="hljs-variable">%%D</span> <span class="hljs-keyword">in</span> (&quot;<span class="hljs-variable">%target%</span>\*&quot;) <span class="hljs-keyword">do</span> (<br>    <span class="hljs-keyword">if</span> /i <span class="hljs-keyword">not</span> &quot;<span class="hljs-variable">%%~</span>nxD&quot;==&quot;.git&quot; (<br>        <span class="hljs-built_in">echo</span> Deleting folder: <span class="hljs-variable">%%D</span><br>        <span class="hljs-built_in">rd</span> /s /q &quot;<span class="hljs-variable">%%D</span>&quot;<br>    )<br>)<br><br>:: 删除文件<br><span class="hljs-keyword">for</span> <span class="hljs-variable">%%F</span> <span class="hljs-keyword">in</span> (&quot;<span class="hljs-variable">%target%</span>\*&quot;) <span class="hljs-keyword">do</span> (<br>    <span class="hljs-keyword">if</span> /i <span class="hljs-keyword">not</span> &quot;<span class="hljs-variable">%%~</span>nxF&quot;==&quot;.git&quot; (<br>        <span class="hljs-built_in">echo</span> Deleting file: <span class="hljs-variable">%%F</span><br>        <span class="hljs-built_in">del</span> /q &quot;<span class="hljs-variable">%%F</span>&quot;<br>    )<br>)<br></code></pre></td></tr></table></figure></p>
+<p>这个脚本的预期功能是：删除<code>E:\创作\个人网站\Leon_Blog</code>目录下所有子目录和文件，但保留<code>.git</code>文件夹。<strong>但它存在致命缺陷</strong>：当<code>target</code>路径不存在或无法被正确解析时，<code>"%target%\*"</code>会被错误解析为<code>"E:\*"</code>（即E盘根目录），导致脚本对整个E盘执行删除操作。</p>
+<h2
+id="二误删过程e盘根目录文件被批量删除">二、误删过程：E盘根目录文件被批量删除</h2>
+<p>执行脚本后，我看到命令行中快速闪过大量文件名，才意识到不对劲，立刻按<code>Ctrl+C</code>停止，但已经来不及了——E盘根目录下的所有文件和文件夹已被批量删除，相当于E盘被「格式化」了。</p>
+<p><img src="image.jpg" srcset="/img/loading.gif" lazyload /></p>
+<h2
+id="三恢复尝试三款工具的使用与结果">三、恢复尝试：三款工具的使用与结果</h2>
+<p>为了减少损失，我立刻停止对E盘的任何操作（避免覆盖数据），并尝试了以下恢复工具：</p>
+<h3 id="recuva免费数据恢复工具">1. Recuva（免费数据恢复工具）</h3>
+<p>Recuva是一款经典的免费数据恢复软件，支持多种文件类型，操作相对简单。</p>
+<h4 id="使用步骤">使用步骤：</h4>
+<ul>
+<li>第一步：选择需要恢复的文件类型（这会影响扫描速度和准确度）<br />
+<img src="image%20copy.jpg" srcset="/img/loading.gif" lazyload /></li>
+<li>第二步：选择需要扫描的驱动器（此处选择E盘）<br />
+<img src="image%20copy%202.jpg" srcset="/img/loading.gif" lazyload /></li>
+<li>第三步：启动深度扫描（Deep Search）<br />
+<img src="image%20copy%203.jpg" srcset="/img/loading.gif" lazyload /></li>
+</ul>
+<h4 id="恢复结果">恢复结果：</h4>
+<ul>
+<li>深度扫描后查到约5万多个文件，软件显示「有效恢复」的约2万多个，但实际能正常打开的文件极少。</li>
+<li>恢复的文件被无序放在同一个文件夹中，原有的文件结构完全丢失，使用起来非常不便。</li>
+</ul>
+<blockquote>
+<p>官网链接：<a target="_blank" rel="noopener" href="https://www.ccleaner.com/recuva">Recuva
+官方网站</a></p>
+</blockquote>
+<h3 id="windows-file-recovery微软自带命令行工具">2. Windows File
+Recovery（微软自带命令行工具）</h3>
+<p>Windows File
+Recovery是微软官方推出的命令行恢复工具，支持更多文件类型，虽然操作复杂，但恢复效果相对更好。</p>
+<h4 id="基本步骤">基本步骤：</h4>
+<ol type="1">
+<li>如有必要，请从 Microsoft 应用商店安装应用：<br />
+<a href="ms-windows-store://pdp/?productid=9n26s50ln705">Windows File
+Recovery</a></li>
+<li>按 Windows 键，在搜索框中输入<strong>Windows File
+Recovery</strong>，然后选择“<strong>Windows File
+Recovery</strong>”。</li>
+<li>当系统提示你允许应用对设备进行更改时，请选择“<strong>是</strong>”。</li>
+<li>在 <strong>“命令提示符”</strong>窗口中，按以下格式输入命令：<br />
+<code>winfr source-drive: destination-drive: [/mode] [/switches]</code></li>
+<li>有 2 种基本模式可用于恢复文件：“常规”和“广泛”。<br />
+<strong>常规模式示例</strong>
+<ul>
+<li>将 Documents 文件夹从 C： 驱动器恢复到 E：
+驱动器上的恢复文件夹（不要忘记文件夹末尾的反斜杠 ）：<br />
+<code>Winfr C: E: /regular /n \Users\&lt;username&gt;\Documents\</code><br />
+</li>
+<li>将 PDF 和Word文件从 C： 驱动器恢复到 E：
+驱动器上的恢复文件夹：<br />
+<code>Winfr C: E: /regular /n *.pdf /n *.docx</code></li>
+</ul>
+<strong>广泛的模式示例</strong>
+<ul>
+<li>使用通配符恢复文件名中包含字符串“invoice”的任何文件：<br />
+<code>Winfr E: C: /extensive /n *invoice*</code><br />
+</li>
+<li>将 jpeg 和 png 照片从“图片”文件夹恢复到 E：
+驱动器上的恢复文件夹：<br />
+<code>Winfr C: E: /extensive /n \Users\&lt;username&gt;\Pictures\*.JPEG /n\Users\&lt;username&gt;\Pictures\*.PNG</code></li>
+</ul>
+<blockquote>
+<p>注意：源驱动器和目标驱动器必须不同。从操作系统驱动器（通常是C:）恢复时，请使用
+<code>/n &lt;filter&gt;</code>
+开关指定用户文件或文件夹。微软会在目标驱动器上自动创建名为
+<code>Recovery_&lt;date and time&gt;</code> 的恢复文件夹。</p>
+</blockquote></li>
+<li>当系统提示确认继续时，请输入 <strong>Y</strong>
+以启动恢复操作。这可能需要一段时间，具体取决于源驱动器的大小。若要停止恢复过程，请按
+<strong>Ctrl</strong> + <strong>C</strong>。</li>
+</ol>
+<h4 id="关于模式和文件系统">关于模式和文件系统：</h4>
+<p>以下信息可帮助你确定你拥有哪个文件系统以及要使用的模式。</p>
+<p><strong><em>文件系统</em></strong></p>
+<table>
+
+<thead>
+<tr>
+<th style="text-align: left;"><strong>文件系统</strong></th>
+<th style="text-align: left;"><strong>示例</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">FAT 和 exFAT</td>
+<td style="text-align: left;">SD 卡、闪存或 U 盘 (&lt; 4GB)</td>
+</tr>
+<tr>
+<td style="text-align: left;">NTFS</td>
+<td style="text-align: left;">计算机（HDD、SSD）、外部硬盘驱动器、闪存或
+U 盘 (&gt; 4GB)</td>
+</tr>
+</tbody>
+</table>
+<p>Windows
+支持的多个文件系统因存储设备或操作系统而异。仅广泛模式支持从非 NTFS
+文件系统恢复文件。若要查看你拥有的文件系统，请右键单击文件资源管理器中的驱动器，然后选择“<strong>属性</strong>”。</p>
+<p><strong><em>决定使用哪种模式</em></strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">文件系统</th>
+<th style="text-align: left;">情况</th>
+<th style="text-align: left;">建议模式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">NTFS</td>
+<td style="text-align: left;">最近删除</td>
+<td style="text-align: left;">Regular</td>
+</tr>
+<tr>
+<td style="text-align: left;">NTFS</td>
+<td style="text-align: left;">前一段时间已删除</td>
+<td style="text-align: left;">广泛</td>
+</tr>
+<tr>
+<td style="text-align: left;">NTFS</td>
+<td style="text-align: left;">格式化磁盘后</td>
+<td style="text-align: left;">广泛</td>
+</tr>
+<tr>
+<td style="text-align: left;">NTFS</td>
+<td style="text-align: left;">损坏的磁盘</td>
+<td style="text-align: left;">广泛</td>
+</tr>
+<tr>
+<td style="text-align: left;">FAT 和 exFAT</td>
+<td style="text-align: left;">任何</td>
+<td style="text-align: left;">广泛</td>
+</tr>
+</tbody>
+</table>
+<h4 id="命令行语法">命令行语法：</h4>
+<p><strong><em>常规语法</em></strong></p>
+<table style="width:100%;">
+
+<thead>
+<tr>
+<th style="text-align: left;"><strong>参数/开关</strong></th>
+<th style="text-align: left;"><strong>说明</strong></th>
+<th style="text-align: left;"><strong>支持的模式</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Source-drive:</td>
+<td
+style="text-align: left;">指定文件丢失的存储设备。必须与目标驱动器不同。</td>
+<td style="text-align: left;">全部</td>
+</tr>
+<tr>
+<td style="text-align: left;">Destination-drive:</td>
+<td
+style="text-align: left;">指定要放置恢复文件的存储设备和文件夹。必须与源驱动器不同。</td>
+<td style="text-align: left;">全部</td>
+</tr>
+<tr>
+<td style="text-align: left;">/regular</td>
+<td style="text-align: left;">常规模式，未损坏的 NTFS
+驱动器的标准恢复选项</td>
+<td style="text-align: left;">Regular</td>
+</tr>
+<tr>
+<td style="text-align: left;">/extensive</td>
+<td
+style="text-align: left;">广泛模式，适用于所有文件系统的彻底恢复选项</td>
+<td style="text-align: left;">广泛</td>
+</tr>
+<tr>
+<td style="text-align: left;">/n<filter></td>
+<td
+style="text-align: left;">使用文件名、文件路径、文件类型或通配符扫描特定文件。例如：<br>-
+文件名：/n myfile.docx<br>- 文件路径：/n
+/users/&lt;username&gt;/Documents/<br>- 通配符：/n myfile.*、/n
+*.docx、/n <em>&lt;string&gt;</em></td>
+<td style="text-align: left;">全部</td>
+</tr>
+<tr>
+<td style="text-align: left;">/?</td>
+<td style="text-align: left;">一般用户的语法和开关摘要。</td>
+<td style="text-align: left;">全部</td>
+</tr>
+<tr>
+<td style="text-align: left;">/!</td>
+<td style="text-align: left;">高级用户的语法和开关摘要。</td>
+<td style="text-align: left;">全部</td>
+</tr>
+</tbody>
+</table>
+<p><strong><em>高级语法</em></strong></p>
+<table style="width:100%;">
+
+<thead>
+<tr>
+<th style="text-align: left;"><strong>开关</strong></th>
+<th style="text-align: left;"><strong>说明</strong></th>
+<th style="text-align: left;"><strong>支持的模式</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">/ntfs</td>
+<td style="text-align: left;">NTFS 模式，使用主文件表实现正常 NTFS
+驱动器的快速恢复选项</td>
+<td style="text-align: left;">NTFS</td>
+</tr>
+<tr>
+<td style="text-align: left;">/segment</td>
+<td style="text-align: left;">段模式，使用文件记录段的 NTFS
+驱动器的恢复选项</td>
+<td style="text-align: left;">段</td>
+</tr>
+<tr>
+<td style="text-align: left;">/signature</td>
+<td
+style="text-align: left;">使用文件标头的所有文件系统类型的签名模式和恢复选项</td>
+<td style="text-align: left;">签名</td>
+</tr>
+<tr>
+<td style="text-align: left;">/y:&lt;type(s)&gt;</td>
+<td style="text-align: left;">恢复特定扩展组，逗号分隔</td>
+<td style="text-align: left;">签名</td>
+</tr>
+<tr>
+<td style="text-align: left;">/#</td>
+<td style="text-align: left;">签名模式扩展组和支持的文件类型。</td>
+<td style="text-align: left;">签名</td>
+</tr>
+<tr>
+<td style="text-align: left;">/p:<folder></td>
+<td
+style="text-align: left;">将恢复操作的日志文件保存在与恢复驱动器上的默认位置不同的位置（例如，
+D:）。</td>
+<td style="text-align: left;">全部</td>
+</tr>
+<tr>
+<td style="text-align: left;">/a</td>
+<td style="text-align: left;">重写用户提示，这在脚本文件中很有用。</td>
+<td style="text-align: left;">全部</td>
+</tr>
+<tr>
+<td style="text-align: left;">/u</td>
+<td style="text-align: left;">例如，从回收站中恢复未删除的文件。</td>
+<td style="text-align: left;">NTFS 段</td>
+</tr>
+<tr>
+<td style="text-align: left;">/k</td>
+<td style="text-align: left;">恢复系统文件。</td>
+<td style="text-align: left;">NTFS 段</td>
+</tr>
+<tr>
+<td style="text-align: left;">/o:&lt;a|n|b&gt;</td>
+<td
+style="text-align: left;">指定在选择是否覆盖文件时，是始终（a），从不（n），还是始终保留两者（b）。默认操作是提示覆盖。</td>
+<td style="text-align: left;">NTFS 段</td>
+</tr>
+<tr>
+<td style="text-align: left;">/g</td>
+<td style="text-align: left;">恢复没有主数据流的文件。</td>
+<td style="text-align: left;">NTFS 段</td>
+</tr>
+<tr>
+<td style="text-align: left;">/e</td>
+<td
+style="text-align: left;">为了保持结果易于管理并专注于用户文件，默认情况下会筛选某些文件类型，但此开关会删除该筛选器。有关这些文件类型的完整列表，请参阅此表后面的信息。</td>
+<td style="text-align: left;">NTFS 段</td>
+</tr>
+<tr>
+<td style="text-align: left;">/e:<extension></td>
+<td
+style="text-align: left;">指定筛选的文件类型。有关这些文件类型的完整列表，请参阅此表后面的信息。</td>
+<td style="text-align: left;">NTFS 段</td>
+</tr>
+<tr>
+<td style="text-align: left;">/s:<sectors></td>
+<td
+style="text-align: left;">指定源设备上的扇区数。若要查找扇区信息，请使用
+<a
+target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/fsutil">fsutil</a>。</td>
+<td style="text-align: left;">段、签名</td>
+</tr>
+<tr>
+<td style="text-align: left;">/b:<bytes></td>
+<td style="text-align: left;">指定源设备上（分配单元）群集大小。</td>
+<td style="text-align: left;">段、签名</td>
+</tr>
+</tbody>
+</table>
+<p><strong><em>文件扩展名筛选器列表</em></strong></p>
+<p>默认情况下，将从结果中筛选以下文件类型。使用 <code>/e</code>
+开关禁用此筛选器，或使用 <code>/e:&lt;extension&gt;</code>
+筛选器来指定要筛选的文件类型。</p>
+<p>_, adm, admx, appx, appx, ascx, asm, aspx, aux, ax, bin, browser, c,
+cab, cat cdf-ms, catalogItem, cdxm, cmake, cmd, coffee, config, cp, cpp,
+cs, cshtm, css, cur, dat, dll, et, evtx, exe, fon, gpd, h, hbakedcurve,
+htm, htm, ico, id, ildl, ilpdb, iltoc, iltocpdb, in, inf, inf_loc, ini,
+js, json, lib, lnk, log, man, manifest, map, metadata, mf, mof, msc,
+msi, mui, mui, mum, mun, nls, npmignore, nupkg, nuspec, obj, p7s, p7x,
+pak, pckdep, pdb, pf, pkgdef, plist, pnf, pp, pri, props, ps1, ps1xm,
+psd1, psm1, py, resjson, resw, resx, rl, rs, sha512, snippet, sq, sys,
+t4, targets, th, tlb, tmSnippet, toc, ts, tt, ttf, vb, vbhtm, vbs,
+vsdir, vsix, vsixlangpack, vsixmanifest, vstdir, vstemplate, vstman,
+winmd, xam, xbf, xm, xrm-ms, xs, xsd, ym</p>
+<h4 id="我的操作与结果">我的操作与结果：</h4>
+<p>我选择的恢复命令如下： <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">Winfr C: E: /regular /n E:/<br></code></pre></td></tr></table></figure>
+执行后，软件提示输入<code>Y</code>确认恢复操作。恢复完成后，文件被放在E盘的<code>Recovery_&lt;date and time&gt;</code>文件夹中。</p>
+<ul>
+<li>优势：保留了完整的文件结构（包括文件夹层级），一些久未使用的文件夹被完整恢复。</li>
+<li>不足：大部分文件（如PDF、DOCX）打开后显示损坏，仅少数TXT文件和图片能正常打开。</li>
+</ul>
+<h3 id="diskgenius未尝试的专业工具">3.
+DiskGenius（未尝试的专业工具）</h3>
+<p>DiskGenius是一款功能强大的专业数据恢复软件，支持多种文件系统和恢复模式，提供图形界面，操作相对简单。但由于前两次尝试已消耗较多时间，我未进一步尝试。</p>
+<blockquote>
+<p>官网链接：<a target="_blank" rel="noopener" href="https://www.diskgenius.cn/">DiskGenius
+官方网站</a></p>
+</blockquote>
+<h2 id="四总结与教训">四、总结与教训</h2>
+<p>这次事件让我深刻意识到数据安全的重要性，总结以下教训：</p>
+<h3 id="数据无价操作前务必备份">1. 数据无价，操作前务必备份</h3>
+<p>涉及文件删除、格式化等危险操作时，一定要先备份重要数据。即使是「看似简单」的脚本，也可能因意外导致不可逆的损失。</p>
+<h3 id="谨慎使用ai生成的代码">2. 谨慎使用AI生成的代码</h3>
+<p>AI生成的代码可能存在潜在风险（尤其是文件操作、系统命令类），使用前必须：
+- 逐行检查逻辑（如本次脚本的路径解析漏洞）； -
+在测试环境中验证（用空文件夹或非重要数据测试效果）； -
+明确代码的「边界条件」（如路径不存在时的处理）。</p>
+<p>就像下图的提醒：AI不会为你的错误负责，最终承担损失的是自己。 <img
+src="b53a1b6f950a710f3b2a425e356477b8.jpg" srcset="/img/loading.gif" lazyload /></p>
+<h3 id="数据恢复的注意事项">3. 数据恢复的注意事项</h3>
+<ul>
+<li>误删后<strong>立即停止对目标磁盘的操作</strong>（避免新数据覆盖原有扇区）；</li>
+<li>优先使用专业工具（如DiskGenius）或官方工具（如Windows File
+Recovery）；</li>
+<li>恢复后需逐一验证文件完整性，不要依赖「恢复成功」的提示。</li>
+</ul>
+<p>希望我的经历能给大家提个醒：对待数据操作，再谨慎也不为过。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/technology/" class="category-chain-item">technology</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E6%81%A2%E5%A4%8D/" class="print-no-link">#恢复</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>误删文件后的恢复尝试与教训</div>
+      <div>https://liaohr9.github.io/2025/08/04/技术分享/误删文件后的恢复尝试与教训/误删文件后的恢复尝试与教训/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Haoran Liao</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>August 4, 2025</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/08/05/%E8%AE%BA%E6%96%87/%E9%A3%9E%E9%A3%9EAgent-AI%E7%AC%94%E8%AE%B0/" title="飞飞Agent-AI笔记">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">飞飞Agent-AI笔记</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/08/04/%E7%94%9F%E6%B4%BB%E9%9A%8F%E7%AC%94/%E6%91%86%E8%84%B1%E5%BF%99%E7%A2%8C%E7%84%A6%E8%99%91/" title="摆脱忙碌焦虑">
+                        <span class="hidden-mobile">摆脱忙碌焦虑</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

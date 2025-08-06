@@ -1,0 +1,903 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head><!-- hexo injector head_begin start --><meta name="google-site-verification" content="qZ_SWeFH1DKuHoF65EsrPOowD_ekRYBX5hTT2MDf06A" /><!-- hexo injector head_begin end -->
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/bg/sysu_128.png">
+  <link rel="icon" href="/bg/sysu_128.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Haoran Liao">
+  <meta name="keywords" content="Haoran Liao, Sun Yat-sen University, Computer Science, Robotics, Machine Learning, Computer Vision, Teleoperation, Research, SYSU, TypeTele, CoRL">
+  
+    <meta name="description" content="AgentAI具身智能笔记 引言：当前基础模型的挑战与局限 目前，LLM（大型语言模型）和 VLM（视觉语言模型）的基础模型在具身人工智能领域的性能仍然有限，特别是在理解、生成、编辑和在未见环境或场景中交互方面存在明显不足。 AI 代理的核心能力与现实局限 人工智能代理能够根据其训练和输入数据进行解释、预测和响应。虽然这些能力非常先进且在不断改进，但认识到它们的局限性以及底层训练数据的影">
+<meta property="og:type" content="article">
+<meta property="og:title" content="飞飞Agent-AI笔记">
+<meta property="og:url" content="https://liaohr9.github.io/2025/08/05/%E8%AE%BA%E6%96%87/%E9%A3%9E%E9%A3%9EAgent-AI%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:site_name" content="Haoran&#39;s homepage">
+<meta property="og:description" content="AgentAI具身智能笔记 引言：当前基础模型的挑战与局限 目前，LLM（大型语言模型）和 VLM（视觉语言模型）的基础模型在具身人工智能领域的性能仍然有限，特别是在理解、生成、编辑和在未见环境或场景中交互方面存在明显不足。 AI 代理的核心能力与现实局限 人工智能代理能够根据其训练和输入数据进行解释、预测和响应。虽然这些能力非常先进且在不断改进，但认识到它们的局限性以及底层训练数据的影">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-08-05T05:32:56.000Z">
+<meta property="article:modified_time" content="2025-08-06T07:49:21.528Z">
+<meta property="article:author" content="Haoran Liao">
+<meta property="article:tag" content="Agent">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>飞飞Agent-AI笔记 - Haoran&#39;s homepage</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"liaohr9.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"jgAoXGVyQknEgQf68L2QLytO-gzGzoHsz","app_key":"Xbyl5Mn2Yb3aP7IhjQZBz2nB","server_url":"https://jgaoxgvy.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+
+<body>
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Haoran&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/publications/" target="_self">
+                
+                <span>publications</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                
+                <span>blogs</span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/Learnings/" target="_self">
+                    
+                    <span>Learnings</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/Life/" target="_self">
+                    
+                    <span>Life</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/technology/" target="_self">
+                    
+                    <span>technology</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/Research/" target="_self">
+                    
+                    <span>Research</span>
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="飞飞Agent-AI笔记"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-08-05 13:32" pubdate>
+          August 5, 2025 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.2k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          27 mins
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          read <span id="leancloud-page-views"></span> times
+        </span>
+        
+      
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">飞飞Agent-AI笔记</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="agentai具身智能笔记">AgentAI具身智能笔记</h1>
+<h2
+id="引言当前基础模型的挑战与局限">引言：当前基础模型的挑战与局限</h2>
+<p>目前，LLM（大型语言模型）和
+VLM（视觉语言模型）的基础模型在具身人工智能领域的性能仍然有限，特别是在理解、生成、编辑和在未见环境或场景中交互方面存在明显不足。</p>
+<h2 id="ai-代理的核心能力与现实局限">AI 代理的核心能力与现实局限</h2>
+<p>人工智能代理能够根据其训练和输入数据进行解释、预测和响应。虽然这些能力非常先进且在不断改进，但认识到它们的局限性以及底层训练数据的影响至关重要。</p>
+<h3 id="ai-代理系统的四大核心能力">AI 代理系统的四大核心能力</h3>
+<p><strong>1. 预测建模能力</strong><br />
+人工智能代理可以根据历史数据和趋势预测可能的结果或建议后续步骤。例如，它们能够预测文本的后续内容、问题的答案、机器人的下一步动作或场景的解决方案。</p>
+<p><strong>2. 智能决策能力</strong><br />
+在某些应用中，人工智能代理可以根据其推理做出决策。通常，代理会根据最有可能实现特定目标的因素做出决策。对于推荐系统等人工智能应用，代理可以根据其对用户偏好的推断来决定推荐哪些产品或内容。</p>
+<p><strong>3. 模糊性处理能力</strong><br />
+人工智能代理通常可以通过基于上下文和训练推断出最可能的解释来处理模糊输入。然而，它们这样做的能力受到其训练数据和算法范围的限制。</p>
+<p><strong>4. 持续改进潜力</strong><br />
+虽然一些人工智能代理能够从新数据和交互中学习，但许多大型语言模型在训练后并不会持续更新其知识库或内部表征。它们的推理通常仅基于上次训练更新之前可用的数据。</p>
+<h2
+id="突破性创新增强交互代理与无限代理概念">突破性创新：增强交互代理与无限代理概念</h2>
+<p>We show augmented interactive agents for multi-modality and cross
+reality-agnostic integration with an emergence mechanism in Fig. <a
+target="_blank" rel="noopener" href="https://ar5iv.labs.arxiv.org/html/2401.03568?_immersive_translate_auto_translate=1#S2.F2"
+title="Figure 2 ‣ 2 Agent AI Integration ‣ Agent AI: Surveying the Horizons of Multimodal Interaction">2</a>.
+An AI agent requires collecting extensive training data for every new
+task, which can be costly or impossible for many domains. In this study,
+we develop an infinite agent that learns to transfer memory information
+from general foundation models (e.g., GPT-X, DALL-E) to novel domains or
+scenarios for scene understanding, generation, and interactive editing
+in physical or virtual worlds.</p>
+<p>如图2所示，研究团队展示了用于多模态和跨现实不可知论集成的增强交互代理，该代理具有涌现机制。传统上，AI代理需要为每个新任务收集大量的训练数据，这对于许多领域来说可能是成本高昂甚至不可能实现的。<strong>在本研究中，我们开发了一个革命性的”无限代理”（Infinite
+Agent），它能够学习将记忆信息从通用基础模型（例如GPT-X、DALL-E）迁移到新的领域或场景，以便在物理或虚拟世界中进行场景理解、生成和交互式编辑。</strong></p>
+<h3
+id="robogen无限代理在机器人领域的实际应用">RoboGen：无限代理在机器人领域的实际应用</h3>
+<p>An application of such an infinite agent in robotics is RoboGen Wang
+et al. In this study, the authors propose a pipeline that autonomously
+run the cycles of task proposition, environment generation, and skill
+learning. RoboGen is an effort to transfer the knowledge embedded in
+large models to robotics.</p>
+<p>RoboGen
+Wang等人的研究成果就是这种无限代理在机器人领域的一个突破性应用。在这项研究中，作者提出了一个创新性流程，可以自主运行任务提议、环境生成和技能学习的循环。<strong>RoboGen致力于将大型模型中嵌入的知识迁移到机器人技术中。</strong></p>
+<h3 id="robogen-系统架构详解">RoboGen 系统架构详解</h3>
+<p><strong>RoboGen的概要：</strong>
+这是一种旨在利用生成模型的最新进展来扩展模拟机器人学习的新范式。生成模拟主张为模拟中各种机器人技能学习所需的所有阶段自主生成信息：从高级任务和技能建议到依赖于任务的场景描述、资产选择和生成、策略学习选择和训练监督。这些信息随后用于大规模技能训练，使机器人能够获得所建议的技能。</p>
+<p>在本文中，作为这一所提范式的初步实现，我们提出了<strong>RoboGen</strong>，这是一个机器人代理，它通过自我引导的提议-生成-学习循环不断生成新技能：</p>
+<ol type="1">
+<li><strong>技能提议阶段</strong>：首先自我提出要学习的技能</li>
+<li><strong>环境构建阶段</strong>：根据所提出的任务生成所需的资产并在模拟中构建场景</li>
+<li><strong>任务描述与分解</strong>：用自然语言描述标记任务，将任务分解为子任务</li>
+<li><strong>学习方法选择</strong>：选择最佳学习方法（强化学习、运动规划或轨迹优化）</li>
+<li><strong>训练监督设计</strong>：设计适当的训练监督（例如奖励函数）</li>
+<li><strong>策略学习执行</strong>：最后进行策略学习以解决所提出的任务</li>
+</ol>
+<p>我们提出的范式的一个显著优势在于，它精心选择了从当代基础模型中提取哪些知识模式。</p>
+<h2
+id="从模仿学习到解耦学习的范式转变">从模仿学习到解耦学习的范式转变</h2>
+<h3 id="模仿学习的挑战与解决方案">模仿学习的挑战与解决方案</h3>
+<p>Agents are typically trained using a continuous feedback loop in
+Reinforcement Learning (RL) or Imitation Learning (IL), starting with a
+randomly initialized policy. However, this approach faces leader-board
+in obtaining initial rewards in unfamiliar environments, particularly
+when rewards are sparse or only available at the end of a long-step
+interaction. Thus, a superior solution is to use an infinite-memory
+agent trained through IL, which can learn policies from expert data,
+improving exploration and utilization of unseen environmental space with
+emergent infrastructure as shown in Fig. <a
+target="_blank" rel="noopener" href="https://ar5iv.labs.arxiv.org/html/2401.03568?_immersive_translate_auto_translate=1#S2.F3"
+title="Figure 3 ‣ Decoupling → Generalization. ‣ 2.2.4 Interpretability and Explainability ‣ 2.2 Agent AI with Large Foundation Models ‣ 2 Agent AI Integration ‣ Agent AI: Surveying the Horizons of Multimodal Interaction">3</a>.
+With expert characteristics to help the agent explore better and utilize
+the unseen environmental space. Agent AI, can learn policies and new
+paradigm flow directly from expert data.</p>
+<p>代理通常使用强化学习(RL)或模仿学习(IL)中的连续反馈循环进行训练，从随机初始化的策略开始。然而，这种方法在不熟悉的环境中获取初始奖励时面临排行榜问题，特别是当奖励稀疏或仅在长步交互结束时可用时。因此，一个更好的解决方案是使用通过IL训练的无限内存代理，它可以从专家数据中学习策略，通过如图3所示的新兴基础设施改进对未知环境空间的探索和利用。专家特性可以帮助代理更好地探索和利用未知环境空间。代理AI可以直接从专家数据中学习策略和新范式流。</p>
+<h3 id="传统模仿学习的局限性">传统模仿学习的局限性</h3>
+<p>Traditional IL has an agent mimicking an expert demonstrator’s
+behavior to learn a policy. However, learning the expert policy directly
+may not always be the best approach, as the agent may not generalize
+well to unseen situations. To tackle this, we propose learning an agent
+with in-context prompt or a implicit reward function that captures key
+aspects of the expert’s behavior, as shown in Fig. <a
+target="_blank" rel="noopener" href="https://ar5iv.labs.arxiv.org/html/2401.03568?_immersive_translate_auto_translate=1#S2.F3"
+title="Figure 3 ‣ Decoupling → Generalization. ‣ 2.2.4 Interpretability and Explainability ‣ 2.2 Agent AI with Large Foundation Models ‣ 2 Agent AI Integration ‣ Agent AI: Surveying the Horizons of Multimodal Interaction">3</a>.
+This equips the infinite memory agent with physical-world behavior data
+for task execution, learned from expert demonstrations. It helps
+overcome existing imitation learning drawbacks like the need for
+extensive expert data and potential errors in complex tasks. The key
+idea behind the Agent AI has two parts: 1) the infinite agent that
+collects physical-world expert demonstrations as state-action pairs and
+2) the virtual environment that imitates the agent generator. The
+imitating agent produces actions that mimic the expert’s behavior, while
+the agent learns a policy mapping from states to actions by reducing a
+loss function of the disparity between the expert’s actions and the
+actions generated by the learned policy.</p>
+<p>传统的IL（模仿学习）会模仿专家演示者的行为来学习策略。然而，直接学习专家策略并非最佳方法，因为代理可能无法很好地泛化到未知情境。为了解决这个问题，我们建议学习一个具有情境提示或隐式奖励函数的代理，该函数可以捕捉专家行为的关键方面，如图3所示。这使得无限记忆代理能够从专家演示中学习到物理世界的行为数据，用于执行任务。这有助于克服现有的模仿学习的缺点，例如需要大量的专家数据以及在复杂任务中可能出现的错误。</p>
+<p><strong>Agent AI背后的关键思想包含两个部分：</strong> 1.
+<strong>无限代理</strong>：收集物理世界专家演示作为状态-动作对 2.
+<strong>虚拟环境</strong>：模仿代理生成器</p>
+<p>模仿代理会生成模仿专家行为的动作，而代理则通过减少专家动作与学习到的策略生成的动作之间的差异的损失函数来学习从状态到动作的策略映射。</p>
+<h3 id="作者的个人见解">作者的个人见解</h3>
+<blockquote>
+<p>本人之前也一直觉得传统的模仿学习，而且就是在完全的复刻那一个轨迹的分布。呃，真的完全缺少了最基本的泛化性。稍微变一点点，位置偏了一点点就做不出来了。或者说你把那个视觉去掉眼基本上能做出来。和
+replay 没有什么区别。</p>
+</blockquote>
+<h2 id="解耦机制从局限走向泛化">解耦机制：从局限走向泛化</h2>
+<h3 id="解耦学习的核心理念">解耦学习的核心理念</h3>
+<p>Rather than relying on a task-specific reward function, the agent
+learns from expert demonstrations, which provide a diverse set of
+state-action pairs covering various task aspects. The agent then learns
+a policy that maps states to actions by imitating the expert’s behavior.
+Decoupling in imitation learning refers to separating the learning
+process from the task-specific reward function, allowing the policy to
+generalize across different tasks without explicit reliance on the
+task-specific reward function. By decoupling, the agent can learn from
+expert demonstrations and learn a policy that is adaptable to a variety
+of situations. Decoupling enables transfer learning, where a policy
+learned in one domain can adapt to others with minimal fine-tuning. By
+learning a general policy that is not tied to a specific reward
+function, the agent can leverage the knowledge it acquired in one task
+to perform well in other related tasks. Since the agent does not rely on
+a specific reward function, it can adapt to changes in the reward
+function or environment without the need for significant retraining.
+This makes the learned policy more robust and generalizable across
+different environments. Decoupling in this context refers to the
+separation of two tasks in the learning process: learning the reward
+function and learning the optimal policy.</p>
+<p>智能体并非依赖于特定任务的奖励函数，而是从专家演示中学习，这些演示提供了涵盖各种任务方面的多样化状态-动作对。然后，智能体通过模仿专家的行为来学习将状态映射到动作的策略。模仿学习中的解耦是指将学习过程与特定任务的奖励函数分离，从而使策略能够在不同任务之间进行泛化，而无需明确依赖特定任务的奖励函数。通过解耦，智能体可以从专家演示中学习，并学习出一种能够适应各种情况的策略。解耦支持迁移学习，即在一个领域学习到的策略只需进行少量微调即可适应其他领域。通过学习不依赖于特定奖励函数的通用策略，智能体可以利用其在一项任务中获得的知识在其他相关任务中表现出色。由于智能体不依赖于特定的奖励函数，它可以适应奖励函数或环境的变化，而无需进行大量的再训练。这使得学习到的策略更加稳健，并且在不同环境中具有泛化能力。这里所说的解耦是指学习过程中两个任务的分离：学习奖励函数和学习最优策略。</p>
+<h3 id="解耦机制的深度解析">解耦机制的深度解析</h3>
+<p><strong>传统强化学习的问题：</strong> -
+严重依赖<strong>任务特定的奖励函数</strong>，泛化性差，迁移性弱</p>
+<p><strong>模仿学习的转变：</strong> -
+<strong>用专家演示替代奖励函数</strong>作为学习信号 -
+获得覆盖不同任务场景的多样化状态-动作对</p>
+<p><strong>解耦的含义：</strong> -
+将<strong>策略学习</strong>与<strong>奖励函数设计</strong>彻底分离 -
+不再需要针对每个任务重新定义reward</p>
+<p><strong>带来的好处：</strong> - 策略能<strong>跨任务泛化</strong> -
+支持<strong>迁移学习</strong>：原任务学到的策略可迁移到新任务，微调成本低
+- 对环境/目标变化更鲁棒，无需大规模再训练</p>
+<p><strong>总结：</strong> - 解耦 = 泛化 + 可迁移 + 鲁棒性提升</p>
+<h2 id="智能代理的高级推理技术">智能代理的高级推理技术</h2>
+<h3 id="实时反馈集成">实时反馈集成</h3>
+<p>Using real-time feedback from users or the environment to enhance
+inferences is another promising method for improving performance during
+inference. For example, an AI might adjust its recommendations based on
+live user responses or changing conditions in a dynamic system. Or, if
+the agent is taking actions in a simulated environment that break
+certain rules, the agent can be dynamically given feedback to help
+correct itself.</p>
+<p>利用来自用户或环境的实时反馈来增强推理能力，是另一种提升推理性能的有效方法。例如，人工智能可以根据实时用户响应或动态系统中不断变化的条件来调整其推荐。或者，如果代理在模拟环境中采取的操作违反了某些规则，则可以动态地向代理提供反馈，以帮助其自我纠正。</p>
+<h3 id="跨领域知识转移">跨领域知识转移</h3>
+<p>Leveraging knowledge or models from one domain to improve inferences
+in another can be particularly helpful when producing outputs within a
+specialized discipline. For instance, techniques developed for language
+translation might be applied to code generation, or insights from
+medical diagnostics could enhance predictive maintenance in
+machinery.</p>
+<p>利用一个领域的知识或模型来改进另一个领域的推理，在特定学科领域生成输出时尤其有用。例如，为语言翻译而开发的技术可以应用于代码生成，或者医学诊断的洞见可以增强机械的预测性维护。</p>
+<h3 id="针对特定用例的定制">针对特定用例的定制</h3>
+<p>Tailoring the AI’s inference capabilities for particular applications
+or industries can involve training the AI on specialized datasets or
+fine-tuning its models to better suit specific tasks, such as legal
+analysis, medical diagnosis, or financial forecasting. Since the
+particular language or information within one domain can greatly
+contrast with the language from other domains, it can be beneficial to
+finetune the agent on domain-specific information.</p>
+<p>针对特定应用或行业定制AI的推理能力，可能涉及在专用数据集上训练AI，或对其模型进行微调，以更好地适应特定任务，例如法律分析、医疗诊断或财务预测。由于某个领域内的特定语言或信息可能与其他领域的语言存在很大差异，因此根据特定领域的信息对代理进行微调将大有裨益。</p>
+<h2 id="人机协作中的安全性考量">人机协作中的安全性考量</h2>
+<p>在人机协作系统中使用LLM/VLM时，必须注意它们像黑匣子一样运行，会产生不可预测的输出。这种不确定性在物理设置中至关重要，例如操作实际的机器人。解决这一挑战的一种方法是通过提示工程来限制LLM/VLM的关注点。例如，据报道，在根据指令进行机器人任务规划时，在提示中提供环境信息比单纯依赖文本能产生更稳定的输出。</p>
+<h2 id="模仿学习的研究前沿与挑战">模仿学习的研究前沿与挑战</h2>
+<h3 id="rgb输入的维数灾难问题">RGB输入的维数灾难问题</h3>
+<p>使用RGB输入的固有挑战是维数灾难。为了解决这个问题，研究人员要么使用更多数据Jang等人（2022年）；Ha等人（2023年），要么在模型设计中引入归纳偏差以提高样本效率。具体来说，作者将3D结构合并到模型架构中以便于操作。</p>
+<h3 id="数据获取与sim2real差距">数据获取与Sim2Real差距</h3>
+<p>为了获取更多数据，研究人员使用图形模拟器合成数据，并尝试缩小sim2real差距。</p>
+<h3 id="大规模数据集的构建努力">大规模数据集的构建努力</h3>
+<p>最近，人们共同努力整理大规模数据集，旨在解决数据稀缺问题。这一趋势表明，数据规模的扩大仍然是推动具身智能发展的重要驱动力之一。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Research/" class="category-chain-item">Research</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Agent/" class="print-no-link">#Agent</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>飞飞Agent-AI笔记</div>
+      <div>https://liaohr9.github.io/2025/08/05/论文/飞飞Agent-AI笔记/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Haoran Liao</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>August 5, 2025</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/08/06/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/Vite%E5%88%9B%E5%BB%BAVue-Tauri%E9%A1%B9%E7%9B%AE/" title="Vite创建Vue + Tauri项目">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Vite创建Vue + Tauri项目</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/08/04/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/%E8%AF%AF%E5%88%A0%E6%96%87%E4%BB%B6%E5%90%8E%E7%9A%84%E6%81%A2%E5%A4%8D%E5%B0%9D%E8%AF%95%E4%B8%8E%E6%95%99%E8%AE%AD/%E8%AF%AF%E5%88%A0%E6%96%87%E4%BB%B6%E5%90%8E%E7%9A%84%E6%81%A2%E5%A4%8D%E5%B0%9D%E8%AF%95%E4%B8%8E%E6%95%99%E8%AE%AD/" title="误删文件后的恢复尝试与教训">
+                        <span class="hidden-mobile">误删文件后的恢复尝试与教训</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>
