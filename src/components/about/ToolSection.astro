@@ -91,3 +91,11 @@ function isImageMetadata(obj: unknown): obj is ImageMetadata {
     }
   </div>
 </div>
+
+<style>
+  /* 强制 SVG 图标大小 */
+  div :global(svg) {
+    width: 40px !important;
+    height: 40px !important;
+  }
+</style>
