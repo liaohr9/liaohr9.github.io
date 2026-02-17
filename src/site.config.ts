@@ -3,7 +3,7 @@ import type { CardListData, Config, IntegrationUserConfig, ThemeUserConfig } fro
 export const theme: ThemeUserConfig = {
   // === Basic configuration ===
   /** Title for your website. Will be used in metadata and as browser tab title. */
-  title: "Haoran's Homepage",
+  title: "Haoran Liao | 廖浩然",
   /** Will be used in index page & copyright declaration */
   author: 'Haoran Liao | 廖浩然',
   /** Description metadata for your website. Can be used in page metadata. */
@@ -26,7 +26,7 @@ export const theme: ThemeUserConfig = {
   },
   /** Set a logo image to show in the homepage. */
   logo: {
-    src: '/src/assets/avatar.png',
+    src: '/src/content/homepage/imgs/me.jpeg',
     alt: 'Avatar'
   },
 
@@ -53,7 +53,7 @@ export const theme: ThemeUserConfig = {
       // { title: 'Docs', link: '/docs' },
       { title: 'Projects', link: '/projects' },
       { title: 'Publications', link: '/publications' },
-      { title: 'Links', link: '/links' },
+      // { title: 'Links', link: '/links' },
       { title: 'About', link: '/about' }
     ]
   },

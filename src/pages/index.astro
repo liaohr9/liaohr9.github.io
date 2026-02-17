@@ -7,25 +7,27 @@ import { getBlogCollection, sortMDByDate } from 'astro-pure/server'
 import { Button, Card, Icon, Label } from 'astro-pure/user'
 import PageLayout from '@/layouts/BaseLayout.astro'
 import ProjectCard from '@/components/home/ProjectCard.astro'
+import PublicationCard from '@/components/home/PublicationCard.astro'
 import Section from '@/components/home/Section.astro'
 import SkillLayout from '@/components/home/SkillLayout.astro'
 import config from '@/site-config'
+import { publications } from '@/content/publication/publications'
 
 const languages = ['Python', 'C/C++', 'JavaScript', 'Shell']
 const frontend = ['PyTorch', 'TensorFlow', 'OpenCV', 'ROS']
 const backend = ['Computer Vision', 'Machine Learning', 'Robotics']
 
-const MAX_POSTS = 10
-const allPosts = await getBlogCollection()
-const allPostsByDate = sortMDByDate(allPosts).slice(0, MAX_POSTS)
+const MAX_PUBLICATIONS = 15
+// 按年份排序论文 (从新到旧)
+const publicationsByDate = [...publications].sort((a, b) => parseInt(b.year) - parseInt(a.year)).slice(0, MAX_PUBLICATIONS)
 
 const imagePath = config.logo.src
 const images = import.meta.glob<{ default: ImageMetadata }>(
-  '/src/assets/*.{jpeg,jpg,png,gif,avif,webp}'
+  '/src/content/homepage/imgs/*.{jpeg,jpg,png,gif,avif,webp}'
 )
 if (!images[imagePath])
   throw new Error(
-    `"${imagePath}" does not exist in glob: "src/assets/*.{jpeg,jpg,png,gif,avif,webp}"`
+    `"${imagePath}" does not exist in glob: "src/content/homepage/imgs/*.{jpeg,jpg,png,gif,avif,webp}"`
   )
 ---
 
@@ -35,7 +37,7 @@ if (!images[imagePath])
       <Image
         src={images[imagePath]()}
         alt={config.logo.alt || 'Logo'}
-        class='h-28 w-auto rounded-full border p-1'
+        class='h-52 w-auto rounded-full border p-1'
         loading='eager'
         fetchpriority='high'
       />
@@ -57,23 +59,8 @@ if (!images[imagePath])
         </div>
       </div>
 
-      {/* Get template */}
-      <a
-        href='https://github.com/cworld1/astro-theme-pure'
-        target='_blank'
-        class='flex flex-row items-center gap-x-3 rounded-full border bg-background px-4 py-2 text-sm shadow-sm transition-shadow hover:shadow-md'
-      >
-        <span class='relative flex items-center justify-center'>
-          <span
-            class='absolute size-2 animate-ping rounded-full border border-green-400 bg-green-400 opacity-75'
-          ></span>
-          <span class='size-2 rounded-full bg-green-400'></span>
-        </span>
-        <p class='font-medium text-muted-foreground'>Get Template</p>
-      </a>
-    </section>
 
-    <div id='content' class='animate flex flex-col gap-y-10 md:w-4/5 lg:w-5/6'>
+    <div id='content' class='animate flex flex-col gap-y-10 md:w-[95%] lg:w-[94%] xl:w-[90%]'>
       <Section title='About'>
         <p class='text-muted-foreground'>Undergraduate Student / Researcher</p>
         <p class='text-muted-foreground'>
@@ -81,7 +68,39 @@ if (!images[imagePath])
         </p>
         <Button title='More about me' class='w-fit self-end' href='/about' variant='ahead' />
       </Section>
+
+      <Section title='Education'>
+        <Card
+          as='a'
+          heading='Bachelor of Computer Science and Engineering'
+          subheading='Sun Yat-sen University (SYSU)'
+          date='2023 - Present (Expected 2027)'
+          href='https://www.sysu.edu.cn'
+        >
+          <ul class='ms-4 list-disc text-muted-foreground'>
+            <li>
+              Intern Undergraduate at Intelligence Science and System Lab (iSEE), advised by Wei-shi Zheng.
+            </li>
+          </ul>
+        </Card>
+      </Section>
+
       {
+        publicationsByDate.length > 0 && (
+          <Section title='Publications'>
+            <ul class='flex flex-col gap-y-3'>
+              {publicationsByDate.map((pub) => (
+                <li>
+                  <PublicationCard publication={pub} />
+                </li>
+              ))}
+            </ul>
+            <Button title='More publications' class='w-fit self-end' href='/publications' variant='ahead' />
+          </Section>
+        )
+      }
+
+      <!-- {
         allPostsByDate.length > 0 && (
           <Section title='Posts'>
             <ul class='flex flex-col gap-y-1.5 sm:gap-y-2'>
@@ -94,53 +113,8 @@ if (!images[imagePath])
             <Button title='More posts' class='w-fit self-end' href='/blog' variant='ahead' />
           </Section>
         )
-      }
-
-      {
-        /* <Section title='Experience'>
-      <Card
-        heading='Lorem Ipsum'
-        subheading='Sit amet consectetur'
-        date='Dec 2022 - Nov 2023'
-        imagePath='/src/assets/about-astro.png'
-        altText='Lorem, ipsum dolor sit'
-        imageClass='h-12 w-auto md:-start-16'
-      >
-        <ul class='ms-4 list-disc text-muted-foreground'>
-          <li>
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolore debitis recusandae, ut
-            molestiae laboriosam pariatur!
-
-            <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae, pariatur!</li>
-          </li>
-        </ul>
-      </Card>
-      <Card
-        heading='Lorem Ipsum'
-        subheading='Sit amet consectetur'
-        date='Dec 2022 - Nov 2023'
-        imagePath='/src/assets/about-astro.png'
-        altText='Lorem, ipsum dolor sit'
-        imageClass='h-12 w-auto md:-start-16'
-      />
-    </Section> */
-      }
-      <Section title='Education'>
-        <Card
-          as='a'
-          heading='Bachelor of Computer Science and Engineering'
-          subheading='Sun Yat-sen University (SYSU)'
-          date='2023 - Present (Expected 2027)'
-          href='https://www.sysu.edu.cn'
-        >
-          <ul class='ms-4 list-disc text-muted-foreground'>
-            <li>
-              Intern Undergraduate at Intelligence Science and System Lab (isEE), advised by Wei-shi Zheng.
-            </li>
-          </ul>
-        </Card>
-      </Section>
-
+      } -->
+<!-- 
       <Section title='Website List'>
         <div class='grid grid-cols-1 gap-3 sm:grid-cols-2'>
           <ProjectCard
@@ -168,9 +142,9 @@ if (!images[imagePath])
             imagePath='/src/assets/projects/4.jpg'
           />
         </div>
-      </Section>
+      </Section> -->
 
-      <Section title='Certifications'>
+      <!-- <Section title='Certifications'>
         <Card
           as='a'
           heading='Lorem ipsum'
@@ -178,7 +152,7 @@ if (!images[imagePath])
           date='July 2024'
           href='https://www.youtube.com/watch?v=dQw4w9WgXcQ'
         />
-      </Section>
+      </Section> -->
 
       <Section title='Skills'>
         <SkillLayout title='Programming Languages' skills={languages} />
