@@ -1,0 +1,120 @@
+---
+import { Icon, Button } from 'astro-pure/user'
+import { cn } from 'astro-pure/utils'
+import type { ComponentProps } from 'astro/types'
+
+type IconName = ComponentProps<typeof Icon>['name']
+
+interface Publication {
+  title: string
+  authors: string[]
+  year: string
+  journal: string
+  image?: string
+  links: Array<{
+    name: string
+    href: string
+    icon: IconName
+  }>
+}
+
+interface Props {
+  publications: Publication[]
+}
+
+const { publications } = Astro.props
+---
+
+<div class='publication-list grid gap-6'>
+  {
+    publications.map((pub) => (
+      <article class='publication-card group relative overflow-hidden rounded-2xl border bg-background transition-all hover:border-foreground/25 hover:shadow-md'>
+        <div class='flex flex-col md:flex-row'>
+          {/* 左侧图片 */}
+          <div class='publication-image-wrapper w-full md:w-72 lg:w-80 flex-shrink-0'>
+            <div class='relative aspect-[4/3] md:aspect-auto md:h-full overflow-hidden bg-muted'>
+              {pub.image ? (
+                <img
+                  src={pub.image}
+                  alt={pub.title}
+                  class='absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105'
+                  loading='lazy'
+                />
+              ) : (
+                <div class='absolute inset-0 flex items-center justify-center text-muted-foreground'>
+                  <Icon name='document' class='h-16 w-16 opacity-50' />
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* 右侧内容 */}
+          <div class='flex flex-1 flex-col justify-between p-5 md:p-6'>
+            <div>
+              {/* 标题 */}
+              <h3 class='mb-3 text-lg font-semibold leading-tight text-foreground transition-colors group-hover:text-primary md:text-xl'>
+                {pub.title}
+              </h3>
+
+              {/* 作者 */}
+              <p class='mb-2 text-sm text-muted-foreground'>
+                {pub.authors.map((author, index) => (
+                  <span>
+                    {author === 'Your Name' ? (
+                      <span class='font-medium text-foreground'>{author}</span>
+                    ) : (
+                      author
+                    )}
+                    {index < pub.authors.length - 1 && ', '}
+                  </span>
+                ))}
+              </p>
+
+              {/* 期刊/会议 */}
+              <p class='mb-4 text-sm italic text-muted-foreground'>{pub.journal}</p>
+            </div>
+
+            {/* 链接按钮 */}
+            <div class='flex flex-wrap gap-2'>
+              {pub.links.map((link) => (
+                <a
+                  href={link.href}
+                  class='inline-flex items-center gap-1.5 rounded-lg border border-border bg-background px-3 py-1.5 text-sm font-medium transition-all hover:border-primary hover:bg-muted hover:text-primary'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                >
+                  <Icon name={link.icon} class='h-4 w-4' />
+                  {link.name}
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+      </article>
+    ))
+  }
+</div>
+
+<style>
+  .publication-card {
+    --transition-duration: 0.3s;
+  }
+
+  .publication-image-wrapper {
+    position: relative;
+  }
+
+  /* 移动端优化 */
+  @media (max-width: 768px) {
+    .publication-image-wrapper {
+      border-bottom: 1px solid hsl(var(--border));
+    }
+  }
+
+  /* 桌面端优化 */
+  @media (min-width: 768px) {
+    .publication-image-wrapper {
+      border-right: 1px solid hsl(var(--border));
+    }
+  }
+</style>
