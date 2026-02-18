@@ -1,4 +1,5 @@
 ---
+import { Image } from 'astro:assets'
 import { Icon, Button } from 'astro-pure/user'
 import { cn } from 'astro-pure/utils'
 import type { ComponentProps } from 'astro/types'
@@ -23,6 +24,11 @@ interface Props {
 }
 
 const { publications } = Astro.props
+
+// Import all publication images using glob
+const images = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/content/publication/imgs/*.{jpeg,jpg,png,gif,avif,webp}'
+)
 ---
 
 <div class='publication-list grid gap-6'>
@@ -38,9 +44,9 @@ const { publications } = Astro.props
           {/* 左侧图片 */}
           <div class='publication-image-wrapper w-full md:w-72 lg:w-80 flex-shrink-0'>
             <div class='relative aspect-[4/3] md:aspect-auto md:h-full overflow-hidden bg-muted'>
-              {pub.image ? (
-                <img
-                  src={pub.image}
+              {pub.image && images[pub.image] ? (
+                <Image
+                  src={images[pub.image]()}
                   alt={pub.title}
                   class='absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105'
                   loading='lazy'
