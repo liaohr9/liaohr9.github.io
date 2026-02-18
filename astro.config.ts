@@ -24,7 +24,7 @@ export default defineConfig({
   // Top-Level Options
   site: 'https://liaohr9.github.io',
   // Deploy to a sub path; See https://astro-pure.js.org/docs/setup/deployment#platform-with-base-path
-  base: '/homepage',
+  // base: '/homepage',
   trailingSlash: 'never',
 
   // Adapter
