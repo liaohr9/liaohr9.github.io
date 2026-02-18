@@ -1,5 +1,5 @@
 import { rehypeHeadingIds } from '@astrojs/markdown-remark'
-import vercel from '@astrojs/vercel'
+// import vercel from '@astrojs/vercel'
 import AstroPureIntegration from 'astro-pure'
 import { defineConfig, fontProviders } from 'astro/config'
 import rehypeKatex from 'rehype-katex'
@@ -22,16 +22,18 @@ import config from './src/site.config.ts'
 // https://astro.build/config
 export default defineConfig({
   // Top-Level Options
-  site: 'https://liaohr9.github.io',
+  site: 'https://iaohr9.github.io',
   // Deploy to a sub path; See https://astro-pure.js.org/docs/setup/deployment#platform-with-base-path
   // base: '/homepage',
   trailingSlash: 'never',
 
   // Adapter
   // https://docs.astro.build/en/guides/deploy/
-  // 1. Vercel (serverless)
-  adapter: vercel(),
-  output: 'server',
+  // GitHub Pages (static)
+  output: 'static',
+  // 1. Vercel (serverless) - commented out for GitHub Pages
+  // adapter: vercel(),
+  // output: 'server',
   // 2. Vercel (static)
   // adapter: vercelStatic(),
   // 3. Local (standalone)
