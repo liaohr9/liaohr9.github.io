@@ -27,7 +27,12 @@ const { publications } = Astro.props
 
 <div class='publication-list grid gap-6'>
   {
-    publications.map((pub) => (
+    publications.map((pub) => {
+      const projectLink = pub.links.find(link => link.name === 'Project')
+      const paperLink = pub.links.find(link => link.name === 'Paper' || link.name === 'PDF')
+      const titleLink = projectLink?.href || paperLink?.href || '#'
+      
+      return (
       <article class='publication-card group relative overflow-hidden rounded-2xl border bg-background transition-all hover:border-foreground/25 hover:shadow-md'>
         <div class='flex flex-col md:flex-row'>
           {/* 左侧图片 */}
@@ -52,9 +57,11 @@ const { publications } = Astro.props
           <div class='flex flex-1 flex-col justify-between p-5 md:p-6'>
             <div>
               {/* 标题 */}
-              <h3 class='mb-3 text-lg font-semibold leading-tight text-foreground transition-colors group-hover:text-primary md:text-xl'>
-                {pub.title}
-              </h3>
+              <a href={titleLink} target='_blank' rel='noopener noreferrer' class='block'>
+                <h3 class='mb-3 text-lg font-semibold leading-tight text-foreground transition-colors group-hover:text-primary md:text-xl'>
+                  {pub.title}
+                </h3>
+              </a>
 
               {/* 作者 */}
               <p class='mb-2 text-sm text-muted-foreground'>
@@ -91,7 +98,7 @@ const { publications } = Astro.props
           </div>
         </div>
       </article>
-    ))
+    )})
   }
 </div>
 

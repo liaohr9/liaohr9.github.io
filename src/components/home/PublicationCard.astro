@@ -20,6 +20,10 @@ interface Props {
 }
 
 const { publication } = Astro.props
+
+const projectLink = publication.links.find(link => link.name === 'Project')
+const paperLink = publication.links.find(link => link.name === 'Paper' || link.name === 'PDF')
+const titleLink = projectLink?.href || paperLink?.href || '#'
 ---
 
 <article class='publication-card group relative overflow-hidden rounded-2xl border bg-background transition-all hover:border-foreground/25 hover:shadow-md'>
@@ -46,7 +50,7 @@ const { publication } = Astro.props
     <div class='flex flex-1 flex-col justify-between p-4 md:p-5'>
       <div>
         {/* 标题 */}
-        <a href='/publications' class='block'>
+        <a href={titleLink} target='_blank' rel='noopener noreferrer' class='block'>
           <h3 class='mb-2 text-base font-semibold leading-tight text-foreground transition-colors group-hover:text-primary md:text-lg'>
             {publication.title}
           </h3>
