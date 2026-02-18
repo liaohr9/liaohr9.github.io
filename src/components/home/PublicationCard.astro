@@ -1,4 +1,5 @@
 ---
+import { Image } from 'astro:assets'
 import { Icon } from 'astro-pure/user'
 import type { ComponentProps } from 'astro/types'
 
@@ -24,6 +25,11 @@ const { publication } = Astro.props
 const projectLink = publication.links.find(link => link.name === 'Project')
 const paperLink = publication.links.find(link => link.name === 'Paper' || link.name === 'PDF')
 const titleLink = projectLink?.href || paperLink?.href || '#'
+
+// Import all publication images using glob
+const images = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/content/publication/imgs/*.{jpeg,jpg,png,gif,avif,webp}'
+)
 ---
 
 <article class='publication-card group relative overflow-hidden rounded-2xl border bg-background transition-all hover:border-foreground/25 hover:shadow-md'>
@@ -31,9 +37,9 @@ const titleLink = projectLink?.href || paperLink?.href || '#'
     {/* 左侧图片 */}
     <div class='publication-image-wrapper w-full md:w-64 lg:w-72 flex-shrink-0'>
       <div class='relative aspect-[4/3] md:aspect-auto md:h-full overflow-hidden bg-muted'>
-        {publication.image ? (
-          <img
-            src={publication.image}
+        {publication.image && images[publication.image] ? (
+          <Image
+            src={images[publication.image]()}
             alt={publication.title}
             class='absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105'
             loading='lazy'
