@@ -1,0 +1,91 @@
+---
+import { Icon } from 'astro-pure/user'
+
+interface NewsItem {
+  title: string
+  description: string
+  date: string
+  link?: string
+  category?: string
+}
+
+interface Props {
+  newsList: NewsItem[]
+}
+
+const { newsList } = Astro.props
+
+// 格式化日期
+const formatDate = (dateStr: string) => {
+  const date = new Date(dateStr)
+  return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+}
+
+// 根据类别选择不同的颜色
+const getCategoryColor = (category?: string) => {
+  switch (category) {
+    case 'Research':
+      return 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
+    case 'Award':
+      return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300'
+    case 'Publication':
+      return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
+    default:
+      return 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-300'
+  }
+}
+---
+
+<div class='news-list flex flex-col gap-4'>
+  {
+    newsList.map((newsItem) => (
+      <article class='news-item group relative overflow-hidden rounded-xl border bg-background transition-all hover:border-foreground/25 hover:shadow-md'>
+        <div class='p-6'>
+          {/* 头部：日期和分类 */}
+          <div class='mb-3 flex flex-wrap items-center gap-3'>
+            <div class='flex items-center gap-2 text-sm text-muted-foreground'>
+              <Icon name='calendar' class='h-4 w-4' />
+              <span>{formatDate(newsItem.date)}</span>
+            </div>
+            {newsItem.category && (
+              <span class={`rounded-full px-3 py-1 text-xs font-medium ${getCategoryColor(newsItem.category)}`}>
+                {newsItem.category}
+              </span>
+            )}
+          </div>
+
+          {/* 标题 */}
+          {newsItem.link ? (
+            <a href={newsItem.link} target='_blank' rel='noopener noreferrer' class='block'>
+              <h3 class='mb-3 text-xl font-bold leading-tight text-foreground transition-colors group-hover:text-primary'>
+                {newsItem.title}
+              </h3>
+            </a>
+          ) : (
+            <h3 class='mb-3 text-xl font-bold leading-tight text-foreground'>
+              {newsItem.title}
+            </h3>
+          )}
+
+          {/* 描述 */}
+          <p class='mb-4 text-muted-foreground'>
+            {newsItem.description}
+          </p>
+
+          {/* 链接按钮 */}
+          {newsItem.link && (
+            <a
+              href={newsItem.link}
+              target='_blank'
+              rel='noopener noreferrer'
+              class='inline-flex items-center gap-2 text-sm font-medium text-primary transition-colors hover:text-primary/80'
+            >
+              Read more
+              <Icon name='link' class='h-4 w-4' />
+            </a>
+          )}
+        </div>
+      </article>
+    ))
+  }
+</div>

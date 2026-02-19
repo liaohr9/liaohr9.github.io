@@ -1,0 +1,44 @@
+---
+import PageLayout from '@/layouts/CommonPage.astro'
+import NewsList from '@/components/news/NewsList.astro'
+import { news } from '@/content/news/news'
+
+// 按日期排序新闻 (从新到旧)
+const sortedNews = [...news].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+
+// 按年份分组
+const groupedNews = sortedNews.reduce(
+  (acc: Record<string, typeof news>, newsItem) => {
+    const year = new Date(newsItem.date).getFullYear().toString()
+    if (!acc[year]) acc[year] = []
+    acc[year].push(newsItem)
+    return acc
+  },
+  {} as Record<string, typeof news>
+)
+
+const years = Object.keys(groupedNews).sort((a, b) => parseInt(b) - parseInt(a))
+
+const headings = years.map(year => ({
+  depth: 2,
+  slug: year,
+  text: year
+}))
+---
+
+<PageLayout title='News' {headings} view>
+  
+  <p class="mb-8 text-muted-foreground">
+    Latest news and updates about my research, awards, and academic activities.
+  </p>
+
+  {
+    years.map((year) => (
+      <div class='mb-12'>
+        <h2 id={year} class='text-2xl font-bold mb-6'>{year}</h2>
+        <NewsList newsList={groupedNews[year]} />
+      </div>
+    ))
+  }
+
+</PageLayout>

@@ -8,10 +8,12 @@ import { Button, Card, Icon, Label } from 'astro-pure/user'
 import PageLayout from '@/layouts/BaseLayout.astro'
 import ProjectCard from '@/components/home/ProjectCard.astro'
 import PublicationCard from '@/components/home/PublicationCard.astro'
+import NewsCard from '@/components/home/NewsCard.astro'
 import Section from '@/components/home/Section.astro'
 import SkillLayout from '@/components/home/SkillLayout.astro'
 import config from '@/site-config'
 import { publications } from '@/content/publication/publications'
+import { news } from '@/content/news/news'
 
 const languages = ['Python', 'C/C++', 'JavaScript', 'Shell']
 const frontend = ['PyTorch', 'TensorFlow', 'OpenCV', 'ROS']
@@ -20,6 +22,10 @@ const backend = ['Computer Vision', 'Machine Learning', 'Robotics']
 const MAX_PUBLICATIONS = 15
 // 按年份排序论文 (从新到旧)
 const publicationsByDate = [...publications].sort((a, b) => parseInt(b.year) - parseInt(a.year)).slice(0, MAX_PUBLICATIONS)
+
+const MAX_NEWS = 3
+// 按日期排序新闻 (从新到旧)
+const latestNews = [...news].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).slice(0, MAX_NEWS)
 
 const imagePath = config.logo.src
 const images = import.meta.glob<{ default: ImageMetadata }>(
@@ -66,16 +72,20 @@ if (!images[imagePath])
         <Button title='More about me' class='w-fit self-end' href='/about' variant='ahead' />
       </Section>
 
-      <Section title='Education'>
-        <Card
-          as='a'
-          heading='School of Computer Science and Engineering, Sun Yat-sen University (SYSU)'
-          subheading='Intern Undergraduate at Intelligence Science and System Lab (iSEE), advised by Wei-shi Zheng.'
-          date='2023 - Present (Expected 2027)'
-          href='https://www.sysu.edu.cn'
-        >
-        </Card>
-      </Section>
+      {
+        latestNews.length > 0 && (
+          <Section title='News'>
+            <ul class='flex flex-col gap-y-3'>
+              {latestNews.map((newsItem) => (
+                <li>
+                  <NewsCard newsItem={newsItem} />
+                </li>
+              ))}
+            </ul>
+            <Button title='More news' class='w-fit self-end' href='/news' variant='ahead' />
+          </Section>
+        )
+      }
 
       {
         publicationsByDate.length > 0 && (

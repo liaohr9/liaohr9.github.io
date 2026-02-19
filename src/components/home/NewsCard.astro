@@ -1,0 +1,93 @@
+---
+import { Icon } from 'astro-pure/user'
+
+interface Props {
+  newsItem: {
+    title: string
+    description: string
+    date: string
+    link?: string
+    category?: string
+  }
+}
+
+const { newsItem } = Astro.props
+
+// 格式化日期
+const formatDate = (dateStr: string) => {
+  const date = new Date(dateStr)
+  return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
+}
+
+// 根据类别选择不同的颜色
+const getCategoryColor = (category?: string) => {
+  switch (category) {
+    case 'Research':
+      return 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
+    case 'Award':
+      return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300'
+    case 'Publication':
+      return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
+    default:
+      return 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-300'
+  }
+}
+---
+
+<article class='news-card group relative overflow-hidden rounded-xl border bg-background p-4 transition-all hover:border-foreground/25 hover:shadow-md'>
+  <div class='flex items-start gap-3'>
+    {/* 日期图标 */}
+    <div class='mt-1 flex-shrink-0'>
+      <div class='flex h-10 w-10 items-center justify-center rounded-lg bg-muted'>
+        <Icon name='calendar' class='h-5 w-5 text-muted-foreground' />
+      </div>
+    </div>
+
+    {/* 内容 */}
+    <div class='flex-1 min-w-0'>
+      {/* 日期和分类 */}
+      <div class='mb-2 flex flex-wrap items-center gap-2'>
+        <span class='text-xs text-muted-foreground'>
+          {formatDate(newsItem.date)}
+        </span>
+        {newsItem.category && (
+          <span class={`rounded-full px-2 py-0.5 text-xs font-medium ${getCategoryColor(newsItem.category)}`}>
+            {newsItem.category}
+          </span>
+        )}
+      </div>
+
+      {/* 标题 */}
+      {newsItem.link ? (
+        <a href={newsItem.link} target='_blank' rel='noopener noreferrer' class='block'>
+          <h3 class='mb-1 text-base font-semibold leading-tight text-foreground transition-colors group-hover:text-primary'>
+            {newsItem.title}
+          </h3>
+        </a>
+      ) : (
+        <h3 class='mb-1 text-base font-semibold leading-tight text-foreground'>
+          {newsItem.title}
+        </h3>
+      )}
+
+      {/* 描述 */}
+      <p class='text-sm text-muted-foreground line-clamp-2'>
+        {newsItem.description}
+      </p>
+    </div>
+
+    {/* 链接图标 */}
+    {newsItem.link && (
+      <div class='flex-shrink-0'>
+        <a 
+          href={newsItem.link} 
+          target='_blank' 
+          rel='noopener noreferrer'
+          class='flex h-8 w-8 items-center justify-center rounded-lg transition-colors hover:bg-muted'
+        >
+          <Icon name='link' class='h-4 w-4 text-muted-foreground' />
+        </a>
+      </div>
+    )}
+  </div>
+</article>
