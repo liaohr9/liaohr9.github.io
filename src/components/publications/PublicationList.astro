@@ -71,16 +71,27 @@ const images = import.meta.glob<{ default: ImageMetadata }>(
 
               {/* 作者 */}
               <p class='mb-2 text-sm text-muted-foreground'>
-                {pub.authors.map((author, index) => (
-                  <span>
-                    {author === 'Haoran Liao' ? (
-                      <span class='font-semibold text-foreground'>{author}</span>
-                    ) : (
-                      author
-                    )}
-                    {index < pub.authors.length - 1 && ', '}
-                  </span>
-                ))}
+                {pub.authors.map((author, index) => {
+                  const isMe = author.replace(/\*$/, '') === 'Haoran Liao';
+                  const hasStar = author.endsWith('*');
+                  const name = author.replace(/\*$/, '');
+                  return (
+                    <span style='position: relative; display: inline-block;'>
+                      {isMe ? (
+                        <span class='font-semibold text-foreground'>
+                          {name}
+                          {hasStar && <sup style='font-size: 0.7em; top: -0.6em; left: 0.1em; position: relative;'>*</sup>}
+                        </span>
+                      ) : (
+                        <>
+                          {name}
+                          {hasStar && <sup style='font-size: 0.7em; top: -0.6em; left: 0.1em; position: relative;'>*</sup>}
+                        </>
+                      )}
+                      {index < pub.authors.length - 1 && ', '}
+                    </span>
+                  );
+                })}
               </p>
 
               {/* 期刊/会议 */}

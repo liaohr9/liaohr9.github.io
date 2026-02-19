@@ -1,7 +1,7 @@
 export const publications = [
   {
     title: 'CycleManip: Enabling Cyclic Task Manipulation via Effective Historical Perception and Understanding',
-    authors: ['Yi-Lin Wei', 'Haoran Liao', 'Yuhao Lin', 'Pengyue Wang', 'Zhizhao Liang', 'Guiliang Liu', 'Wei-Shi Zheng'],
+    authors: ['Yi-Lin Wei*', 'Haoran Liao*', 'Yuhao Lin', 'Pengyue Wang', 'Zhizhao Liang', 'Guiliang Liu', 'Wei-Shi Zheng'],
     year: '2025',
     journal: 'arXiv preprint',
     image: '/src/content/publication/imgs/cyclemanip.jpeg',
@@ -12,7 +12,7 @@ export const publications = [
   },
   {
     title: 'TypeTele: Releasing Dexterity in Teleoperation by Dexterous Manipulation Types',
-    authors: ['Yuhao Lin', 'Yi-Lin Wei', 'Haoran Liao', 'Mu Lin', 'Chengyi Xing', 'Hao Li', 'Dandan Zhang', 'Mark Cutkosky', 'Wei-Shi Zheng'],
+    authors: ['Yuhao Lin*', 'Yi-Lin Wei*', 'Haoran Liao', 'Mu Lin', 'Chengyi Xing', 'Hao Li', 'Dandan Zhang', 'Mark Cutkosky', 'Wei-Shi Zheng'],
     year: '2025',
     journal: 'CoRL 2025',
     image: '/src/content/publication/imgs/typetele.jpeg',
@@ -24,7 +24,7 @@ export const publications = [
   },
   {
     title: 'LDA-1B: Scaling Latent Dynamics Action Model via Universal Embodied Data Ingestion',
-    authors: ['Jiangran Lyu', 'Kai Liu', 'Xuheng Zhang', 'Haoran Liao', 'Yusen Feng', 'Wenxuan Zhu', 'Tingrui Shen', 'Jiayi Chen', 'Jiazhao Zhang', 'Yifei Dong', 'Wenbo Cui', 'Senmao Qi', 'Shuo Wang', 'Yixin Zheng', 'Mi Yan', 'Xuesong Shi', 'Haoran Li', 'Dongbin Zhao', 'Ming-Yu Liu', 'Zhizheng Zhang', 'Li Yi', 'Yizhou Wang', 'He Wang'],
+    authors: ['Jiangran Lyu*', 'Kai Liu*', 'Xuheng Zhang*', 'Haoran Liao', 'Yusen Feng', 'Wenxuan Zhu', 'Tingrui Shen', 'Jiayi Chen', 'Jiazhao Zhang', 'Yifei Dong', 'Wenbo Cui', 'Senmao Qi', 'Shuo Wang', 'Yixin Zheng', 'Mi Yan', 'Xuesong Shi', 'Haoran Li', 'Dongbin Zhao', 'Ming-Yu Liu', 'Zhizheng Zhang', 'Li Yi', 'Yizhou Wang', 'He Wang'],
     year: '2026',
     journal: 'arXiv preprint',
     image: '/src/content/publication/imgs/ida.jpeg',
