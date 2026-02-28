@@ -15,7 +15,7 @@ export const publications = [
     title: 'CycleManip: Enabling Cyclic Task Manipulation via Effective Historical Perception and Understanding',
     authors: ['Yi-Lin Wei*', 'Haoran Liao*', 'Yuhao Lin', 'Pengyue Wang', 'Zhizhao Liang', 'Guiliang Liu', 'Wei-Shi Zheng'],
     year: '2025',
-    journal: 'CVPR 2025',
+    journal: 'CVPR 2026',
     image: '/src/content/publication/imgs/cyclemanip.jpeg',
     links: [
       { name: 'Paper', href: 'https://arxiv.org/abs/2512.01022', icon: 'document' as const },
