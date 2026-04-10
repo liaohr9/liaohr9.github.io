@@ -1,0 +1,63 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro'
+---
+
+<BaseLayout meta={{ title: 'Life', description: 'A peek into life beyond the lab — photography, travels, and more.' }}>
+  <main class='w-full'>
+    <!-- Page Header -->
+    <section class='animate mb-14 mt-8 flex flex-col items-center gap-y-3 text-center' id='content-header'>
+      <p class='text-sm font-medium uppercase tracking-[0.3em] text-muted-foreground'>Beyond the Research</p>
+      <h1 class='text-4xl font-bold tracking-tight sm:text-5xl'>Life</h1>
+      <p class='max-w-md text-base text-muted-foreground'>
+        A space for the things that matter outside of research — captured moments, quiet observations, and everything in between.
+      </p>
+    </section>
+
+    <!-- Category Grid -->
+    <div class='animate grid gap-6 sm:grid-cols-2 lg:grid-cols-3' id='content'>
+
+      <!-- Photography Card -->
+      <a
+        href='/life/photograph'
+        class='group relative overflow-hidden rounded-2xl border border-border/50 bg-card transition-all duration-300 hover:-translate-y-1 hover:border-border hover:shadow-xl'
+      >
+        <!-- Background accent -->
+        <div class='absolute inset-0 bg-gradient-to-br from-sky-500/8 via-transparent to-indigo-500/8 opacity-0 transition-opacity duration-300 group-hover:opacity-100' />
+
+        <div class='relative flex flex-col gap-y-4 p-7'>
+          <!-- Icon -->
+          <div class='flex h-12 w-12 items-center justify-center rounded-xl bg-sky-500/10 text-sky-600 dark:text-sky-400'>
+            <svg xmlns='http://www.w3.org/2000/svg' class='h-6 w-6' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
+              <path stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z' />
+              <path stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M15 13a3 3 0 11-6 0 3 3 0 016 0z' />
+            </svg>
+          </div>
+
+          <!-- Text -->
+          <div>
+            <h2 class='text-lg font-semibold tracking-tight'>Photography</h2>
+            <p class='mt-1.5 text-sm leading-relaxed text-muted-foreground'>
+              Moments preserved through the lens — stories told in light and shadow.
+            </p>
+          </div>
+
+          <!-- Arrow -->
+          <div class='flex items-center gap-x-1 text-xs font-medium text-sky-600 dark:text-sky-400'>
+            <span>View albums</span>
+            <svg xmlns='http://www.w3.org/2000/svg' class='h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
+              <path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M9 5l7 7-7 7' />
+            </svg>
+          </div>
+        </div>
+      </a>
+
+      <!-- Placeholder card – coming soon -->
+      <!-- Uncomment and duplicate when you add a new category -->
+      <!--
+      <div class='relative overflow-hidden rounded-2xl border border-dashed border-border/50 bg-muted/20 p-7'>
+        <p class='text-sm text-muted-foreground'>More coming soon…</p>
+      </div>
+      -->
+    </div>
+  </main>
+</BaseLayout>

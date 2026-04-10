@@ -1,8 +1,8 @@
 export const news = [
   {
-    title: 'Paper accepted by CVPR 2026',
-    description: 'Our paper "CycleManip" has been accepted by CVPR 2026!',
-    date: '2026-02',
+    title: 'Paper HIGHLIGHTED by CVPR 2026',
+    description: 'Our paper "CycleManip" has been accepted by CVPR 2026 and highlighted! ',
+    date: '2026-04',
     link: '#',
     category: 'Research'
   },
