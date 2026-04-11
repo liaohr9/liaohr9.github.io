@@ -51,13 +51,40 @@ import BaseLayout from '@/layouts/BaseLayout.astro'
         </div>
       </a>
 
-      <!-- Placeholder card – coming soon -->
-      <!-- Uncomment and duplicate when you add a new category -->
-      <!--
-      <div class='relative overflow-hidden rounded-2xl border border-dashed border-border/50 bg-muted/20 p-7'>
-        <p class='text-sm text-muted-foreground'>More coming soon…</p>
-      </div>
-      -->
+      <!-- Tourism Card -->
+      <a
+        href='/life/tourism'
+        class='group relative overflow-hidden rounded-2xl border border-border/50 bg-card transition-all duration-300 hover:-translate-y-1 hover:border-border hover:shadow-xl'
+      >
+        <!-- Background accent -->
+        <div class='absolute inset-0 bg-gradient-to-br from-emerald-500/8 via-transparent to-teal-500/8 opacity-0 transition-opacity duration-300 group-hover:opacity-100' />
+
+        <div class='relative flex flex-col gap-y-4 p-7'>
+          <!-- Icon -->
+          <div class='flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'>
+            <svg xmlns='http://www.w3.org/2000/svg' class='h-6 w-6' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
+              <path stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z' />
+              <path stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M15 11a3 3 0 11-6 0 3 3 0 016 0z' />
+            </svg>
+          </div>
+
+          <!-- Text -->
+          <div>
+            <h2 class='text-lg font-semibold tracking-tight'>Tourism</h2>
+            <p class='mt-1.5 text-sm leading-relaxed text-muted-foreground'>
+              A map of places I've explored — each dot a journey, each stop a story.
+            </p>
+          </div>
+
+          <!-- Arrow -->
+          <div class='flex items-center gap-x-1 text-xs font-medium text-emerald-600 dark:text-emerald-400'>
+            <span>View map</span>
+            <svg xmlns='http://www.w3.org/2000/svg' class='h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
+              <path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M9 5l7 7-7 7' />
+            </svg>
+          </div>
+        </div>
+      </a>
     </div>
   </main>
 </BaseLayout>

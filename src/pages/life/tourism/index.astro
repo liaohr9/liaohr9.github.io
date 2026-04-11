@@ -1,0 +1,207 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro'
+import { tourismPlaces } from '@/content/tourism'
+
+const headContent = `
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+  crossorigin=""
+/>
+<script
+  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+  crossorigin=""
+></script>
+`
+
+// ── Geocode cache ──────────────────────────────────────────────────────────
+const cachePath = new URL('.cache/geocode.json', import.meta.url).pathname
+let cache: Record<string, [number, number]> = {}
+try { if (import.meta.env.SSR) { const fs = await import('node:fs'); cache = JSON.parse(fs.readFileSync(cachePath, 'utf8')) } } catch {}
+
+/** Geocode a city name using Nominatim API */
+async function geocode(name: string): Promise<[number, number] | null> {
+  if (cache[name]) return cache[name]
+  try {
+    const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(name)}&limit=1`, {
+      headers: { 'User-Agent': 'liaohr9.github.io tourism map' }
+    })
+    const data = await res.json()
+    if (data?.[0]) {
+      const coords: [number, number] = [parseFloat(data[0].lat), parseFloat(data[0].lon)]
+      cache[name] = coords
+      return coords
+    }
+  } catch { /* skip */ }
+  return null
+}
+
+// Resolve all cities
+const geocoded = await Promise.all(tourismPlaces.map(async (p) => ({
+  name: p.name,
+  coords: await geocode(p.name)
+})))
+
+const valid = geocoded.filter((p) => p.coords != null) as { name: string; coords: [number, number] }[]
+const failed = geocoded.filter((p) => p.coords == null)
+
+// Persist cache
+try {
+  const fs = await import('node:fs')
+  fs.mkdirSync(new URL('.cache/', import.meta.url).pathname, { recursive: true })
+  fs.writeFileSync(cachePath, JSON.stringify(cache, null, 2))
+} catch {}
+---
+
+<BaseLayout
+  meta={{ title: 'Tourism', description: 'Places I have visited around the world.' }}
+  {headContent}
+>
+  <main class='w-full'>
+    <!-- Page Header -->
+    <section class='animate mb-14 mt-8 flex flex-col items-center gap-y-3 text-center' id='content-header'>
+      <a href='/life' class='flex items-center gap-x-1 text-xs text-muted-foreground transition-colors hover:text-foreground'>
+        <svg xmlns='http://www.w3.org/2000/svg' class='h-3 w-3' fill='none' viewBox='0 0 24 24' stroke='currentColor'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M15 19l-7-7 7-7' /></svg>
+        Life
+      </a>
+      <p class='text-sm font-medium uppercase tracking-[0.3em] text-muted-foreground'>Exploration</p>
+      <h1 class='text-4xl font-bold tracking-tight sm:text-5xl'>Tourism</h1>
+      <p class='max-w-md text-base text-muted-foreground'>
+        Places I've been to — each dot a story, each journey a memory.
+      </p>
+    </section>
+
+    <!-- Map -->
+    <div class='animate rounded-2xl border border-border/50 bg-card overflow-hidden' id='content'>
+      <div id='tourism-map' class='w-full' style='height: 70vh; min-height: 480px;'></div>
+    </div>
+
+    <!-- City List -->
+    {valid.length > 0 && (
+      <section class='animate mt-10'>
+        <h2 class='text-lg font-semibold tracking-tight mb-4'>Places Visited ({valid.length})</h2>
+        <div class='grid gap-2 sm:grid-cols-2 lg:grid-cols-3'>
+          {valid.map((place) => (
+            <div class='flex items-center gap-x-2 rounded-lg border border-border/40 bg-card px-4 py-2.5 text-sm'>
+              <span class='h-2 w-2 flex-none rounded-full bg-red-500'></span>
+              <span class='truncate'>{place.name}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+    )}
+
+    {failed.length > 0 && (
+      <div class='animate mt-6 rounded-lg border border-amber-500/30 bg-amber-500/5 p-4 text-sm text-amber-600 dark:text-amber-400'>
+        <p class='font-medium'>Could not locate the following cities:</p>
+        <ul class='mt-1 list-inside list-disc'>
+          {failed.map((place) => <li>{place.name}</li>)}
+        </ul>
+      </div>
+    )}
+
+    {tourismPlaces.length === 0 && (
+      <div class='animate flex flex-col items-center gap-y-3 py-24 text-center text-muted-foreground'>
+        <svg xmlns='http://www.w3.org/2000/svg' class='h-12 w-12 opacity-30' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
+          <path stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z' />
+          <path stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M15 11a3 3 0 11-6 0 3 3 0 016 0z' />
+        </svg>
+        <p class='text-sm'>No places added yet. Edit <code>src/content/tourism/index.ts</code> to get started.</p>
+      </div>
+    )}
+  </main>
+</BaseLayout>
+
+<!-- Map initialization -->
+<script is:inline define:vars={{ valid }}>
+  const isDark = document.documentElement.classList.contains('dark')
+  const lightTiles = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+  const darkTiles = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png'
+
+  function initMap() {
+    if (typeof L === 'undefined') {
+      setTimeout(initMap, 50)
+      return
+    }
+
+    // World bounds to prevent infinite panning
+    const worldBounds = [[-85.05, -180], [85.05, 180]]
+
+    const map = L.map('tourism-map', {
+      zoomControl: true,
+      scrollWheelZoom: true,
+      minZoom: 2,
+      maxZoom: 18,
+      maxBounds: worldBounds,
+      maxBoundsViscosity: 0.8
+    })
+
+    let tiles = L.tileLayer(isDark ? darkTiles : lightTiles, {
+      maxZoom: 18,
+      attribution: isDark
+        ? '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>'
+        : '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>'
+    }).addTo(map)
+
+    const redIcon = L.divIcon({
+      className: 'custom-marker',
+      html: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 36" width="24" height="36"><path fill="#ef4444" stroke="#fff" stroke-width="2" d="M12 0C5.4 0 0 5.4 0 12c0 9 12 24 12 24s12-15 12-24C24 5.4 18.6 0 12 0z"/><circle fill="#fff" cx="12" cy="11" r="4"/></svg>',
+      iconSize: [24, 36],
+      iconAnchor: [12, 36],
+      popupAnchor: [0, -30]
+    })
+
+    const bounds = []
+    valid.forEach((place) => {
+      const [lat, lng] = place.coords
+      L.marker([lat, lng], { icon: redIcon }).bindPopup('<b>' + place.name + '</b>').addTo(map)
+      bounds.push([lat, lng])
+    })
+    if (bounds.length > 0) map.fitBounds(bounds, { padding: [50, 50] })
+
+    // Set initial background to match theme
+    map.getContainer().style.background = isDark ? '#0B0B10' : '#FCFCFD'
+
+    // Theme change listener
+    const observer = new MutationObserver(() => {
+      const nowDark = document.documentElement.classList.contains('dark')
+      map.removeLayer(tiles)
+      tiles = L.tileLayer(nowDark ? darkTiles : lightTiles, {
+        maxZoom: 18,
+        attribution: nowDark
+          ? '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>'
+          : '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>'
+      }).addTo(map)
+      map.getContainer().style.background = nowDark ? '#0B0B10' : '#FCFCFD'
+    })
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
+  }
+
+  initMap()
+</script>
+
+<style>
+  /* Hide default leaflet marker bounding box */
+  .custom-marker {
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  }
+
+  /* Leaflet popup styling */
+  .leaflet-popup-content-wrapper {
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+  }
+  .leaflet-popup-content {
+    margin: 0.5rem 0.75rem;
+  }
+
+  /* Map container background */
+  #tourism-map .leaflet-container {
+    background: hsl(var(--muted));
+  }
+</style>
