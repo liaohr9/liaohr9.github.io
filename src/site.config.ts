@@ -54,7 +54,7 @@ export const theme: ThemeUserConfig = {
       { title: 'Blog', link: '/blog' },
       // { title: 'Docs', link: '/docs' },
       // { title: 'Links', link: '/links' },
-      // { title: 'Life', link: '/life' }, // 暂时不展示，还处于实验阶段
+      { title: 'Life', link: '/life' }, // 暂时不展示，还处于实验阶段
       { title: 'About', link: '/about' }
     ]
   },
