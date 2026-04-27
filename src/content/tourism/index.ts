@@ -34,6 +34,7 @@ export const tourismPlaces: TourismPlace[] = [
   { name: "Chongqing, China" },
   { name: "Haikou, China" },
   { name: "Sanya, China" },
+  { name: "Datong, China" },
 
   { name: "Soul, South Korea" },
 ]

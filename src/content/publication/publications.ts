@@ -3,7 +3,7 @@ export const publications = [
     title: 'LDA-1B: Scaling Latent Dynamics Action Model via Universal Embodied Data Ingestion',
     authors: ['Jiangran Lyu*', 'Kai Liu*', 'Xuheng Zhang*', 'Haoran Liao', 'Yusen Feng', 'Wenxuan Zhu', 'Tingrui Shen', 'Jiayi Chen', 'Jiazhao Zhang', 'Yifei Dong', 'Wenbo Cui', 'Senmao Qi', 'Shuo Wang', 'Yixin Zheng', 'Mi Yan', 'Xuesong Shi', 'Haoran Li', 'Dongbin Zhao', 'Ming-Yu Liu', 'Zhizheng Zhang', 'Li Yi', 'Yizhou Wang', 'He Wang'],
     year: '2026',
-    journal: 'arXiv preprint',
+    journal: 'RSS 2026',
     image: '/src/content/publication/imgs/ida.jpeg',
     links: [
       { name: 'Paper', href: 'https://arxiv.org/pdf/2602.12215', icon: 'document' as const },
