@@ -1,0 +1,445 @@
+<script>
+let mermaidLoader: Promise<typeof import('mermaid').default> | undefined
+let renderId = 0
+let renderTimer: number | undefined
+const panZoomStates = new WeakMap<
+  HTMLElement,
+  {
+    scale: number
+    x: number
+    y: number
+    activePointers: Map<number, { x: number; y: number }>
+    lastPan?: { x: number; y: number }
+    pinch?: {
+      centerX: number
+      centerY: number
+      distance: number
+      scale: number
+      x: number
+      y: number
+    }
+  }
+>()
+
+const minScale = 0.75
+const maxScale = 4
+
+const getMermaidSource = (block: HTMLElement) => {
+  const copyButton = block.querySelector<HTMLButtonElement>('button.copy[data-code]')
+  if (copyButton?.dataset?.code) return copyButton.dataset.code
+
+  const code = block.querySelector<HTMLElement>('pre code')
+  return code?.textContent ?? ''
+}
+
+const isDarkTheme = () => document.documentElement.classList.contains('dark')
+
+const getMermaidConfig = () => {
+  const dark = isDarkTheme()
+
+  return {
+    startOnLoad: false,
+    securityLevel: 'strict' as const,
+    theme: 'base' as const,
+    themeVariables: dark
+      ? {
+          background: '#0b0b12',
+          mainBkg: '#171722',
+          secondBkg: '#1f2937',
+          tertiaryColor: '#111827',
+          primaryColor: '#172033',
+          primaryTextColor: '#f8fafc',
+          primaryBorderColor: '#64748b',
+          secondaryColor: '#1e293b',
+          secondaryTextColor: '#e5e7eb',
+          secondaryBorderColor: '#475569',
+          tertiaryTextColor: '#e5e7eb',
+          tertiaryBorderColor: '#334155',
+          lineColor: '#94a3b8',
+          textColor: '#f8fafc',
+          nodeTextColor: '#f8fafc',
+          clusterBkg: '#101827',
+          clusterBorder: '#475569',
+          edgeLabelBackground: '#111827',
+          fontFamily: 'Satoshi, ui-sans-serif, system-ui, sans-serif'
+        }
+      : {
+          background: '#ffffff',
+          mainBkg: '#f8fafc',
+          secondBkg: '#eef2f7',
+          tertiaryColor: '#e2e8f0',
+          primaryColor: '#eaf4fb',
+          primaryTextColor: '#0f172a',
+          primaryBorderColor: '#5d879d',
+          secondaryColor: '#f1f5f9',
+          secondaryTextColor: '#0f172a',
+          secondaryBorderColor: '#94a3b8',
+          tertiaryTextColor: '#0f172a',
+          tertiaryBorderColor: '#cbd5e1',
+          lineColor: '#475569',
+          textColor: '#0f172a',
+          nodeTextColor: '#0f172a',
+          clusterBkg: '#f8fafc',
+          clusterBorder: '#cbd5e1',
+          edgeLabelBackground: '#ffffff',
+          fontFamily: 'Satoshi, ui-sans-serif, system-ui, sans-serif'
+        }
+  }
+}
+
+const loadMermaid = async () => {
+  mermaidLoader ??= import('mermaid').then(({ default: mermaid }) => mermaid)
+  return mermaidLoader
+}
+
+const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value))
+
+const getPanZoomState = (figure: HTMLElement) => {
+  let state = panZoomStates.get(figure)
+  if (!state) {
+    state = {
+      scale: 1,
+      x: 0,
+      y: 0,
+      activePointers: new Map()
+    }
+    panZoomStates.set(figure, state)
+  }
+
+  return state
+}
+
+const applyPanZoom = (figure: HTMLElement) => {
+  const content = figure.querySelector<SVGSVGElement>('.mermaid-diagram__content')
+  if (!content) return
+
+  const state = getPanZoomState(figure)
+  content.style.transform = `translate(${state.x}px, ${state.y}px) scale(${state.scale})`
+  figure.dataset.panzoomScale = state.scale.toFixed(2)
+}
+
+const zoomAt = (figure: HTMLElement, nextScale: number, clientX: number, clientY: number) => {
+  const viewport = figure.querySelector<HTMLElement>('.mermaid-diagram__viewport')
+  if (!viewport) return
+
+  const state = getPanZoomState(figure)
+  const rect = viewport.getBoundingClientRect()
+  const oldScale = state.scale
+  const scale = clamp(nextScale, minScale, maxScale)
+  const localX = clientX - rect.left
+  const localY = clientY - rect.top
+
+  state.x = localX - ((localX - state.x) / oldScale) * scale
+  state.y = localY - ((localY - state.y) / oldScale) * scale
+  state.scale = scale
+
+  applyPanZoom(figure)
+}
+
+const resetPanZoom = (figure: HTMLElement) => {
+  const state = getPanZoomState(figure)
+  state.scale = 1
+  state.x = 0
+  state.y = 0
+  state.lastPan = undefined
+  state.pinch = undefined
+  state.activePointers.clear()
+  applyPanZoom(figure)
+}
+
+const getPointerPair = (state: ReturnType<typeof getPanZoomState>) => {
+  const pointers = Array.from(state.activePointers.values())
+  return pointers.length >= 2 ? [pointers[0], pointers[1]] : undefined
+}
+
+const getDistance = (a: { x: number; y: number }, b: { x: number; y: number }) =>
+  Math.hypot(a.x - b.x, a.y - b.y)
+
+const getCenter = (a: { x: number; y: number }, b: { x: number; y: number }) => ({
+  x: (a.x + b.x) / 2,
+  y: (a.y + b.y) / 2
+})
+
+const setupPanZoom = (figure: HTMLElement) => {
+  const svg = figure.querySelector<SVGSVGElement>('svg')
+  if (!svg) return
+
+  const state = getPanZoomState(figure)
+  state.scale = 1
+  state.x = 0
+  state.y = 0
+  state.lastPan = undefined
+  state.pinch = undefined
+  state.activePointers.clear()
+
+  const viewport = document.createElement('div')
+  viewport.className = 'mermaid-diagram__viewport'
+  svg.classList.add('mermaid-diagram__content')
+  svg.style.transformOrigin = '0 0'
+  viewport.append(svg)
+  figure.replaceChildren(viewport)
+  applyPanZoom(figure)
+
+  viewport.addEventListener(
+    'wheel',
+    (event) => {
+      if (event.ctrlKey || event.metaKey || event.altKey) {
+        event.preventDefault()
+        const factor = Math.exp(-event.deltaY * 0.002)
+        zoomAt(figure, state.scale * factor, event.clientX, event.clientY)
+        return
+      }
+
+      if (event.shiftKey) {
+        event.preventDefault()
+        state.x -= event.deltaY
+        state.y -= event.deltaX
+        applyPanZoom(figure)
+      }
+    },
+    { passive: false }
+  )
+
+  viewport.addEventListener('dblclick', (event) => {
+    event.preventDefault()
+    if (Math.abs(state.scale - 1) > 0.05 || Math.abs(state.x) > 2 || Math.abs(state.y) > 2) {
+      resetPanZoom(figure)
+    } else {
+      zoomAt(figure, 2, event.clientX, event.clientY)
+    }
+  })
+
+  viewport.addEventListener('pointerdown', (event) => {
+    if (event.pointerType === 'mouse' && event.button !== 0) return
+
+    viewport.setPointerCapture(event.pointerId)
+    figure.dataset.panzoomActive = 'true'
+    state.activePointers.set(event.pointerId, { x: event.clientX, y: event.clientY })
+
+    if (state.activePointers.size === 1) {
+      state.lastPan = { x: event.clientX, y: event.clientY }
+    }
+
+    if (state.activePointers.size === 2) {
+      const pair = getPointerPair(state)
+      if (!pair) return
+
+      const center = getCenter(pair[0], pair[1])
+      state.pinch = {
+        centerX: center.x,
+        centerY: center.y,
+        distance: getDistance(pair[0], pair[1]),
+        scale: state.scale,
+        x: state.x,
+        y: state.y
+      }
+    }
+  })
+
+  viewport.addEventListener('pointermove', (event) => {
+    if (!state.activePointers.has(event.pointerId)) return
+
+    event.preventDefault()
+    state.activePointers.set(event.pointerId, { x: event.clientX, y: event.clientY })
+
+    if (state.activePointers.size >= 2) {
+      const pair = getPointerPair(state)
+      if (!pair) return
+
+      const center = getCenter(pair[0], pair[1])
+      const distance = getDistance(pair[0], pair[1])
+      const rect = viewport.getBoundingClientRect()
+
+      state.pinch ??= {
+        centerX: center.x,
+        centerY: center.y,
+        distance,
+        scale: state.scale,
+        x: state.x,
+        y: state.y
+      }
+
+      const nextScale = clamp(state.pinch.scale * (distance / state.pinch.distance), minScale, maxScale)
+      const graphX = (state.pinch.centerX - rect.left - state.pinch.x) / state.pinch.scale
+      const graphY = (state.pinch.centerY - rect.top - state.pinch.y) / state.pinch.scale
+
+      state.scale = nextScale
+      state.x = center.x - rect.left - graphX * nextScale
+      state.y = center.y - rect.top - graphY * nextScale
+      applyPanZoom(figure)
+      return
+    }
+
+    if (!state.lastPan) {
+      state.lastPan = { x: event.clientX, y: event.clientY }
+      return
+    }
+
+    state.x += event.clientX - state.lastPan.x
+    state.y += event.clientY - state.lastPan.y
+    state.lastPan = { x: event.clientX, y: event.clientY }
+    applyPanZoom(figure)
+  })
+
+  const endPointer = (event: PointerEvent) => {
+    state.activePointers.delete(event.pointerId)
+
+    if (state.activePointers.size === 0) {
+      figure.dataset.panzoomActive = 'false'
+      state.lastPan = undefined
+      state.pinch = undefined
+      return
+    }
+
+    if (state.activePointers.size === 1) {
+      const pointer = Array.from(state.activePointers.values())[0]
+      state.lastPan = { ...pointer }
+      state.pinch = undefined
+    }
+  }
+
+  viewport.addEventListener('pointerup', endPointer)
+  viewport.addEventListener('pointercancel', endPointer)
+  viewport.addEventListener('lostpointercapture', endPointer)
+}
+
+const createFigure = (block: HTMLElement) => {
+  const source = getMermaidSource(block).trim()
+  if (!source) return undefined
+
+  const figure = document.createElement('figure')
+  figure.className = 'mermaid-diagram'
+  figure.dataset.mermaidSource = source
+  figure.dataset.mermaidProcessed = 'true'
+  block.replaceWith(figure)
+
+  return figure
+}
+
+const getMermaidFigures = () => {
+  const figures = new Set<HTMLElement>()
+
+  document
+    .querySelectorAll<HTMLElement>('[data-language="mermaid"]')
+    .forEach((block) => {
+      const figure = createFigure(block)
+      if (figure) figures.add(figure)
+    })
+
+  document
+    .querySelectorAll<HTMLElement>('.mermaid-diagram[data-mermaid-source]')
+    .forEach((figure) => figures.add(figure))
+
+  return Array.from(figures)
+}
+
+const renderMermaidBlocks = async () => {
+  const figures = getMermaidFigures()
+
+  if (!figures.length) return
+
+  const mermaid = await loadMermaid()
+  mermaid.initialize(getMermaidConfig())
+
+  for (const [index, figure] of figures.entries()) {
+    const source = figure.dataset.mermaidSource?.trim()
+    if (!source) continue
+
+    figure.dataset.mermaidTheme = isDarkTheme() ? 'dark' : 'light'
+    figure.replaceChildren()
+
+    try {
+      const { svg, bindFunctions } = await mermaid.render(
+        `mermaid-diagram-${Date.now()}-${renderId++}-${index}`,
+        source
+      )
+
+      figure.innerHTML = svg
+      setupPanZoom(figure)
+      bindFunctions?.(figure)
+    } catch (error) {
+      figure.dataset.mermaidProcessed = 'error'
+      figure.textContent = source
+      console.error('Failed to render Mermaid diagram', error)
+    }
+  }
+}
+
+const scheduleRenderMermaidBlocks = () => {
+  window.clearTimeout(renderTimer)
+  renderTimer = window.setTimeout(renderMermaidBlocks, 80)
+}
+
+document.addEventListener('astro:page-load', renderMermaidBlocks)
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', renderMermaidBlocks)
+} else {
+  renderMermaidBlocks()
+}
+
+new MutationObserver((mutations) => {
+  if (mutations.some((mutation) => mutation.attributeName === 'class')) {
+    scheduleRenderMermaidBlocks()
+  }
+}).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
+</script>
+
+<style is:global>
+  .mermaid-diagram {
+    width: min(88vw, 72rem);
+    max-width: calc(100vw - 2rem);
+    margin: 1.75rem 0 1.75rem 50%;
+    transform: translateX(-50%);
+    overflow: hidden;
+    border: 1px solid hsl(var(--border));
+    border-radius: 0.75rem;
+    background: hsl(var(--card));
+    padding: 1.25rem;
+    cursor: grab;
+    user-select: none;
+  }
+
+  .dark .mermaid-diagram {
+    background:
+      linear-gradient(180deg, hsl(var(--card)) 0%, hsl(var(--muted)) 100%);
+  }
+
+  .mermaid-diagram[data-panzoom-active='true'] {
+    cursor: grabbing;
+  }
+
+  .mermaid-diagram__viewport {
+    overflow: hidden;
+    touch-action: none;
+    width: 100%;
+  }
+
+  .mermaid-diagram__content {
+    display: block;
+    width: 100%;
+    min-width: 44rem;
+    max-width: none;
+    height: auto;
+    margin: 0 auto;
+    will-change: transform;
+  }
+
+  .mermaid-diagram svg .label,
+  .mermaid-diagram svg .nodeLabel,
+  .mermaid-diagram svg .edgeLabel,
+  .mermaid-diagram svg .cluster-label {
+    font-family: 'Satoshi', ui-sans-serif, system-ui, sans-serif;
+  }
+
+  @media (max-width: 640px) {
+    .mermaid-diagram {
+      width: calc(100vw - 1.5rem);
+      padding: 1rem;
+    }
+
+    .mermaid-diagram__content {
+      min-width: 36rem;
+    }
+  }
+</style>
