@@ -42,7 +42,7 @@ const toc = generateToc(headings)
     headings: HTMLElement[] = []
     tocLinks: TOCLink[] = []
     headingProgress: Record<string, HeadingProgress> = {}
-    activeSlug = ''
+    activeSlugs = ''
     scrollContainer: HTMLElement | null = null
 
     constructor() {
@@ -61,7 +61,10 @@ const toc = generateToc(headings)
     }
 
     getScrollContainer() {
-      if (this.scrollContainer?.isConnected) {
+      if (
+        this.scrollContainer?.isConnected &&
+        this.scrollContainer.scrollHeight > this.scrollContainer.clientHeight
+      ) {
         return this.scrollContainer
       }
 
@@ -78,8 +81,7 @@ const toc = generateToc(headings)
         parent = parent.parentElement
       }
 
-      this.scrollContainer = this
-      return this.scrollContainer
+      return this
     }
 
     scrollActiveLinksIntoView(links: HTMLAnchorElement[]) {
@@ -156,9 +158,9 @@ const toc = generateToc(headings)
         }
       })
 
-      const activeSlug = activeLinks.map((link) => link.slug).join('|')
-      if (activeSlug && activeSlug !== this.activeSlug) {
-        this.activeSlug = activeSlug
+      const activeSlugs = activeLinks.map((link) => link.slug).join('|')
+      if (activeSlugs !== this.activeSlugs) {
+        this.activeSlugs = activeSlugs
         this.scrollActiveLinksIntoView(activeLinks.map((link) => link.element))
       }
     }
