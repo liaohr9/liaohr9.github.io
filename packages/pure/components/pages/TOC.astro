@@ -42,6 +42,8 @@ const toc = generateToc(headings)
     headings: HTMLElement[] = []
     tocLinks: TOCLink[] = []
     headingProgress: Record<string, HeadingProgress> = {}
+    activeSlug = ''
+    scrollContainer: HTMLElement | null = null
 
     constructor() {
       super()
@@ -58,12 +60,65 @@ const toc = generateToc(headings)
       }))
     }
 
+    getScrollContainer() {
+      if (this.scrollContainer?.isConnected) {
+        return this.scrollContainer
+      }
+
+      let parent = this.parentElement
+      while (parent) {
+        const { overflowY } = window.getComputedStyle(parent)
+        if (
+          (overflowY === 'auto' || overflowY === 'scroll') &&
+          parent.scrollHeight > parent.clientHeight
+        ) {
+          this.scrollContainer = parent
+          return parent
+        }
+        parent = parent.parentElement
+      }
+
+      this.scrollContainer = this
+      return this.scrollContainer
+    }
+
+    scrollActiveLinksIntoView(links: HTMLAnchorElement[]) {
+      if (!links.length) {
+        return
+      }
+
+      const container = this.getScrollContainer()
+      const containerRect = container.getBoundingClientRect()
+      const linkRects = links.map((link) => link.getBoundingClientRect())
+      const activeBlockTop = Math.min(...linkRects.map((rect) => rect.top))
+      const activeBlockBottom = Math.max(...linkRects.map((rect) => rect.bottom))
+      const padding = 24
+
+      if (
+        activeBlockTop >= containerRect.top + padding &&
+        activeBlockBottom <= containerRect.bottom - padding
+      ) {
+        return
+      }
+
+      const activeBlockCenter = activeBlockTop + (activeBlockBottom - activeBlockTop) / 2
+      const targetTop = Math.max(
+        0,
+        container.scrollTop + activeBlockCenter - (containerRect.top + container.clientHeight / 2)
+      )
+      container.scrollTo({
+        top: targetTop,
+        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'
+      })
+    }
+
     updatePositionAndStyle = () => {
       const windowHeight = window.innerHeight
       const pageOffset =
         window.scrollY - ((document.querySelector('#content') as HTMLElement)?.offsetTop || 0)
       const postOffset =
         ((document.querySelector('#content') as HTMLElement)?.offsetHeight || 0) + 127
+      const activeLinks: TOCLink[] = []
 
       this.headings.forEach((el, index) => {
         const nextHeadingTop = this.headings[index + 1]?.offsetTop || postOffset
@@ -77,25 +132,35 @@ const toc = generateToc(headings)
       })
 
       this.tocLinks.forEach(({ element: el, progressBar: bar, slug }, i) => {
-        const { inView, progress } = this.headingProgress[slug]
-        if (this.headingProgress[slug]) {
+        const heading = this.headingProgress[slug]
+        if (heading) {
+          const { inView, progress } = heading
+          if (inView) {
+            activeLinks.push(this.tocLinks[i])
+          }
           el.classList.toggle('highlight', inView)
           el.classList.toggle('highlight-bg-translucent', inView)
           el.classList.toggle(
             'rounded-t-2xl',
-            inView && (i == 0 || !this.headingProgress[this.tocLinks[i - 1]?.slug].inView)
+            inView && (i == 0 || !this.headingProgress[this.tocLinks[i - 1]?.slug]?.inView)
           )
           el.classList.toggle(
             'rounded-b-2xl',
             inView &&
               (i == this.tocLinks.length - 1 ||
-                !this.headingProgress[this.tocLinks[i + 1]?.slug].inView)
+                !this.headingProgress[this.tocLinks[i + 1]?.slug]?.inView)
           )
           bar.classList.toggle('is-read', !inView && progress == 1)
           bar.classList.toggle('highlight-bg', inView)
           bar.style.setProperty('height', `${progress * 90}%`)
         }
       })
+
+      const activeSlug = activeLinks.map((link) => link.slug).join('|')
+      if (activeSlug && activeSlug !== this.activeSlug) {
+        this.activeSlug = activeSlug
+        this.scrollActiveLinksIntoView(activeLinks.map((link) => link.element))
+      }
     }
 
     connectedCallback() {
