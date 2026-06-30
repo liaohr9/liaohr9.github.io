@@ -1,7 +1,11 @@
 <script>
 let mermaidLoader: Promise<typeof import('mermaid').default> | undefined
 let renderId = 0
-let renderTimer: number | undefined
+let themeRenderTimer: number | undefined
+let queueTaskId: number | undefined
+let renderingQueue = false
+let mermaidObserver: IntersectionObserver | undefined
+const renderQueue: HTMLElement[] = []
 const panZoomStates = new WeakMap<
   HTMLElement,
   {
@@ -23,6 +27,12 @@ const panZoomStates = new WeakMap<
 
 const minScale = 0.75
 const maxScale = 4
+const lazyRenderRootMargin = '800px 0px'
+const idleRenderTimeout = 1200
+type OptionalIdleWindow = Window &
+  typeof globalThis & {
+    requestIdleCallback?: (callback: () => void, options?: { timeout: number }) => number
+  }
 
 const getMermaidSource = (block: HTMLElement) => {
   const copyButton = block.querySelector<HTMLButtonElement>('button.copy[data-code]')
@@ -91,6 +101,20 @@ const loadMermaid = async () => {
   mermaidLoader ??= import('mermaid').then(({ default: mermaid }) => mermaid)
   return mermaidLoader
 }
+
+const getMermaidTheme = () => (isDarkTheme() ? 'dark' : 'light')
+
+const scheduleIdleTask = (callback: () => void) => {
+  const idleCallback = (window as OptionalIdleWindow).requestIdleCallback
+
+  if (idleCallback) {
+    return idleCallback.call(window, () => callback(), { timeout: idleRenderTimeout })
+  }
+
+  return window.setTimeout(callback, 16)
+}
+
+const yieldToMain = () => new Promise<void>((resolve) => window.setTimeout(resolve, 0))
 
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value))
 
@@ -303,6 +327,13 @@ const setupPanZoom = (figure: HTMLElement) => {
   viewport.addEventListener('lostpointercapture', endPointer)
 }
 
+const createPlaceholder = (label: string) => {
+  const placeholder = document.createElement('div')
+  placeholder.className = 'mermaid-diagram__placeholder'
+  placeholder.textContent = label
+  return placeholder
+}
+
 const createFigure = (block: HTMLElement) => {
   const source = getMermaidSource(block).trim()
   if (!source) return undefined
@@ -310,7 +341,9 @@ const createFigure = (block: HTMLElement) => {
   const figure = document.createElement('figure')
   figure.className = 'mermaid-diagram'
   figure.dataset.mermaidSource = source
-  figure.dataset.mermaidProcessed = 'true'
+  figure.dataset.mermaidProcessed = 'pending'
+  figure.dataset.mermaidTheme = getMermaidTheme()
+  figure.replaceChildren(createPlaceholder('Mermaid 图将在滚动到附近时渲染'))
   block.replaceWith(figure)
 
   return figure
@@ -333,54 +366,156 @@ const getMermaidFigures = () => {
   return Array.from(figures)
 }
 
-const renderMermaidBlocks = async () => {
-  const figures = getMermaidFigures()
+const renderFigure = async (figure: HTMLElement) => {
+  const source = figure.dataset.mermaidSource?.trim()
+  if (!source) return
 
-  if (!figures.length) return
+  const theme = getMermaidTheme()
+  figure.dataset.mermaidProcessed = 'rendering'
+  figure.dataset.mermaidTheme = theme
+  figure.replaceChildren(createPlaceholder('正在渲染 Mermaid 图...'))
 
-  const mermaid = await loadMermaid()
-  mermaid.initialize(getMermaidConfig())
+  try {
+    const mermaid = await loadMermaid()
+    mermaid.initialize(getMermaidConfig())
+    const { svg, bindFunctions } = await mermaid.render(
+      `mermaid-diagram-${Date.now()}-${renderId++}`,
+      source
+    )
 
-  for (const [index, figure] of figures.entries()) {
-    const source = figure.dataset.mermaidSource?.trim()
-    if (!source) continue
+    figure.dataset.mermaidProcessed = 'done'
+    figure.dataset.mermaidTheme = theme
+    figure.innerHTML = svg
+    setupPanZoom(figure)
+    bindFunctions?.(figure)
 
-    figure.dataset.mermaidTheme = isDarkTheme() ? 'dark' : 'light'
-    figure.replaceChildren()
-
-    try {
-      const { svg, bindFunctions } = await mermaid.render(
-        `mermaid-diagram-${Date.now()}-${renderId++}-${index}`,
-        source
-      )
-
-      figure.innerHTML = svg
-      setupPanZoom(figure)
-      bindFunctions?.(figure)
-    } catch (error) {
-      figure.dataset.mermaidProcessed = 'error'
-      figure.textContent = source
-      console.error('Failed to render Mermaid diagram', error)
+    if (figure.dataset.mermaidNeedsRerender === 'true' || theme !== getMermaidTheme()) {
+      delete figure.dataset.mermaidNeedsRerender
+      queueFigure(figure, true)
     }
+  } catch (error) {
+    figure.dataset.mermaidProcessed = 'error'
+    const errorBlock = document.createElement('pre')
+    errorBlock.className = 'mermaid-diagram__error'
+    errorBlock.textContent = source
+    figure.replaceChildren(errorBlock)
+    console.error('Failed to render Mermaid diagram', error)
   }
 }
 
-const scheduleRenderMermaidBlocks = () => {
-  window.clearTimeout(renderTimer)
-  renderTimer = window.setTimeout(renderMermaidBlocks, 80)
+const renderQueuedFigures = async () => {
+  if (renderingQueue) return
+
+  renderingQueue = true
+
+  try {
+    while (renderQueue.length) {
+      const figure = renderQueue.shift()
+      if (!figure?.isConnected) continue
+
+      await renderFigure(figure)
+      await yieldToMain()
+    }
+  } finally {
+    renderingQueue = false
+    if (renderQueue.length) scheduleRenderQueue()
+  }
 }
 
-document.addEventListener('astro:page-load', renderMermaidBlocks)
+const scheduleRenderQueue = () => {
+  if (queueTaskId !== undefined) return
+
+  queueTaskId = scheduleIdleTask(() => {
+    queueTaskId = undefined
+    void renderQueuedFigures()
+  })
+}
+
+function queueFigure(figure: HTMLElement, force = false) {
+  const state = figure.dataset.mermaidProcessed
+
+  if (!figure.isConnected) return
+  if (state === 'rendering') {
+    if (force) figure.dataset.mermaidNeedsRerender = 'true'
+    return
+  }
+
+  if (!force && (state === 'done' || state === 'queued' || state === 'error')) return
+
+  figure.dataset.mermaidProcessed = 'queued'
+  if (!renderQueue.includes(figure)) renderQueue.push(figure)
+  scheduleRenderQueue()
+}
+
+const observeFigure = (figure: HTMLElement) => {
+  const state = figure.dataset.mermaidProcessed
+
+  if (state === 'done' || state === 'queued' || state === 'rendering') return
+  if (state === 'error') return
+
+  if (mermaidObserver) {
+    mermaidObserver.observe(figure)
+  } else {
+    queueFigure(figure)
+  }
+}
+
+const setupLazyMermaidRendering = () => {
+  const figures = getMermaidFigures()
+  if (!figures.length) return
+
+  renderQueue.splice(0, renderQueue.length, ...renderQueue.filter((figure) => figure.isConnected))
+  mermaidObserver?.disconnect()
+
+  if ('IntersectionObserver' in window) {
+    mermaidObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return
+
+          const figure = entry.target as HTMLElement
+          mermaidObserver?.unobserve(figure)
+          queueFigure(figure)
+        })
+      },
+      { rootMargin: lazyRenderRootMargin }
+    )
+  } else {
+    mermaidObserver = undefined
+  }
+
+  figures.forEach(observeFigure)
+}
+
+const scheduleThemeRefresh = () => {
+  window.clearTimeout(themeRenderTimer)
+  themeRenderTimer = window.setTimeout(() => {
+    const theme = getMermaidTheme()
+
+    document
+      .querySelectorAll<HTMLElement>('.mermaid-diagram[data-mermaid-source]')
+      .forEach((figure) => {
+        if (figure.dataset.mermaidProcessed === 'done' && figure.dataset.mermaidTheme !== theme) {
+          queueFigure(figure, true)
+          return
+        }
+
+        observeFigure(figure)
+      })
+  }, 80)
+}
+
+document.addEventListener('astro:page-load', setupLazyMermaidRendering)
 
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', renderMermaidBlocks)
+  document.addEventListener('DOMContentLoaded', setupLazyMermaidRendering)
 } else {
-  renderMermaidBlocks()
+  setupLazyMermaidRendering()
 }
 
 new MutationObserver((mutations) => {
   if (mutations.some((mutation) => mutation.attributeName === 'class')) {
-    scheduleRenderMermaidBlocks()
+    scheduleThemeRefresh()
   }
 }).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
 </script>
@@ -407,6 +542,37 @@ new MutationObserver((mutations) => {
 
   .mermaid-diagram[data-panzoom-active='true'] {
     cursor: grabbing;
+  }
+
+  .mermaid-diagram[data-mermaid-processed='pending'],
+  .mermaid-diagram[data-mermaid-processed='queued'],
+  .mermaid-diagram[data-mermaid-processed='rendering'],
+  .mermaid-diagram[data-mermaid-processed='error'] {
+    cursor: default;
+  }
+
+  .mermaid-diagram__placeholder {
+    display: grid;
+    min-height: 8rem;
+    place-items: center;
+    border: 1px dashed hsl(var(--border));
+    border-radius: 0.625rem;
+    background: hsl(var(--muted) / 0.36);
+    color: hsl(var(--muted-foreground));
+    font-size: 0.92rem;
+  }
+
+  .mermaid-diagram__error {
+    max-height: 28rem;
+    overflow: auto;
+    border-radius: 0.625rem;
+    background: hsl(var(--muted) / 0.5);
+    color: hsl(var(--foreground));
+    font-size: 0.86rem;
+    line-height: 1.6;
+    padding: 1rem;
+    user-select: text;
+    white-space: pre-wrap;
   }
 
   .mermaid-diagram__viewport {
