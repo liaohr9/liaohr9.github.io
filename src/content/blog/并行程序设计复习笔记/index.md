@@ -194,17 +194,7 @@ language: 'Chinese'
 
 图 2.2：有三个线程的进程
 
-```mermaid
-flowchart LR
-    Start["进程开始"] --> Fork["创建线程"]
-    Fork --> Main["主线程继续执行"]
-    Fork --> Thread1["线程 1 执行"]
-    Fork --> Thread2["线程 2 执行"]
-    Thread1 --> Join["线程结束并汇入"]
-    Thread2 --> Join
-    Main --> Join
-    Join --> End["进程继续 / 结束"]
-```
+![Diagram 01](att/diagram-01.jpg)
 
 ## 2.2 冯·诺依曼模型的改进
 
@@ -590,23 +580,7 @@ for (i = 2; i <= n; i++)
 
 抽象 SIMD 系统：
 
-```mermaid
-flowchart LR
-    CU["控制单元<br/>Control Unit"] -->|广播同一条指令| DP0["数据通路 0"]
-    CU -->|广播同一条指令| DP1["数据通路 1"]
-    CU -->|广播同一条指令| DP2["数据通路 2"]
-    CU -->|广播同一条指令| DPn["数据通路 p-1"]
-
-    D0["数据 0"] --> DP0
-    D1["数据 1"] --> DP1
-    D2["数据 2"] --> DP2
-    Dn["数据 p-1"] --> DPn
-
-    DP0 --> R0["结果 0"]
-    DP1 --> R1["结果 1"]
-    DP2 --> R2["结果 2"]
-    DPn --> Rn["结果 p-1"]
-```
+![Diagram 02](att/diagram-02.jpg)
 
 ### 条件分支带来的问题
 
@@ -672,22 +646,7 @@ SIMD 系统主要利用的就是数据并行性。
 
 抽象 MIMD 系统：
 
-```mermaid
-flowchart LR
-    subgraph P0["处理器 / 核心 0"]
-        CU0["控制单元 0"] --> DP0["数据通路 0"]
-    end
-    subgraph P1["处理器 / 核心 1"]
-        CU1["控制单元 1"] --> DP1["数据通路 1"]
-    end
-    subgraph Pn["处理器 / 核心 p-1"]
-        CUn["控制单元 p-1"] --> DPn["数据通路 p-1"]
-    end
-
-    D0["数据流 0"] --> DP0
-    D1["数据流 1"] --> DP1
-    Dn["数据流 p-1"] --> DPn
-```
+![Diagram 03](att/diagram-03.jpg)
 
 ### 异步执行
 
@@ -706,37 +665,10 @@ flowchart LR
 
 共享内存系统：
 
-```mermaid
-flowchart TB
-    CPU0["CPU 0"] <--> IC["互连网络"]
-    CPU1["CPU 1"] <--> IC
-    CPU2["CPU 2"] <--> IC
-    CPUn["CPU p-1"] <--> IC
-    IC <--> MEM["共享内存<br/>所有 CPU 都可访问"]
-```
-
+![Diagram 04](att/diagram-04.jpg)
 分布式内存系统：
 
-```mermaid
-flowchart TB
-    IC["互连网络"]
-
-    subgraph N0["节点 0"]
-        CPU0["CPU 0"] <--> MEM0["私有内存 0"]
-    end
-
-    subgraph N1["节点 1"]
-        CPU1["CPU 1"] <--> MEM1["私有内存 1"]
-    end
-
-    subgraph Nn["节点 p-1"]
-        CPUn["CPU p-1"] <--> MEMn["私有内存 p-1"]
-    end
-
-    CPU0 <--> IC
-    CPU1 <--> IC
-    CPUn <--> IC
-```
+![Diagram 05](att/diagram-05.jpg)
 
 ### 共享内存系统
 
@@ -753,53 +685,10 @@ flowchart TB
 
 UMA 多核系统：
 
-```mermaid
-flowchart TB
-    subgraph C1["芯片 1"]
-        C1A["核心 1"]
-        C1B["核心 2"]
-    end
-    subgraph C2["芯片 2"]
-        C2A["核心 1"]
-        C2B["核心 2"]
-    end
-
-    C1A <--> IC["统一互连"]
-    C1B <--> IC
-    C2A <--> IC
-    C2B <--> IC
-    IC <--> MEM["共享内存<br/>访问时间基本相同"]
-```
-
+![Diagram 06](att/diagram-06.jpg)
 NUMA 多核系统：
 
-```mermaid
-flowchart TB
-    subgraph C1["芯片 1"]
-        C1A["核心 1"]
-        C1B["核心 2"]
-        IC1["本地互连 1"]
-        M1["本地内存 1"]
-    end
-
-    subgraph C2["芯片 2"]
-        C2A["核心 1"]
-        C2B["核心 2"]
-        IC2["本地互连 2"]
-        M2["本地内存 2"]
-    end
-
-    C1A <--> IC1
-    C1B <--> IC1
-    IC1 <--> M1
-
-    C2A <--> IC2
-    C2B <--> IC2
-    IC2 <--> M2
-
-    IC1 <--> LINK["芯片间互连<br/>访问远程内存更慢"]
-    LINK <--> IC2
-```
+![Diagram 07](att/diagram-07.jpg)
 
 ### 分布式内存系统
 
@@ -833,14 +722,7 @@ flowchart TB
 
 **监听缓存一致性**（snooping cache coherence）：各核心监听互连网络上的更新广播。
 
-```mermaid
-flowchart LR
-    C0["核心 0<br/>更新包含 x 的缓存行"] -->|广播该缓存行已更新| BUS["互连 / 总线"]
-    BUS --> C1["核心 1<br/>监听并使本地副本无效"]
-    BUS --> C2["核心 2<br/>监听并使本地副本无效"]
-    BUS --> Cn["核心 p-1<br/>监听并使本地副本无效"]
-```
-
+![Diagram 08](att/diagram-08.jpg)
 要点：
 
 - 广播通常针对**缓存行**，不是单个变量。
@@ -923,13 +805,7 @@ for (i = iter_count; i < 2 * iter_count; i++)
 
 于是一个缓存行正好能存下 8 个 `double`，即 `y[0]..y[7]` 全部位于同一个缓存行。
 
-```mermaid
-flowchart TB
-    CL["同一个 64 字节缓存行<br/>y[0] y[1] y[2] y[3] y[4] y[5] y[6] y[7]"]
-    C0["核心 0<br/>更新 y[0]..y[3]"] -->|使缓存行失效| CL
-    C1["核心 1<br/>更新 y[4]..y[7]"] -->|使缓存行失效| CL
-```
-
+![Diagram 09](att/diagram-09.jpg)
 发生过程：
 
 - 核心 0 更新 `y[0]..y[3]`。
@@ -1096,14 +972,7 @@ Unlock(&add_my_val_lock);
 
 流程图：
 
-```mermaid
-flowchart LR
-    T["线程"] --> L["获取锁 Lock"]
-    L --> C["临界区<br/>x += my_val"]
-    C --> U["释放锁 Unlock"]
-    W["其他线程"] -->|锁已被占用时等待| L
-```
-
+![Diagram 10](att/diagram-10.jpg)
 要点：
 
 - 互斥量保证一次只有一个线程执行 `x += my_val`。
@@ -1181,11 +1050,7 @@ if (my_rank == 0)
 
 示意：
 
-```mermaid
-flowchart LR
-    P1["进程 1<br/>私有内存 message"] -->|Send(message)| NET["互连网络"]
-    NET -->|Receive(message)| P0["进程 0<br/>私有内存 message"]
-```
+![Diagram 11](att/diagram-11.jpg)
 
 ### rank
 
@@ -2053,43 +1918,7 @@ total_sum = 1.5 + 2.0 + 3.5 + 4.0;  /* 11.0 */
 
 树形归约示意：
 
-```mermaid
-flowchart TB
-    P0["rank 0: 5"]
-    P1["rank 1: 2"]
-    P2["rank 2: -1"]
-    P3["rank 3: -3"]
-    P4["rank 4: 6"]
-    P5["rank 5: 5"]
-    P6["rank 6: -7"]
-    P7["rank 7: 2"]
-
-    A01["7"]
-    A23["-4"]
-    A45["11"]
-    A67["-5"]
-    B03["3"]
-    B47["6"]
-    ROOT["rank 0: 9"]
-
-    P0 --> A01
-    P1 --> A01
-    P2 --> A23
-    P3 --> A23
-    P4 --> A45
-    P5 --> A45
-    P6 --> A67
-    P7 --> A67
-
-    A01 --> B03
-    A23 --> B03
-    A45 --> B47
-    A67 --> B47
-
-    B03 --> ROOT
-    B47 --> ROOT
-```
-
+![Diagram 12](att/diagram-12.jpg)
 核心思想：
 
 - 每一轮把相邻进程或局部结果两两合并。
@@ -2520,26 +2349,7 @@ rank 7:  2
 
 第一阶段：树形归约，把所有值逐步加到 root 进程。
 
-```mermaid
-flowchart TB
-    P0["0: 5"] --> A01["0: 7"]
-    P1["1: 2"] --> A01
-    P2["2: -1"] --> A23["2: -4"]
-    P3["3: -3"] --> A23
-    P4["4: 6"] --> A45["4: 11"]
-    P5["5: 5"] --> A45
-    P6["6: -7"] --> A67["6: -5"]
-    P7["7: 2"] --> A67
-
-    A01 --> B03["0: 3"]
-    A23 --> B03
-    A45 --> B47["4: 6"]
-    A67 --> B47
-
-    B03 --> ROOT["0: 9"]
-    B47 --> ROOT
-```
-
+![Diagram 13](att/diagram-13.jpg)
 第二阶段：root 再把结果广播给所有进程。
 
 ![mpi reduce and allreduce](att/mpi-reduce-and-allreduce.png)
@@ -2627,13 +2437,7 @@ if (my_rank == 0) {
 
 ### 图示
 
-```mermaid
-flowchart LR
-    STDIN["stdin"] --> P0["rank 0<br/>读取 a, b, n"]
-    P0 -->|MPI_Send a,b,n| P1["rank 1"]
-    P0 -->|MPI_Send a,b,n| P2["rank 2"]
-    P0 -->|MPI_Send a,b,n| PN["rank p-1"]
-```
+![Diagram 14](att/diagram-14.jpg)
 
 ### 注意点
 

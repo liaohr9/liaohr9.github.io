@@ -10,7 +10,6 @@ import config from 'virtual:config'
 import { MediumZoom } from 'astro-pure/advanced'
 import { ArticleBottom, Copyright, Hero, TOC } from 'astro-pure/components/pages'
 import PageLayout from '@/layouts/ContentLayout.astro'
-import MermaidRenderer from '@/components/blog/MermaidRenderer.astro'
 import { Comment, PageInfo } from '@/components/waline'
 
 interface Props {
@@ -74,4 +73,3 @@ const primaryColor = data.heroImage?.color ?? 'hsl(var(--primary) / var(--un-tex
 </PageLayout>
 
 {config.integ.mediumZoom.enable && <MediumZoom />}
-<MermaidRenderer />

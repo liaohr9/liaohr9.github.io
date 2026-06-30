@@ -11,7 +11,7 @@ language: 'Chinese'
 
 # CUDA 笔记整理
 
-> 按截图顺序整理。能抽象重画的图已经改为 Mermaid、表格或公式；代码和索引规则单独整理，方便之后复习。
+> 按截图顺序整理。能抽象重画的图已经改为流程图、表格或公式；代码和索引规则单独整理，方便之后复习。
 
 ## 01. 线程模型与物理结构
 
@@ -33,28 +33,7 @@ Device / GPU -> SM -> CUDA Core
 
 线程块分配到 SM 后，会继续以 `32` 个线程为一组划分成线程束（warp）。
 
-```mermaid
-flowchart LR
-    subgraph Software["Software：线程模型"]
-        Grid["Grid"]
-        BlockA["Block"]
-        ThreadA["Thread"]
-        Grid --> BlockA --> ThreadA
-    end
-
-    subgraph Hardware["Hardware：物理结构"]
-        GPU["Device / GPU"]
-        SM0["SM 0"]
-        SM1["SM 1"]
-        Core0["CUDA Cores"]
-        Core1["CUDA Cores"]
-        GPU --> SM0 --> Core0
-        GPU --> SM1 --> Core1
-    end
-
-    BlockA -- "以 block 为单位分配" --> SM0
-    ThreadA -- "进入 SM 后按 32 个线程划分" --> Warp["Warp"]
-```
+![Diagram 01](att/diagram-01.jpg)
 
 ## 02. 一维线程模型
 
@@ -110,18 +89,7 @@ int warp_id = thread_id_in_block / 32;
 int lane_id = thread_id_in_block % 32;
 ```
 
-```mermaid
-flowchart TB
-    subgraph Block0["Block 0"]
-        B0W0["warp 0：thread 0 ~ 31"]
-        B0W1["warp 1：thread 32 ~ 63"]
-    end
-
-    subgraph Block1["Block 1"]
-        B1W0["warp 0：thread 0 ~ 31"]
-        B1W1["warp 1：thread 32 ~ 63"]
-    end
-```
+![Diagram 02](att/diagram-02.jpg)
 
 ## 04. 流多处理器 SM
 
@@ -136,24 +104,7 @@ GPU 的并行性主要依赖 SM（Streaming Multiprocessor，流多处理器）�
 5. 特殊函数单元（Special Function Unit，SFU）
 6. Warp 调度器（Warp Scheduler）
 
-```mermaid
-flowchart TB
-    IC["Instruction Cache"]
-    WS["Warp Scheduler"]
-    DU["Dispatch Unit"]
-    RF["Register File"]
-    CORE["CUDA Cores"]
-    LDST["Load / Store Units"]
-    SFU["Special Function Units"]
-    SMEM["Shared Memory / L1 Cache"]
-
-    IC --> WS --> DU --> RF
-    RF --> CORE
-    RF --> LDST
-    RF --> SFU
-    LDST --> SMEM
-```
-
+![Diagram 03](att/diagram-03.jpg)
 SM 内部资源有限，所以同一时刻能驻留的线程块、线程束和线程数量会受到寄存器、共享内存、最大线程数等资源限制。
 
 ## 05. SM 上的并发与并行
@@ -171,17 +122,7 @@ GPU 中每个 SM 都可以支持数百个线程并发执行。调度时以线程
 - 并发：多个任务在时间上交错推进，不一定同时执行。
 - 并行：多个任务在硬件上真正同时执行。
 
-```mermaid
-flowchart TB
-    subgraph C["并发：时间上交错推进"]
-        C1["task 1 时间片"] --> C2["task 2 时间片"] --> C3["task 1 时间片"] --> C4["task 2 时间片"]
-    end
-
-    subgraph P["并行：硬件上同时执行"]
-        P1["task 1 持续执行"]
-        P2["task 2 持续执行"]
-    end
-```
+![Diagram 04](att/diagram-04.jpg)
 
 ## 06. 线程束与线程块大小
 
@@ -307,18 +248,7 @@ nvcc helloworld.cu -o helloworld -arch=compute_60 -code=sm_60
 1. 先将设备代码编译为 PTX（Parallel Thread Execution）伪汇编代码。
 2. 再将 PTX 编译为二进制 `cubin` 目标代码。
 
-```mermaid
-flowchart LR
-    CU[".cu 源文件"] --> NVCC["nvcc"]
-    NVCC --> Host["主机代码"]
-    NVCC --> Device["设备代码"]
-    Host --> HostCompiler["C / C++ 主机编译器"]
-    Device --> PTX["PTX：虚拟架构代码"]
-    PTX --> CUBIN["cubin：真实架构机器码"]
-    HostCompiler --> EXE["可执行文件"]
-    CUBIN --> EXE
-```
-
+![Diagram 05](att/diagram-05.jpg)
 相关选项：
 
 ```bash
@@ -571,15 +501,7 @@ __host__ __device__ float add_common(float a, float b) {
 
 通常可以理解为同时生成当前 `sm_XY` 的机器码，并保留对应 `compute_XY` 的 PTX，以便运行时进行兼容处理。
 
-```mermaid
-flowchart TB
-    CU["x.cu 设备代码"] --> PTXGen["Stage 1：PTX Generation"]
-    PTXGen --> PTX["x.ptx / 保留 PTX"]
-    PTX --> Runtime["CUDA Runtime"]
-    Runtime --> CubinGen["Stage 2：Cubin Generation"]
-    CubinGen --> CUBIN["x.cubin"]
-    CUBIN --> Execute["Execute"]
-```
+![Diagram 06](att/diagram-06.jpg)
 
 ## 19. CUDA 事件计时
 
@@ -635,54 +557,7 @@ CUDA 内存模型中常见的内存类型包括：
 
 抽象关系如下：
 
-```mermaid
-flowchart TB
-    subgraph CPU["CPU / Host"]
-        HostMem["Host Memory"]
-    end
-
-    subgraph GPU["GPU / Device"]
-        Global["Global Memory"]
-        Constant["Constant Memory"]
-        Texture["Texture Memory"]
-
-        subgraph Block0["Block 0"]
-            Shared0["Shared Memory"]
-            T00["Thread 0"]
-            Reg00["Registers"]
-            Local00["Local Memory"]
-            T01["Thread 1"]
-            Reg01["Registers"]
-            Local01["Local Memory"]
-        end
-
-        subgraph Block1["Block 1"]
-            Shared1["Shared Memory"]
-            T10["Threads"]
-            Reg10["Registers"]
-            Local10["Local Memory"]
-        end
-    end
-
-    HostMem <--> Global
-    T00 --> Reg00
-    T00 --> Local00
-    T01 --> Reg01
-    T01 --> Local01
-    T10 --> Reg10
-    T10 --> Local10
-    T00 <--> Shared0
-    T01 <--> Shared0
-    T10 <--> Shared1
-    T00 <--> Global
-    T01 <--> Global
-    T10 <--> Global
-    T00 --> Constant
-    T01 --> Constant
-    T00 --> Texture
-    T01 --> Texture
-```
-
+![Diagram 07](att/diagram-07.jpg)
 核心理解：
 
 - 寄存器和本地内存属于单个线程。
