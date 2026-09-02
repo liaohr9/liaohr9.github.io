@@ -1,207 +1,649 @@
 ---
-import BaseLayout from '@/layouts/BaseLayout.astro'
+import 'leaflet/dist/leaflet.css'
+
 import { tourismPlaces } from '@/content/tourism'
 
-const headContent = `
-<link
-  rel="stylesheet"
-  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-  crossorigin=""
-/>
-<script
-  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-  crossorigin=""
-></script>
-`
+import BaseLayout from '@/layouts/BaseLayout.astro'
 
-// ── Geocode cache ──────────────────────────────────────────────────────────
-const cachePath = new URL('.cache/geocode.json', import.meta.url).pathname
-let cache: Record<string, [number, number]> = {}
-try { if (import.meta.env.SSR) { const fs = await import('node:fs'); cache = JSON.parse(fs.readFileSync(cachePath, 'utf8')) } } catch {}
-
-/** Geocode a city name using Nominatim API */
-async function geocode(name: string): Promise<[number, number] | null> {
-  if (cache[name]) return cache[name]
-  try {
-    const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(name)}&limit=1`, {
-      headers: { 'User-Agent': 'liaohr9.github.io tourism map' }
-    })
-    const data = await res.json()
-    if (data?.[0]) {
-      const coords: [number, number] = [parseFloat(data[0].lat), parseFloat(data[0].lon)]
-      cache[name] = coords
-      return coords
-    }
-  } catch { /* skip */ }
-  return null
-}
-
-// Resolve all cities
-const geocoded = await Promise.all(tourismPlaces.map(async (p) => ({
-  name: p.name,
-  coords: await geocode(p.name)
-})))
-
-const valid = geocoded.filter((p) => p.coords != null) as { name: string; coords: [number, number] }[]
-const failed = geocoded.filter((p) => p.coords == null)
-
-// Persist cache
-try {
-  const fs = await import('node:fs')
-  fs.mkdirSync(new URL('.cache/', import.meta.url).pathname, { recursive: true })
-  fs.writeFileSync(cachePath, JSON.stringify(cache, null, 2))
-} catch {}
+const countryCount = new Set(tourismPlaces.map((place) => place.countryCode)).size
+const placeJson = JSON.stringify(tourismPlaces).replace(/</g, '\\u003c')
 ---
 
 <BaseLayout
-  meta={{ title: 'Tourism', description: 'Places I have visited around the world.' }}
-  {headContent}
+  meta={{ title: 'Tourism', description: 'An interactive atlas of places I have visited.' }}
 >
   <main class='w-full'>
-    <!-- Page Header -->
-    <section class='animate mb-14 mt-8 flex flex-col items-center gap-y-3 text-center' id='content-header'>
-      <a href='/life' class='flex items-center gap-x-1 text-xs text-muted-foreground transition-colors hover:text-foreground'>
-        <svg xmlns='http://www.w3.org/2000/svg' class='h-3 w-3' fill='none' viewBox='0 0 24 24' stroke='currentColor'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M15 19l-7-7 7-7' /></svg>
+    <section
+      class='animate mb-10 mt-8 flex flex-col items-center gap-y-3 text-center'
+      id='content-header'
+    >
+      <a
+        href='/life'
+        class='flex items-center gap-x-1 text-xs text-muted-foreground transition-colors hover:text-foreground'
+      >
+        <svg
+          xmlns='http://www.w3.org/2000/svg'
+          class='h-3 w-3'
+          fill='none'
+          viewBox='0 0 24 24'
+          stroke='currentColor'
+          aria-hidden='true'
+        >
+          <path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M15 19l-7-7 7-7'
+          ></path>
+        </svg>
         Life
       </a>
-      <p class='text-sm font-medium uppercase tracking-[0.3em] text-muted-foreground'>Exploration</p>
-      <h1 class='text-4xl font-bold tracking-tight sm:text-5xl'>Tourism</h1>
-      <p class='max-w-md text-base text-muted-foreground'>
-        Places I've been to — each dot a story, each journey a memory.
+      <p class='text-sm font-medium uppercase tracking-[0.3em] text-muted-foreground'>
+        Travel atlas
+      </p>
+      <h1 class='text-4xl font-bold tracking-tight sm:text-5xl'>Places I Have Been</h1>
+      <p class='max-w-xl text-base leading-relaxed text-muted-foreground'>
+        A map of the cities I have explored. Select a marker or a city below to take a closer look.
       </p>
     </section>
 
-    <!-- Map -->
-    <div class='animate rounded-2xl border border-border/50 bg-card overflow-hidden' id='content'>
-      <div id='tourism-map' class='w-full' style='height: 70vh; min-height: 480px;'></div>
-    </div>
+    <section class='animate mb-6 grid grid-cols-3 gap-3' aria-label='Travel statistics'>
+      <article class='travel-stat'>
+        <strong>{tourismPlaces.length}</strong>
+        <span>Cities</span>
+      </article>
+      <article class='travel-stat'>
+        <strong>{countryCount}</strong>
+        <span>Countries</span>
+      </article>
+      <article class='travel-stat'>
+        <strong>0</strong>
+        <span>Geocoding calls</span>
+      </article>
+    </section>
 
-    <!-- City List -->
-    {valid.length > 0 && (
-      <section class='animate mt-10'>
-        <h2 class='text-lg font-semibold tracking-tight mb-4'>Places Visited ({valid.length})</h2>
-        <div class='grid gap-2 sm:grid-cols-2 lg:grid-cols-3'>
-          {valid.map((place) => (
-            <div class='flex items-center gap-x-2 rounded-lg border border-border/40 bg-card px-4 py-2.5 text-sm'>
-              <span class='h-2 w-2 flex-none rounded-full bg-red-500'></span>
-              <span class='truncate'>{place.name}</span>
-            </div>
-          ))}
+    <section class='animate travel-map-shell' id='content' aria-labelledby='map-heading'>
+      <div class='travel-map-heading'>
+        <div>
+          <p class='travel-eyebrow'>Interactive map</p>
+          <h2 id='map-heading'>Explore the journey</h2>
         </div>
-      </section>
-    )}
-
-    {failed.length > 0 && (
-      <div class='animate mt-6 rounded-lg border border-amber-500/30 bg-amber-500/5 p-4 text-sm text-amber-600 dark:text-amber-400'>
-        <p class='font-medium'>Could not locate the following cities:</p>
-        <ul class='mt-1 list-inside list-disc'>
-          {failed.map((place) => <li>{place.name}</li>)}
-        </ul>
+        <button
+          type='button'
+          id='reset-map'
+          class='reset-map-button'
+          aria-label='Show all visited places'
+        >
+          <svg
+            xmlns='http://www.w3.org/2000/svg'
+            viewBox='0 0 24 24'
+            fill='none'
+            stroke='currentColor'
+            aria-hidden='true'
+          >
+            <path
+              stroke-linecap='round'
+              stroke-linejoin='round'
+              stroke-width='1.8'
+              d='M3 12a9 9 0 101.64-5.18M3 4v4h4'></path>
+          </svg>
+          Show all
+        </button>
       </div>
-    )}
 
-    {tourismPlaces.length === 0 && (
-      <div class='animate flex flex-col items-center gap-y-3 py-24 text-center text-muted-foreground'>
-        <svg xmlns='http://www.w3.org/2000/svg' class='h-12 w-12 opacity-30' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
-          <path stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z' />
-          <path stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M15 11a3 3 0 11-6 0 3 3 0 016 0z' />
-        </svg>
-        <p class='text-sm'>No places added yet. Edit <code>src/content/tourism/index.ts</code> to get started.</p>
+      <div class='travel-map-layout'>
+        <div class='map-frame'>
+          <div id='tourism-map' role='application' aria-label='Interactive map of visited cities'>
+          </div>
+          <div id='map-fallback' class='map-fallback' hidden>
+            The base map is temporarily unavailable. The saved city coordinates and place list still
+            work.
+          </div>
+        </div>
+
+        <aside class='place-focus' aria-live='polite'>
+          <span class='place-focus-kicker'>Selected place</span>
+          <div class='place-focus-pin' aria-hidden='true'>
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              viewBox='0 0 24 24'
+              fill='none'
+              stroke='currentColor'
+            >
+              <path
+                stroke-linecap='round'
+                stroke-linejoin='round'
+                stroke-width='1.7'
+                d='M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1116 0z'></path>
+              <circle cx='12' cy='10' r='2.5'></circle>
+            </svg>
+          </div>
+          <div>
+            <h3 id='selected-name'>{tourismPlaces[0]?.name}</h3>
+            <p id='selected-country'>{tourismPlaces[0]?.country}</p>
+          </div>
+          <dl class='coordinate-pair'>
+            <div>
+              <dt>Latitude</dt>
+              <dd id='selected-lat'>{tourismPlaces[0]?.coordinates[0].toFixed(4)}°</dd>
+            </div>
+            <div>
+              <dt>Longitude</dt>
+              <dd id='selected-lng'>{tourismPlaces[0]?.coordinates[1].toFixed(4)}°</dd>
+            </div>
+          </dl>
+          <p class='place-focus-note'>
+            Coordinates are stored with the site, so this marker will not move when a third-party
+            geocoder changes.
+          </p>
+        </aside>
       </div>
-    )}
+    </section>
+
+    <section class='animate mt-12' aria-labelledby='places-heading'>
+      <div class='places-title-row'>
+        <div>
+          <p class='travel-eyebrow'>City index</p>
+          <h2 id='places-heading'>All visited places</h2>
+        </div>
+        <span>{tourismPlaces.length} markers</span>
+      </div>
+      <div class='place-grid'>
+        {
+          tourismPlaces.map((place, index) => (
+            <button
+              type='button'
+              class='place-card'
+              data-place-index={index}
+              aria-label={`Show ${place.name}, ${place.country} on the map`}
+            >
+              <span class='place-dot' aria-hidden='true' />
+              <span class='place-card-copy'>
+                <strong>{place.name}</strong>
+                <small>{place.country}</small>
+              </span>
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                viewBox='0 0 24 24'
+                fill='none'
+                stroke='currentColor'
+                aria-hidden='true'
+              >
+                <path
+                  stroke-linecap='round'
+                  stroke-linejoin='round'
+                  stroke-width='1.8'
+                  d='M9 18l6-6-6-6'
+                />
+              </svg>
+            </button>
+          ))
+        }
+      </div>
+    </section>
+
+    <script is:inline id='tourism-data' type='application/json' set:html={placeJson} />
   </main>
 </BaseLayout>
 
-<!-- Map initialization -->
-<script is:inline define:vars={{ valid }}>
-  const isDark = document.documentElement.classList.contains('dark')
-  const lightTiles = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-  const darkTiles = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png'
+<script>
+  import L from 'leaflet'
 
-  function initMap() {
-    if (typeof L === 'undefined') {
-      setTimeout(initMap, 50)
-      return
-    }
+  interface Place {
+    name: string
+    country: string
+    countryCode: string
+    coordinates: [number, number]
+  }
 
-    // World bounds to prevent infinite panning
-    const worldBounds = [[-85.05, -180], [85.05, 180]]
+  const dataElement = document.querySelector<HTMLScriptElement>('#tourism-data')
+  const places: Place[] = dataElement?.textContent ? JSON.parse(dataElement.textContent) : []
+  const mapElement = document.querySelector<HTMLElement>('#tourism-map')
 
-    const map = L.map('tourism-map', {
+  if (mapElement && places.length > 0) {
+    const activeMapElement = mapElement
+    const map = L.map(activeMapElement, {
       zoomControl: true,
       scrollWheelZoom: true,
-      minZoom: 2,
-      maxZoom: 18,
-      maxBounds: worldBounds,
+      minZoom: 3,
+      maxZoom: 13,
+      maxBounds: [
+        [-85, -180],
+        [85, 180]
+      ],
       maxBoundsViscosity: 0.8
     })
 
-    let tiles = L.tileLayer(isDark ? darkTiles : lightTiles, {
-      maxZoom: 18,
-      attribution: isDark
-        ? '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>'
-        : '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>'
+    const tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map)
 
-    const redIcon = L.divIcon({
-      className: 'custom-marker',
-      html: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 36" width="24" height="36"><path fill="#ef4444" stroke="#fff" stroke-width="2" d="M12 0C5.4 0 0 5.4 0 12c0 9 12 24 12 24s12-15 12-24C24 5.4 18.6 0 12 0z"/><circle fill="#fff" cx="12" cy="11" r="4"/></svg>',
-      iconSize: [24, 36],
-      iconAnchor: [12, 36],
-      popupAnchor: [0, -30]
+    let tileErrors = 0
+    tiles.on('tileerror', () => {
+      tileErrors += 1
+      if (tileErrors >= 4) {
+        document.querySelector<HTMLElement>('#map-fallback')?.removeAttribute('hidden')
+      }
     })
 
-    const bounds = []
-    valid.forEach((place) => {
-      const [lat, lng] = place.coords
-      L.marker([lat, lng], { icon: redIcon }).bindPopup('<b>' + place.name + '</b>').addTo(map)
-      bounds.push([lat, lng])
-    })
-    if (bounds.length > 0) map.fitBounds(bounds, { padding: [50, 50] })
-
-    // Set initial background to match theme
-    map.getContainer().style.background = isDark ? '#0B0B10' : '#FCFCFD'
-
-    // Theme change listener
-    const observer = new MutationObserver(() => {
-      const nowDark = document.documentElement.classList.contains('dark')
-      map.removeLayer(tiles)
-      tiles = L.tileLayer(nowDark ? darkTiles : lightTiles, {
-        maxZoom: 18,
-        attribution: nowDark
-          ? '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>'
-          : '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>'
+    const bounds = L.latLngBounds(places.map((place) => place.coordinates))
+    const markers = places.map((place, index) => {
+      const marker = L.circleMarker(place.coordinates, {
+        radius: 7,
+        weight: 3,
+        color: '#ffffff',
+        fillColor: '#ef4444',
+        fillOpacity: 1,
+        className: 'travel-marker'
       }).addTo(map)
-      map.getContainer().style.background = nowDark ? '#0B0B10' : '#FCFCFD'
-    })
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
-  }
 
-  initMap()
+      marker.bindTooltip(`${place.name}, ${place.country}`, {
+        direction: 'top',
+        offset: [0, -8]
+      })
+      marker.on('click', () => selectPlace(index, true))
+      return marker
+    })
+
+    function showAllPlaces() {
+      map.fitBounds(bounds, { padding: [46, 46], maxZoom: 5 })
+    }
+
+    function selectPlace(index: number, moveMap: boolean) {
+      const place = places[index]
+      const marker = markers[index]
+      if (!place || !marker) return
+
+      document.querySelector('#selected-name')!.textContent = place.name
+      document.querySelector('#selected-country')!.textContent = place.country
+      document.querySelector('#selected-lat')!.textContent = `${place.coordinates[0].toFixed(4)}°`
+      document.querySelector('#selected-lng')!.textContent = `${place.coordinates[1].toFixed(4)}°`
+
+      markers.forEach((item, markerIndex) => {
+        item.setStyle({
+          radius: markerIndex === index ? 9 : 7,
+          fillColor: markerIndex === index ? '#dc2626' : '#ef4444'
+        })
+      })
+      document.querySelectorAll<HTMLElement>('[data-place-index]').forEach((card) => {
+        card.classList.toggle('is-active', Number(card.dataset.placeIndex) === index)
+      })
+
+      if (moveMap) {
+        map.flyTo(place.coordinates, 8, { duration: 1.1 })
+        marker.openTooltip()
+        if (window.matchMedia('(max-width: 767px)').matches) {
+          activeMapElement.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        }
+      }
+    }
+
+    document.querySelectorAll<HTMLButtonElement>('[data-place-index]').forEach((button) => {
+      button.addEventListener('click', () => selectPlace(Number(button.dataset.placeIndex), true))
+    })
+    document
+      .querySelector<HTMLButtonElement>('#reset-map')
+      ?.addEventListener('click', showAllPlaces)
+
+    showAllPlaces()
+    selectPlace(0, false)
+  }
 </script>
 
 <style>
-  /* Hide default leaflet marker bounding box */
-  .custom-marker {
-    background: none !important;
-    border: none !important;
-    box-shadow: none !important;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  .travel-stat {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.2rem;
+    border: 1px solid hsl(var(--border) / 0.55);
+    border-radius: 1rem;
+    background: hsl(var(--card));
+    padding: 1rem 0.5rem;
+    text-align: center;
   }
 
-  /* Leaflet popup styling */
-  .leaflet-popup-content-wrapper {
-    border-radius: 0.5rem;
-    font-size: 0.875rem;
-  }
-  .leaflet-popup-content {
-    margin: 0.5rem 0.75rem;
+  .travel-stat strong {
+    font-size: clamp(1.45rem, 4vw, 2rem);
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    letter-spacing: -0.04em;
   }
 
-  /* Map container background */
-  #tourism-map .leaflet-container {
-    background: hsl(var(--muted));
+  .travel-stat span {
+    font-size: 0.72rem;
+    color: hsl(var(--muted-foreground));
+  }
+
+  .travel-map-shell {
+    overflow: hidden;
+    border: 1px solid hsl(var(--border) / 0.55);
+    border-radius: 1.25rem;
+    background: hsl(var(--card));
+    box-shadow: 0 24px 65px -48px rgb(15 23 42 / 0.55);
+  }
+
+  .travel-map-heading,
+  .places-title-row {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .travel-map-heading {
+    padding: 1.25rem 1.35rem;
+    border-bottom: 1px solid hsl(var(--border) / 0.5);
+  }
+
+  .travel-eyebrow {
+    margin-bottom: 0.2rem;
+    color: hsl(var(--muted-foreground));
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .travel-map-heading h2,
+  .places-title-row h2 {
+    font-size: 1.2rem;
+    font-weight: 650;
+    letter-spacing: -0.02em;
+  }
+
+  .reset-map-button {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    gap: 0.4rem;
+    border: 1px solid hsl(var(--border) / 0.8);
+    border-radius: 999px;
+    padding: 0.48rem 0.72rem;
+    color: hsl(var(--muted-foreground));
+    font-size: 0.72rem;
+    font-weight: 600;
+    transition:
+      border-color 160ms ease,
+      color 160ms ease,
+      background 160ms ease;
+  }
+
+  .reset-map-button:hover {
+    border-color: hsl(var(--foreground) / 0.28);
+    background: hsl(var(--muted) / 0.65);
+    color: hsl(var(--foreground));
+  }
+
+  .reset-map-button svg {
+    width: 0.9rem;
+    height: 0.9rem;
+  }
+
+  .travel-map-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 14.5rem;
+    min-height: 34rem;
+  }
+
+  .map-frame {
+    position: relative;
+    min-width: 0;
+    background-color: #dce6e9;
+    background-image: radial-gradient(circle at 1px 1px, rgb(15 23 42 / 0.13) 1px, transparent 0);
+    background-size: 22px 22px;
+  }
+
+  #tourism-map {
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    min-height: 34rem;
+  }
+
+  .map-fallback {
+    position: absolute;
+    z-index: 500;
+    right: 0.8rem;
+    bottom: 1.8rem;
+    left: 0.8rem;
+    border: 1px solid rgb(245 158 11 / 0.4);
+    border-radius: 0.7rem;
+    background: rgb(255 251 235 / 0.96);
+    padding: 0.65rem 0.8rem;
+    color: #92400e;
+    font-size: 0.72rem;
+    box-shadow: 0 10px 25px -16px rgb(0 0 0 / 0.5);
+  }
+
+  .place-focus {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1.15rem;
+    overflow: hidden;
+    border-left: 1px solid hsl(var(--border) / 0.55);
+    padding: 1.5rem;
+    background:
+      radial-gradient(circle at 100% 0%, rgb(239 68 68 / 0.12), transparent 42%), hsl(var(--card));
+  }
+
+  .place-focus-kicker {
+    color: hsl(var(--muted-foreground));
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .place-focus-pin {
+    display: grid;
+    width: 3.25rem;
+    height: 3.25rem;
+    place-items: center;
+    border-radius: 1rem;
+    background: rgb(239 68 68 / 0.12);
+    color: rgb(220 38 38);
+  }
+
+  .place-focus-pin svg {
+    width: 1.65rem;
+    height: 1.65rem;
+  }
+
+  .place-focus h3 {
+    font-size: 1.55rem;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+  }
+
+  .place-focus #selected-country {
+    margin-top: 0.2rem;
+    color: hsl(var(--muted-foreground));
+    font-size: 0.86rem;
+  }
+
+  .coordinate-pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem;
+  }
+
+  .coordinate-pair div {
+    border: 1px solid hsl(var(--border) / 0.55);
+    border-radius: 0.7rem;
+    background: hsl(var(--background) / 0.58);
+    padding: 0.65rem;
+  }
+
+  .coordinate-pair dt {
+    color: hsl(var(--muted-foreground));
+    font-size: 0.62rem;
+  }
+
+  .coordinate-pair dd {
+    margin-top: 0.15rem;
+    font-size: 0.75rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .place-focus-note {
+    color: hsl(var(--muted-foreground));
+    font-size: 0.7rem;
+    line-height: 1.55;
+  }
+
+  .places-title-row > span {
+    color: hsl(var(--muted-foreground));
+    font-size: 0.75rem;
+  }
+
+  .place-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.65rem;
+    margin-top: 1rem;
+  }
+
+  .place-card {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    gap: 0.65rem;
+    border: 1px solid hsl(var(--border) / 0.5);
+    border-radius: 0.8rem;
+    background: hsl(var(--card));
+    padding: 0.75rem 0.8rem;
+    text-align: left;
+    transition:
+      transform 160ms ease,
+      border-color 160ms ease,
+      background 160ms ease;
+  }
+
+  .place-card:hover,
+  .place-card.is-active {
+    border-color: rgb(239 68 68 / 0.45);
+    background: rgb(239 68 68 / 0.055);
+  }
+
+  .place-card:hover {
+    transform: translateY(-1px);
+  }
+
+  .place-dot {
+    width: 0.55rem;
+    height: 0.55rem;
+    flex: none;
+    border: 2px solid rgb(254 202 202);
+    border-radius: 999px;
+    background: rgb(239 68 68);
+    box-shadow: 0 0 0 3px rgb(239 68 68 / 0.1);
+  }
+
+  .place-card-copy {
+    display: flex;
+    min-width: 0;
+    flex: 1;
+    flex-direction: column;
+  }
+
+  .place-card-copy strong {
+    overflow: hidden;
+    font-size: 0.78rem;
+    font-weight: 650;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .place-card-copy small {
+    color: hsl(var(--muted-foreground));
+    font-size: 0.65rem;
+  }
+
+  .place-card > svg {
+    width: 0.9rem;
+    height: 0.9rem;
+    flex: none;
+    color: hsl(var(--muted-foreground));
+  }
+
+  :global(#tourism-map .leaflet-control-zoom),
+  :global(#tourism-map .leaflet-control-attribution) {
+    border: 0;
+    box-shadow: 0 7px 20px -9px rgb(15 23 42 / 0.55);
+  }
+
+  :global(#tourism-map .leaflet-control-zoom a) {
+    border-color: rgb(226 232 240);
+    color: rgb(51 65 85);
+  }
+
+  :global(#tourism-map .leaflet-tooltip) {
+    border: 0;
+    border-radius: 0.55rem;
+    padding: 0.35rem 0.55rem;
+    color: rgb(30 41 59);
+    font-family: inherit;
+    font-size: 0.72rem;
+    font-weight: 650;
+    box-shadow: 0 10px 24px -13px rgb(15 23 42 / 0.65);
+  }
+
+  :global(#tourism-map .travel-marker) {
+    filter: drop-shadow(0 2px 3px rgb(15 23 42 / 0.35));
+  }
+
+  :global(.dark #tourism-map .leaflet-tile-pane) {
+    filter: brightness(0.72) invert(1) contrast(1.25) hue-rotate(180deg) saturate(0.25);
+  }
+
+  @media (max-width: 767px) {
+    .travel-map-layout {
+      grid-template-columns: 1fr;
+    }
+
+    #tourism-map {
+      min-height: 27rem;
+    }
+
+    .place-focus {
+      border-top: 1px solid hsl(var(--border) / 0.55);
+      border-left: 0;
+    }
+
+    .place-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 420px) {
+    .travel-stat {
+      padding: 0.85rem 0.2rem;
+    }
+
+    .travel-stat span {
+      font-size: 0.62rem;
+    }
+
+    .travel-map-heading {
+      padding: 1rem;
+    }
+
+    #tourism-map {
+      min-height: 23rem;
+    }
+
+    .place-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .place-card,
+    .reset-map-button {
+      transition: none;
+    }
   }
 </style>

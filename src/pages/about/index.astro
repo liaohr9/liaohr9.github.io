@@ -8,6 +8,8 @@ import ExperienceCard from '@/components/about/ExperienceCard.astro'
 import sysuLogo from '@/content/about/sysu.png'
 import iseeLogo from '@/content/about/isee.png'
 import galbotLogo from '@/content/about/galbot.jpeg'
+import litchibotLogo from '@/content/about/litchibot.png'
+import tsinghuaEmblem from '@/content/about/tsinghua-emblem.jpg'
 
 const headings = [
   { depth: 2, slug: 'research-interests', text: 'Research Interests' },
@@ -24,7 +26,7 @@ const headings = [
     Hi there! I'm Haoran Liao, currently an undergraduate student in the <b>School of Computer Science and Engineering</b> at <b>Sun Yat-sen University</b>.
     I will join the{' '}
     <a href='https://github.com/THUSI-Lab' target='_blank' rel='noopener noreferrer'><b>Spatial Intelligence Lab</b></a> at the{' '}
-    <a href='https://collegeai.tsinghua.edu.cn' target='_blank' rel='noopener noreferrer'><b>College of AI (CAI), Tsinghua University</b></a> as a PhD student, supervised by{' '}
+    <a href='https://collegeai.tsinghua.edu.cn' target='_blank' rel='noopener noreferrer'><b>College of AI (CAI), Tsinghua University</b></a> as a PhD student in 2027, supervised by{' '}
     <a href='https://collegeai.tsinghua.edu.cn/en/People/Full_time_PI/Yiming_Li.htm' target='_blank' rel='noopener noreferrer'><b>Prof. Yiming Li</b></a>.
     Previously, I was fortunate to work as a research intern at the{' '}
     <a href='https://pku-epic.github.io' target='_blank' rel='noopener noreferrer'>EPIC Lab</a>, under the supervision of{' '}
@@ -54,14 +56,25 @@ const headings = [
 
   {/* Education */}
   <h2 id='education'>Education</h2>
-  <EducationCard
-    logo={sysuLogo}
-    school='Sun Yat-sen University (SYSU)'
-    degree='B.Eng. from School of Computer Science and Engineering'
-    period='2023.9 - Present (Expected 2027.7)'
-    grades='4.3123 / 5   (Rank 2/353) (0.5%)'
-    link='https://www.sysu.edu.cn'
-  />
+  <div class='flex flex-col gap-3'>
+    <EducationCard
+      logo={tsinghuaEmblem}
+      logoClass='h-40 w-40 object-cover'
+      school='College of AI, Tsinghua University'
+      degree='Incoming Ph.D. Student in Artificial Intelligence'
+      period='Starting in 2027'
+      link='https://collegeai.tsinghua.edu.cn/'
+    />
+    <EducationCard
+      logo={sysuLogo}
+      school='Sun Yat-sen University (SYSU)'
+      degree='B.Eng. from School of Computer Science and Engineering'
+      period='2023.9 - Present (Expected 2027.7)'
+      grades='4.3123 / 5   (Rank 2/353) (0.5%)'
+      honors={['National Scholarship for two consecutive years']}
+      link='https://www.sysu.edu.cn'
+    />
+  </div>
 
   {/* Research Experience */}
   <h2 id='research-experience'>Research Experience</h2>
@@ -78,9 +91,16 @@ const headings = [
       logo={galbotLogo}
       title='Research Intern'
       org='Galbot (Beijing), EPIC Lab (Peking University)'
-      period='2026 - Present'
+      period='2026.1 - 2026.5'
       advisor='Prof. He Wang, Prof. Li Yi'
       link='https://pku-epic.github.io'
+    />
+    <ExperienceCard
+      logo={litchibotLogo}
+      title='Research Intern'
+      org='Liqing Intelligence (Beijing)'
+      period='2026 - Present'
+      link='https://www.litchibot.com/'
     />
   </div>
 

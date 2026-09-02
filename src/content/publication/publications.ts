@@ -12,6 +12,18 @@ export const publications = [
     ]
   },
   {
+    title: 'DynamicManip: Enabling Dynamic Manipulation from a Single Static Demonstration',
+    authors: ['Haoran Liao*', 'Pengyue Wang*', 'Shuoyu Chen*', 'Kehan Cheng', 'Xuhang Chen', 'Yuhao Lin', 'Mu Lin', 'Zhizhao Liang', 'Xiaoyi Fan', 'Chengyi Xing', 'Dan Niu', 'Yi-Lin Wei', 'Wei-Shi Zheng'],
+    year: '2026',
+    journal: 'arXiv 2026',
+    image: '/src/content/publication/imgs/dynamicmanip.jpeg',
+    links: [
+      { name: 'Paper', href: 'https://arxiv.org/abs/2608.01452', icon: 'document' as const },
+      { name: 'Project', href: 'https://liaohr9.github.io/DynamicManip/', icon: 'link' as const },
+      { name: 'Code', href: 'https://github.com/liaohr9/DynamicManip', icon: 'github' as const },
+    ]
+  },
+  {
     title: 'CycleManip: Enabling Cyclic Task Manipulation via Effective Historical Perception and Understanding',
     authors: ['Yi-Lin Wei*', 'Haoran Liao*', 'Yuhao Lin', 'Pengyue Wang', 'Zhizhao Liang', 'Guiliang Liu', 'Wei-Shi Zheng'],
     year: '2025',
