@@ -12,6 +12,17 @@ export const publications = [
     ]
   },
   {
+    title: 'LayerRoute: Action-Conditioned Mixture-of-Layers Routing for Vision-Language-Action Policies',
+    authors: ['Zheng Lu*', 'Haoran Liao*', 'Wanqi Zhong*', 'Yunhe Ni', 'Lijie Wang', 'Xingjie Fan', 'Zhisheng Chen', 'Yantang Qu', 'Meijia Chen', 'Tianyu Xin', 'Zirui Song', 'Yiming Li'],
+    year: '2026',
+    journal: 'arXiv 2026',
+    image: '/src/content/publication/imgs/layerroute.jpeg',
+    imageFit: 'contain' as const,
+    links: [
+      { name: 'Paper', href: 'https://arxiv.org/abs/2609.06079', icon: 'document' as const },
+    ]
+  },
+  {
     title: 'DynamicManip: Enabling Dynamic Manipulation from a Single Static Demonstration',
     authors: ['Haoran Liao*', 'Pengyue Wang*', 'Shuoyu Chen*', 'Kehan Cheng', 'Xuhang Chen', 'Yuhao Lin', 'Mu Lin', 'Zhizhao Liang', 'Xiaoyi Fan', 'Chengyi Xing', 'Dan Niu', 'Yi-Lin Wei', 'Wei-Shi Zheng'],
     year: '2026',

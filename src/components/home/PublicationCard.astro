@@ -12,6 +12,7 @@ interface Props {
     year: string
     journal: string
     image?: string
+    imageFit?: 'cover' | 'contain'
     links: Array<{
       name: string
       href: string
@@ -36,12 +37,13 @@ const images = import.meta.glob<{ default: ImageMetadata }>(
   <div class='flex flex-col md:flex-row'>
     {/* 左侧图片 */}
     <div class='publication-image-wrapper w-full md:w-64 lg:w-72 flex-shrink-0'>
-      <div class='relative aspect-[4/3] md:aspect-auto md:h-full overflow-hidden bg-muted'>
+      <div class='relative aspect-[4/3] md:aspect-auto md:h-full overflow-hidden bg-muted' style={publication.imageFit === 'contain' ? 'background-color: white;' : undefined}>
         {publication.image && images[publication.image] ? (
           <Image
             src={images[publication.image]()}
             alt={publication.title}
             class='absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105'
+            style={publication.imageFit === 'contain' ? 'object-fit: contain;' : undefined}
             loading='lazy'
           />
         ) : (

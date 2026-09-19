@@ -50,11 +50,17 @@ if (!images[imagePath])
 
       <div class='flex flex-col items-center gap-y-4'>
         <h1 class='text-3xl font-bold'>{config.author}</h1>
-        <div class='flex flex-col items-center gap-y-1 text-sm text-muted-foreground'>
-          <span>Mail: liaohr9@mail2.sysu.edu.cn</span>
-          <span>GitHub: <a href='https://github.com/liaohr9' target='_blank'>github.com/liaohr9</a></span>
-          <span>WeChat: liaohr9_sysu</span>
-        </div>
+        <nav aria-label='Contact and academic profiles' class='flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm text-muted-foreground'>
+          <a class='inline-flex items-center gap-1.5 transition-colors hover:text-foreground' href='mailto:liaohr9@mail2.sysu.edu.cn'>
+            <Icon name='email' class='h-4 w-4' /> Email
+          </a>
+          <a class='inline-flex items-center gap-1.5 transition-colors hover:text-foreground' href='https://github.com/liaohr9' target='_blank' rel='noopener noreferrer'>
+            <Icon name='github' class='h-4 w-4' /> GitHub
+          </a>
+          <a class='inline-flex items-center gap-1.5 transition-colors hover:text-foreground' href='https://scholar.google.com/citations?user=ADDac9UAAAAJ&amp;hl=en' target='_blank' rel='noopener noreferrer'>
+            <Icon name='scholar' class='h-4 w-4' /> Google Scholar
+          </a>
+        </nav>
       </div>
 
 
