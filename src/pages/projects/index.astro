@@ -1,14 +1,7 @@
 ---
-import { Image } from 'astro:assets'
 
-import { Button, Collapse, Icon } from 'astro-pure/user'
 import PageLayout from '@/layouts/CommonPage.astro'
 import ProjectSection from '@/components/projects/ProjectSection.astro'
-import Sponsors from '@/components/projects/Sponsors.astro'
-import Sponsorship from '@/components/projects/Sponsorship.astro'
-import alipay from '@/assets/alipay-qrcode.jpg'
-import KeyIcon from '@/assets/icons/key.svg'
-import wechat from '@/assets/wechat-qrcode.jpg'
 
 const headings = [
   // { depth: 2, slug: 'programs', text: 'Programs' },
@@ -21,22 +14,19 @@ const headings = [
 ---
 
 <PageLayout title='Projects' {headings} view>
-  <p>Github Activities:</p>
   <p>
-    <Image
-      src='https://ghchart.rshah.org/659eb9/cworld1'
-      alt='github activities'
-      inferSize
+    <a href='https://github.com/liaohr9?tab=overview' target='_blank' rel='noopener noreferrer'>GitHub activity · @liaohr9</a>
+  </p>
+  <a href='https://github.com/liaohr9?tab=overview' target='_blank' rel='noopener noreferrer' aria-label="View liaohr9's GitHub contributions">
+    <img
+      src='https://ghchart.rshah.org/659eb9/liaohr9'
+      alt="liaohr9's GitHub contribution activity over the past year"
+      width='722'
+      height='112'
+      class='my-4 h-auto w-full'
       loading='lazy'
     />
-  </p>
-  <p>
-    If you think it would be useful or interesting to collaborate on a project, you can donate to
-    support my work or contact me to discuss a project.
-  </p>
-  <Button title='Checkout sponsorship' class='w-fit' href='#sponsorship'>
-    <Icon class='size-5' name='receive-money' slot='before' />
-  </Button>
+  </a>
 
   <!-- <h2 id='programs'>Programs</h2>
   <ProjectSection
@@ -122,6 +112,11 @@ const headings = [
   <h2 id='tools'>Tools</h2>
   <ProjectSection
     projects={[
+      {
+        name: 'DayDistance · 日距',
+        description: 'A native macOS day counter with desktop widgets and local reminders.',
+        links: [{ type: 'github', href: 'https://github.com/liaohr9/DayDistance' }]
+      },
       {
         name: 'ExplorerPlusPlus',
         description: "Add Vim-style keyboard navigation to Windows File Explorer",
