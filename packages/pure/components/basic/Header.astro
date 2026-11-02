@@ -7,8 +7,12 @@ import { Icon } from '../user'
 <header-component
   class='group sticky top-4 z-50 max-md:z-30 mb-12 flex items-center justify-between rounded-xl border border-transparent max-sm:py-1 sm:rounded-2xl'
 >
+  <span class='header-glass-material' aria-hidden='true'>
+    <span class='header-glass-optics'></span>
+    <span class='header-glass-tint'></span>
+  </span>
   <a
-    class='z-30 text-xl font-semibold group-[.not-top]:ms-2 sm:group-[.not-top]:ms-3'
+    class='z-30 whitespace-nowrap text-xl max-sm:text-base font-semibold group-[.not-top]:ms-2 sm:group-[.not-top]:ms-3'
     style='transition:margin-inline 0.3s'
     href='/'
     aria-label='Brand'>{config.title}</a
@@ -45,7 +49,7 @@ import { Icon } from '../user'
     <div class='z-30 flex gap-x-4 group-[.not-top]:gap-x-2' style='transition:gap 0.3s'>
       <button
         id='toggleDarkMode'
-        class='group/dark box-content size-5 rounded-md border p-1.5 transition-colors hover:bg-border sm:group-[.not-top]:rounded-xl'
+        class='group/dark box-content size-5 rounded-md border border-transparent p-1.5 transition-colors hover:bg-border sm:group-[.not-top]:rounded-xl'
       >
         <span class='sr-only'>Dark Theme</span>
         <Icon class='system size-5 group-hover/dark:text-primary' name='computer' />
@@ -71,40 +75,47 @@ import { Icon } from '../user'
   }
 </script>
 <script>
+  import { setupHeaderGlass } from '../../libs/liquid-glass/header-glass'
+  import { setupHeaderScroll } from '../../libs/liquid-glass/header-scroll'
   import { setTheme, showToast } from '../../utils'
 
   class HeaderComponent extends HTMLElement {
-    constructor() {
-      super()
-    }
+    private cleanupGlass?: () => void
+    private cleanupScroll?: () => void
+    private events?: AbortController
 
     connectedCallback() {
-      // Header
-      let preScrollY = window.scrollY
-      this.classList.toggle('not-top', preScrollY > 20)
-      window.addEventListener('scroll', () => {
-        this.classList.toggle('not-top', window.scrollY > 20)
-        this.dataset.show = (window.scrollY < 350 || window.scrollY < preScrollY).toString()
-        preScrollY = window.scrollY
-      })
+      this.events?.abort()
+      this.events = new AbortController()
+      const { signal } = this.events
+      this.cleanupGlass?.()
+      this.cleanupScroll?.()
+      this.cleanupScroll = setupHeaderScroll(this)
+      this.cleanupGlass = setupHeaderGlass(this)
 
       // Dark Mode
       const darkModeBtn = this.querySelector('#toggleDarkMode') as HTMLElement
-      darkModeBtn.addEventListener('click', () => {
-        // Old way: dispatch event
-        // const toggleDarkModeEvent = new CustomEvent('theme-change', {
-        //   detail: { theme: localStorage.getItem('theme') === 'light' ? 'dark' : 'light' }
-        // })
-        // document.dispatchEvent(toggleDarkModeEvent)
-        const newTheme = setTheme(undefined, true)
-        darkModeBtn.dataset.theme = newTheme
-        showToast({ message: `Set theme to ${newTheme}` })
-      })
+      darkModeBtn.addEventListener(
+        'click',
+        () => {
+          const newTheme = setTheme(undefined, true)
+          darkModeBtn.dataset.theme = newTheme
+          showToast({ message: `Set theme to ${newTheme}` })
+        },
+        { signal }
+      )
 
-      // Menu
-      this.querySelector('#toggleMenu')?.addEventListener('click', () => {
-        this.classList.toggle('expanded')
-      })
+      this.querySelector('#toggleMenu')?.addEventListener(
+        'click',
+        () => this.classList.toggle('expanded'),
+        { signal }
+      )
+    }
+
+    disconnectedCallback() {
+      this.events?.abort()
+      this.cleanupGlass?.()
+      this.cleanupScroll?.()
     }
   }
 
@@ -113,6 +124,8 @@ import { Icon } from '../user'
 
 <style>
   header-component {
+    /* Keep the document footprint identical before/after the floating threshold. */
+    min-height: 3.5rem;
     transition:
       padding 0.3s,
       transform 0.3s,
@@ -121,17 +134,11 @@ import { Icon } from '../user'
       background-color 0.15s;
 
     &.not-top {
-      --un-border-opacity: 1;
-      border-color: hsl(var(--border) / var(--un-border-opacity));
-      --un-bg-opacity: 1;
-      background-color: hsl(var(--background) / var(--un-bg-opacity));
+      border-color: var(--glass-border);
+      background-color: var(--glass-fallback);
       padding-left: 0.375rem;
       padding-right: 0.375rem;
-      box-shadow:
-        rgb(255, 255, 255) 0px 0px 0px 0px,
-        rgba(24, 24, 27, 0.08) 0px 0px 0px 1px,
-        rgba(39, 39, 42, 0.08) 0px 10px 15px -3px,
-        rgba(39, 39, 42, 0.08) 0px 4px 6px -4px;
+      box-shadow: var(--glass-shadow);
     }
     &[data-show='false']:not(.expanded) {
       transform: translateY(-5rem);
@@ -142,8 +149,123 @@ import { Icon } from '../user'
       margin-inline: 8%;
     }
   }
+  /* Shared material tokens also tint the expanded mobile menu. */
+  header-component {
+    --glass-fallback: hsl(var(--background) / 0.97);
+    --glass-tint: rgb(255 255 255 / 0.6);
+    --glass-border: rgb(255 255 255 / 0.5);
+    --glass-sheen: linear-gradient(
+      165deg,
+      rgb(255 255 255 / 0.16),
+      transparent 28%,
+      transparent 72%,
+      rgb(255 255 255 / 0.07)
+    );
+    --glass-shadow:
+      inset 0 1px 1px rgb(255 255 255 / 0.8), inset 1px 0 1px rgb(255 255 255 / 0.22),
+      inset 0 -1px 0 rgb(255 255 255 / 0.16), 0 0 0 1px rgb(24 24 27 / 0.05),
+      0 8px 24px -10px rgb(24 24 27 / 0.2);
+  }
+
+  :global(.dark) header-component {
+    --glass-fallback: hsl(var(--muted) / 0.97);
+    --glass-tint: rgb(42 50 64 / 0.75);
+    --glass-border: rgb(255 255 255 / 0.36);
+    --glass-sheen: linear-gradient(
+      165deg,
+      rgb(255 255 255 / 0.12),
+      transparent 28%,
+      transparent 72%,
+      rgb(255 255 255 / 0.04)
+    );
+    --glass-shadow:
+      inset 0 1px 1px rgb(255 255 255 / 0.6), inset 1px 0 1px rgb(255 255 255 / 0.16),
+      inset 0 -1px 0 rgb(255 255 255 / 0.04), 0 0 0 1px rgb(0 0 0 / 0.12),
+      0 10px 28px -10px rgb(0 0 0 / 0.28);
+  }
+
+  /* Keep optics and tint below live controls so text stays sharp. */
+  .header-glass-material {
+    position: absolute;
+    inset: -1px;
+    z-index: -1;
+    border-radius: inherit;
+    overflow: hidden;
+    pointer-events: none;
+    visibility: hidden;
+  }
+
+  .header-glass-optics,
+  .header-glass-tint {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+  }
+
+  .header-glass-optics {
+    -webkit-backdrop-filter: blur(5px) saturate(1.05);
+    backdrop-filter: blur(5px) saturate(1.05);
+  }
+
+  .header-glass-tint {
+    background-color: var(--glass-tint);
+    background-image: var(--glass-sheen);
+    box-shadow:
+      inset 0 1px 1px rgb(255 255 255 / 0.5),
+      inset 0 -1px 1px rgb(255 255 255 / 0.16);
+  }
+
+  @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    header-component.not-top {
+      background-color: transparent;
+    }
+    header-component.not-top .header-glass-material {
+      visibility: visible;
+    }
+  }
+
+  /* Original optical map, tuned for readable navigation over busy photographs. */
+  header-component.not-top[data-glass-engine='author-refraction'] {
+    border-color: transparent;
+    border-radius: 150px;
+    box-shadow: none;
+  }
+  header-component[data-glass-engine='author-refraction'] .header-glass-material {
+    border-radius: 150px;
+    box-shadow:
+      0 6px 20px rgb(0 0 0 / 0.16),
+      inset 0 1px 0 rgb(255 255 255 / 0.3);
+  }
+  header-component[data-glass-engine='author-refraction'] .header-glass-tint {
+    background-image: linear-gradient(135deg, rgb(255 255 255 / 0.08), transparent 45%);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.24);
+  }
+  header-component.not-top {
+    color: #111827;
+  }
   :global(.dark) header-component.not-top {
-    background-color: hsl(var(--muted) / var(--un-bg-opacity));
+    color: #f8fafc;
+  }
+
+  header-component.not-top > a,
+  header-component.not-top #headerExpandContent a,
+  header-component.not-top button,
+  header-component.expanded #headerExpandContent a {
+    text-shadow: 0 1px 2px rgb(255 255 255 / 0.45);
+  }
+
+  :global(.dark) header-component.not-top > a,
+  :global(.dark) header-component.not-top #headerExpandContent a,
+  :global(.dark) header-component.not-top button,
+  :global(.dark) header-component.expanded #headerExpandContent a {
+    text-shadow: 0 1px 3px rgb(0 0 0 / 0.65);
+  }
+
+  header-component a:focus-visible,
+  header-component button:focus-visible {
+    outline: 2px solid hsl(var(--primary));
+    outline-offset: 3px;
+    border-radius: 0.5rem;
   }
 
   /* header menu */
@@ -159,34 +281,46 @@ import { Icon } from '../user'
     .expanded #headerExpandContent {
       grid-template-rows: 1fr;
     }
-    .expanded.not-top #headerExpandContent {
-      box-shadow:
-        rgb(255, 255, 255) 0px 0px 0px 0px,
-        rgba(24, 24, 27, 0.08) 0px 0px 0px 1px,
-        rgba(39, 39, 42, 0.08) 0px 10px 15px -3px,
-        rgba(39, 39, 42, 0.08) 0px 4px 6px -4px;
+    /* Override utility backgrounds in both top and scrolled states. */
+    header-component.expanded #headerExpandContent,
+    :global(.dark) header-component.expanded #headerExpandContent {
+      border-color: var(--glass-border);
+      border-radius: 0.875rem;
+      background-color: var(--glass-fallback);
+      box-shadow: var(--glass-shadow);
     }
 
-    /* header component after */
-    header-component #headerExpandContent::after {
-      box-sizing: content-box;
-      content: '';
-      position: absolute;
-      inset-inline: calc(-1rem - 1px);
-      bottom: 0;
-      top: -5rem;
-      z-index: -1;
-      transition: 0.3s;
-      visibility: hidden;
-      opacity: 0;
-      border-bottom: 1px solid transparent;
+    @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+      header-component.expanded #headerExpandContent,
+      :global(.dark) header-component.expanded #headerExpandContent {
+        background-color: var(--glass-tint);
+        background-image: var(--glass-sheen);
+        -webkit-backdrop-filter: blur(5px) saturate(1.05);
+        backdrop-filter: blur(5px) saturate(1.05);
+      }
     }
-    header-component:not(.not-top) #headerExpandContent::after {
-      visibility: visible;
-      bottom: -1rem;
-      opacity: 1;
-      background-color: hsl(var(--muted) / var(--un-bg-opacity, 1));
-      border-bottom-color: hsl(var(--border) / var(--un-border-opacity, 1));
+  }
+
+  @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+    header-component.not-top {
+      background-color: var(--glass-fallback);
+    }
+    header-component.not-top .header-glass-material {
+      visibility: hidden;
+    }
+    header-component.expanded #headerExpandContent,
+    :global(.dark) header-component.expanded #headerExpandContent {
+      background: var(--glass-fallback);
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    header-component,
+    header-component .header-glass-material,
+    #headerExpandContent {
+      transition: none;
     }
   }
 
